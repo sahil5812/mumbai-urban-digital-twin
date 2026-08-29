@@ -1,0 +1,120 @@
+road_id,road_name,ward,type,surface,lanes,length_km,width_m,elev_m,slope_pct,start_lat,start_lon,end_lat,end_lon,pci
+RD_WEH_01,Western Express Highway (Bandra to Santacruz),H/E,Expressway,Asphalt Over CC Base,8,4.5,35.0,5.2,0.4,19.055,72.842,19.088,72.852,72
+RD_WEH_02,Western Express Highway (Santacruz to Andheri Flyover),K/E,Expressway,Mastic Asphalt,8,5.2,35.0,6.8,0.6,19.088,72.852,19.12,72.858,68
+RD_WEH_03,Western Express Highway (Andheri to Goregaon Hub),P/S,Expressway,Mastic Asphalt,8,4.8,35.0,7.5,0.5,19.12,72.858,19.162,72.86,65
+RD_WEH_04,Western Express Highway (Goregaon to Borivali National Park),R/C,Expressway,Cement Concrete,8,6.5,35.0,8.2,0.3,19.162,72.86,19.225,72.865,88
+RD_WEH_05,Western Express Highway (Borivali to Dahisar Toll Naka),R/N,Expressway,Cement Concrete,8,4.0,35.0,5.0,0.5,19.225,72.865,19.255,72.87,84
+RD_SVR_01,Swami Vivekanand (SV) Road (Bandra Lucky Jn to Khar),H/W,Major Arterial,Bituminous Asphalt,4,3.2,24.0,3.8,0.2,19.055,72.836,19.075,72.837,52
+RD_SVR_02,SV Road (Santacruz Milan Subway Approach),H/W,Major Arterial,Bituminous Asphalt,4,2.1,22.0,2.2,1.2,19.075,72.837,19.092,72.838,44
+RD_SVR_03,SV Road (Vile Parle to Andheri Station West),K/W,Major Arterial,Mastic Asphalt,4,3.5,24.0,3.1,0.3,19.092,72.838,19.12,72.84,58
+RD_SVR_04,SV Road (Andheri Subway Section to Jogeshwari),K/W,Major Arterial,Bituminous Asphalt,4,3.0,22.0,1.9,1.5,19.12,72.84,19.145,72.842,39
+RD_SVR_05,SV Road (Goregaon to Malad Subway Jn),P/N,Major Arterial,Bituminous Asphalt,4,4.2,24.0,3.4,0.4,19.145,72.842,19.185,72.845,48
+RD_SVR_06,SV Road (Kandivali to Borivali Station West),R/C,Major Arterial,Cement Concrete,4,4.6,24.0,5.5,0.3,19.185,72.845,19.228,72.852,82
+RD_LNK_01,New Link Road (Bandra West to Khar Danda),H/W,Major Arterial,Cement Concrete,6,2.8,30.0,3.5,0.2,19.062,72.828,19.082,72.829,86
+RD_LNK_02,New Link Road (Juhu Circle to Andheri Infinity Mall),K/W,Major Arterial,Cement Concrete,6,4.1,30.0,3.2,0.1,19.082,72.829,19.135,72.831,80
+RD_LNK_03,New Link Road (Oshiwara to Goregaon West / Bangur Nagar),P/S,Major Arterial,Cement Concrete,6,3.6,30.0,3.8,0.3,19.135,72.831,19.165,72.833,84
+RD_LNK_04,New Link Road (Malad Inorbit to Mith Chowki),P/N,Major Arterial,Cement Concrete,6,3.2,30.0,4.1,0.2,19.165,72.833,19.192,72.835,78
+RD_LNK_05,New Link Road (Kandivali to Dahisar Link Road Extension),R/N,Major Arterial,Cement Concrete,6,5.8,30.0,4.5,0.2,19.192,72.835,19.25,72.842,85
+RD_EEH_01,Eastern Express Highway (Sion Circle to Priyadarshini Park),F/N,Expressway,Asphalt Over CC Base,8,3.8,36.0,2.3,0.3,19.038,72.862,19.062,72.88,62
+RD_EEH_02,Eastern Express Highway (Kurla Amar Mahal to Ghatkopar),L,Expressway,Mastic Asphalt,8,4.5,36.0,3.5,0.4,19.062,72.88,19.095,72.905,70
+RD_EEH_03,Eastern Express Highway (Ghatkopar to Vikhroli / Godrej),N,Expressway,Cement Concrete,8,4.2,36.0,5.8,0.4,19.095,72.905,19.13,72.925,89
+RD_EEH_04,Eastern Express Highway (Vikhroli to Bhandup / Mulund Toll),T,Expressway,Cement Concrete,8,6.8,36.0,8.0,0.3,19.13,72.925,19.185,72.96,91
+RD_LBS_01,Lal Bahadur Shastri (LBS) Marg (Sion to Kurla Kamani),L,Major Arterial,Bituminous Asphalt,4,3.9,22.0,2.2,0.3,19.042,72.868,19.072,72.885,38
+RD_LBS_02,LBS Marg (Kurla to Ghatkopar Gandhi Nagar),N,Major Arterial,Bituminous Asphalt,4,4.1,22.0,3.8,0.4,19.072,72.885,19.105,72.91,46
+RD_LBS_03,LBS Marg (Ghatkopar to Vikhroli / Kanjurmarg),S,Major Arterial,Cement Concrete,4,4.5,24.0,6.2,0.5,19.105,72.91,19.14,72.932,75
+RD_LBS_04,LBS Marg (Bhandup to Mulund Check Naka),T,Major Arterial,Cement Concrete,4,4.8,24.0,9.5,0.3,19.14,72.932,19.182,72.952,81
+RD_JVL_01,Jogeshwari-Vikhroli Link Road (JVLR - WEH to Powai),K/E,Major Arterial,Mastic Asphalt,6,5.4,32.0,12.5,1.8,19.132,72.855,19.125,72.905,74
+RD_JVL_02,JVLR (Powai Lake to EEH Kanjurmarg Jn),S,Major Arterial,Cement Concrete,6,4.2,32.0,10.0,1.2,19.125,72.905,19.13,72.93,85
+RD_SCL_01,Santacruz-Chembur Link Road (SCLR - Kurla to Amar Mahal),L,Major Arterial,Cement Concrete,6,4.8,30.0,4.2,0.5,19.07,72.86,19.065,72.898,87
+RD_SCL_02,BKC Connector & Extension Road,H/E,Major Arterial,Cement Concrete,4,2.6,26.0,3.8,0.2,19.06,72.868,19.048,72.88,90
+RD_AMB_01,Dr. Babasaheb Ambedkar Road (Byculla to Dadar TT),F/S,Major Arterial,Cement Concrete,6,4.2,30.0,2.5,0.2,18.975,72.836,19.018,72.845,83
+RD_AMB_02,Dr Ambedkar Road (Dadar TT to Sion Circle / Gandhi Market),F/N,Major Arterial,Bituminous Asphalt Over CC,6,3.1,30.0,1.9,0.4,19.018,72.845,19.038,72.862,42
+RD_SNB_01,Senapati Bapat Marg (Mahalakshmi to Dadar West),G/S,Major Arterial,Cement Concrete,4,4.8,24.0,2.8,0.2,18.985,72.825,19.022,72.838,79
+RD_MDR_01,Marine Drive / Netaji Subhash Chandra Bose Road,A,Major Arterial,Cement Concrete,6,3.6,28.0,3.8,0.1,18.925,72.822,18.955,72.815,92
+RD_EFR_01,Eastern Freeway (Orange Gate to Chembur Panjrapol),M/W,Elevated Expressway,Mastic Asphalt,4,16.8,18.0,14.5,0.8,18.945,72.845,19.055,72.905,86
+RD_CST_01,Mumbai Coastal Road (Princess Street Flyover to Worli),D,Expressway / Tunnel,Cement Concrete,8,10.5,34.0,4.0,0.3,18.948,72.818,19.015,72.812,96
+RD_LOC_001,B Ward Sector 1 Connector Road,B,Sub-Arterial,Cement Concrete,2,0.57,12.0,3.7,0.19,18.96494,72.84519,18.96164,72.84121,75
+RD_LOC_002,H/E Ward Sector 2 Connector Road,H/E,Collector Road,Bituminous Asphalt,4,1.65,12.0,4.8,1.17,19.0784,72.84091,19.06688,72.85026,58
+RD_LOC_003,S Ward Sector 3 Connector Road,S,Collector Road,Cement Concrete,4,1.1,12.0,11.0,0.66,19.1533,72.93688,19.15245,72.94672,83
+RD_LOC_004,K/E Ward Sector 4 Connector Road,K/E,Collector Road,Bituminous Asphalt,2,1.24,18.0,8.7,0.91,19.11195,72.87958,19.10607,72.88907,42
+RD_LOC_005,C Ward Sector 5 Connector Road,C,Collector Road,Cement Concrete,2,1.41,18.0,3.0,0.46,18.93367,72.80736,18.92108,72.80916,79
+RD_LOC_006,R/S Ward Sector 6 Connector Road,R/S,Sub-Arterial,Bituminous Asphalt,2,1.39,18.0,6.2,1.11,19.19795,72.86537,19.18543,72.86593,68
+RD_LOC_007,N Ward Sector 7 Connector Road,N,Sub-Arterial,Bituminous Asphalt,2,1.62,18.0,9.9,0.25,19.08612,72.91484,19.07368,72.90714,67
+RD_LOC_008,R/N Ward Sector 8 Connector Road,R/N,Sub-Arterial,Cement Concrete,2,0.88,12.0,5.1,0.93,19.27314,72.86947,19.26818,72.86333,77
+RD_LOC_009,F/S Ward Sector 9 Connector Road,F/S,Collector Road,Bituminous Asphalt,4,0.54,12.0,4.2,1.06,18.9986,72.83916,19.00119,72.84324,68
+RD_LOC_010,S Ward Sector 10 Connector Road,S,Collector Road,Bituminous Asphalt,2,1.03,12.0,9.2,0.74,19.12768,72.92667,19.12359,72.91833,45
+RD_LOC_011,F/S Ward Sector 11 Connector Road,F/S,Collector Road,Mastic Asphalt,2,0.4,12.0,3.9,0.43,19.00055,72.8352,19.00019,72.83294,47
+RD_LOC_012,R/S Ward Sector 12 Connector Road,R/S,Local Ward Road,Mastic Asphalt,2,1.13,12.0,6.4,0.83,19.19389,72.875,19.20209,72.88103,52
+RD_LOC_013,T Ward Sector 13 Connector Road,T,Sub-Arterial,Mastic Asphalt,4,1.77,18.0,12.2,1.14,19.16462,72.96611,19.17898,72.97306,53
+RD_LOC_014,R/S Ward Sector 14 Connector Road,R/S,Collector Road,Bituminous Asphalt,2,1.37,15.0,7.7,0.66,19.22261,72.87822,19.23345,72.88413,66
+RD_LOC_015,M/E Ward Sector 15 Connector Road,M/E,Sub-Arterial,Cement Concrete,4,1.55,12.0,4.7,0.41,19.04778,72.90915,19.04916,72.92305,86
+RD_LOC_016,K/E Ward Sector 16 Connector Road,K/E,Local Ward Road,Bituminous Asphalt,2,1.51,18.0,7.5,0.53,19.11437,72.8622,19.10214,72.85617,35
+RD_LOC_017,H/W Ward Sector 17 Connector Road,H/W,Sub-Arterial,Bituminous Asphalt,4,1.32,12.0,5.7,1.01,19.05551,72.8298,19.06366,72.82116,41
+RD_LOC_018,T Ward Sector 18 Connector Road,T,Sub-Arterial,Bituminous Asphalt,2,1.43,12.0,13.6,1.18,19.1871,72.96864,19.17664,72.96113,50
+RD_LOC_019,D Ward Sector 19 Connector Road,D,Local Ward Road,Cement Concrete,2,1.24,18.0,8.5,1.01,18.97384,72.81953,18.98436,72.82316,94
+RD_LOC_020,D Ward Sector 20 Connector Road,D,Sub-Arterial,Mastic Asphalt,4,1.66,18.0,10.0,0.32,18.97121,72.8055,18.95804,72.79845,51
+RD_LOC_021,F/N Ward Sector 21 Connector Road,F/N,Local Ward Road,Bituminous Asphalt,2,1.71,12.0,2.5,0.24,19.01427,72.87729,19.02298,72.86456,53
+RD_LOC_022,D Ward Sector 22 Connector Road,D,Collector Road,Bituminous Asphalt,4,1.0,15.0,8.5,1.11,18.9637,72.80413,18.97234,72.80171,50
+RD_LOC_023,M/E Ward Sector 23 Connector Road,M/E,Sub-Arterial,Bituminous Asphalt,4,0.81,18.0,2.2,0.5,19.02866,72.92394,19.03083,72.93093,72
+RD_LOC_024,R/C Ward Sector 24 Connector Road,R/C,Local Ward Road,Cement Concrete,2,0.94,12.0,6.5,0.75,19.24404,72.86816,19.23654,72.86422,78
+RD_LOC_025,F/S Ward Sector 25 Connector Road,F/S,Local Ward Road,Cement Concrete,2,1.65,18.0,4.1,0.73,19.00261,72.82267,19.01459,72.8315,75
+RD_LOC_026,T Ward Sector 26 Connector Road,T,Local Ward Road,Mastic Asphalt,4,1.82,15.0,13.6,0.81,19.18025,72.93798,19.19281,72.94848,65
+RD_LOC_027,S Ward Sector 27 Connector Road,S,Sub-Arterial,Bituminous Asphalt,2,1.33,12.0,9.4,0.4,19.13837,72.92162,19.12759,72.92676,59
+RD_LOC_028,F/N Ward Sector 28 Connector Road,F/N,Collector Road,Cement Concrete,4,1.8,12.0,2.4,0.62,19.0231,72.85876,19.01338,72.84583,78
+RD_LOC_029,G/S Ward Sector 29 Connector Road,G/S,Collector Road,Cement Concrete,2,0.55,12.0,2.2,0.49,19.0112,72.82197,19.01407,72.81791,90
+RD_LOC_030,A Ward Sector 30 Connector Road,A,Sub-Arterial,Cement Concrete,2,1.93,18.0,5.2,0.96,18.92245,72.83135,18.93371,72.81808,77
+RD_LOC_031,F/S Ward Sector 31 Connector Road,F/S,Local Ward Road,Mastic Asphalt,2,1.7,15.0,3.5,0.79,18.9818,72.82975,18.98635,72.84441,37
+RD_LOC_032,M/E Ward Sector 32 Connector Road,M/E,Sub-Arterial,Bituminous Asphalt,2,1.09,15.0,4.8,0.63,19.03366,72.90759,19.02393,72.90664,57
+RD_LOC_033,R/N Ward Sector 33 Connector Road,R/N,Local Ward Road,Bituminous Asphalt,2,0.9,12.0,5.6,0.49,19.27197,72.86701,19.27269,72.87513,41
+RD_LOC_034,K/W Ward Sector 34 Connector Road,K/W,Sub-Arterial,Cement Concrete,2,1.78,12.0,2.1,0.39,19.13829,72.82134,19.14612,72.80735,85
+RD_LOC_035,F/N Ward Sector 35 Connector Road,F/N,Collector Road,Cement Concrete,4,1.82,12.0,3.0,0.53,19.03678,72.84037,19.04909,72.85117,82
+RD_LOC_036,H/W Ward Sector 36 Connector Road,H/W,Sub-Arterial,Cement Concrete,4,2.15,12.0,5.7,0.37,19.07115,72.81988,19.05692,72.83305,93
+RD_LOC_037,L Ward Sector 37 Connector Road,L,Local Ward Road,Mastic Asphalt,4,0.61,12.0,3.8,1.17,19.08265,72.88402,19.08097,72.88925,72
+RD_LOC_038,G/S Ward Sector 38 Connector Road,G/S,Collector Road,Bituminous Asphalt,4,1.62,18.0,4.0,0.86,19.00618,72.80288,18.99456,72.79409,69
+RD_LOC_039,R/S Ward Sector 39 Connector Road,R/S,Local Ward Road,Mastic Asphalt,2,1.5,18.0,5.6,0.59,19.21027,72.85873,19.20239,72.84772,40
+RD_LOC_040,L Ward Sector 40 Connector Road,L,Collector Road,Mastic Asphalt,2,0.63,15.0,2.9,0.77,19.0492,72.895,19.04715,72.88968,65
+RD_LOC_041,T Ward Sector 41 Connector Road,T,Local Ward Road,Cement Concrete,2,1.15,15.0,13.2,0.23,19.16028,72.97232,19.15313,72.97977,95
+RD_LOC_042,R/N Ward Sector 42 Connector Road,R/N,Collector Road,Mastic Asphalt,4,0.57,15.0,5.1,1.07,19.2413,72.84065,19.24287,72.83578,43
+RD_LOC_043,P/N Ward Sector 43 Connector Road,P/N,Local Ward Road,Cement Concrete,4,1.66,18.0,5.9,0.94,19.16789,72.82259,19.18264,72.82481,87
+RD_LOC_044,P/N Ward Sector 44 Connector Road,P/N,Collector Road,Bituminous Asphalt,4,0.82,18.0,3.9,0.38,19.18,72.8217,19.18738,72.82168,44
+RD_LOC_045,A Ward Sector 45 Connector Road,A,Sub-Arterial,Bituminous Asphalt,4,0.41,15.0,4.3,0.24,18.9158,72.82211,18.91933,72.82311,67
+RD_LOC_046,M/W Ward Sector 46 Connector Road,M/W,Collector Road,Mastic Asphalt,2,0.65,15.0,4.9,0.17,19.04764,72.90716,19.05336,72.90854,68
+RD_LOC_047,G/N Ward Sector 47 Connector Road,G/N,Local Ward Road,Mastic Asphalt,2,1.74,12.0,4.2,0.72,19.0395,72.85926,19.02962,72.84704,64
+RD_LOC_048,C Ward Sector 48 Connector Road,C,Local Ward Road,Bituminous Asphalt,4,1.67,12.0,5.3,0.16,18.94469,72.81849,18.94802,72.80386,67
+RD_LOC_049,S Ward Sector 49 Connector Road,S,Sub-Arterial,Cement Concrete,2,0.9,18.0,8.6,0.64,19.15016,72.91403,19.14391,72.90886,79
+RD_LOC_050,M/W Ward Sector 50 Connector Road,M/W,Collector Road,Cement Concrete,2,1.36,15.0,5.6,0.82,19.04463,72.88269,19.04184,72.87075,75
+RD_LOC_051,R/S Ward Sector 51 Connector Road,R/S,Local Ward Road,Bituminous Asphalt,2,1.84,15.0,7.2,0.28,19.19569,72.88276,19.20292,72.86783,36
+RD_LOC_052,E Ward Sector 52 Connector Road,E,Local Ward Road,Mastic Asphalt,2,0.99,12.0,2.6,0.15,18.97978,72.83121,18.98769,72.82704,67
+RD_LOC_053,P/N Ward Sector 53 Connector Road,P/N,Collector Road,Cement Concrete,2,1.45,15.0,6.0,0.9,19.1661,72.82972,19.16217,72.8173,76
+RD_LOC_054,K/E Ward Sector 54 Connector Road,K/E,Sub-Arterial,Bituminous Asphalt,4,1.57,15.0,8.2,0.11,19.12788,72.88215,19.11405,72.87906,41
+RD_LOC_055,E Ward Sector 55 Connector Road,E,Sub-Arterial,Bituminous Asphalt,2,1.02,15.0,3.8,0.14,18.9581,72.85129,18.95064,72.84585,41
+RD_LOC_056,T Ward Sector 56 Connector Road,T,Collector Road,Cement Concrete,4,1.54,12.0,13.5,0.66,19.19009,72.96119,19.1927,72.94752,80
+RD_LOC_057,K/E Ward Sector 57 Connector Road,K/E,Sub-Arterial,Bituminous Asphalt,2,1.53,15.0,6.5,0.3,19.12966,72.85395,19.12981,72.86776,60
+RD_LOC_058,S Ward Sector 58 Connector Road,S,Collector Road,Bituminous Asphalt,2,1.03,12.0,11.3,0.29,19.16226,72.92621,19.15736,72.93407,40
+RD_LOC_059,B Ward Sector 59 Connector Road,B,Local Ward Road,Cement Concrete,2,0.82,12.0,5.5,0.85,18.96894,72.84079,18.97508,72.84482,82
+RD_LOC_060,H/E Ward Sector 60 Connector Road,H/E,Collector Road,Bituminous Asphalt,2,0.94,15.0,3.6,0.47,19.06922,72.85756,19.07363,72.85034,52
+RD_LOC_061,S Ward Sector 61 Connector Road,S,Local Ward Road,Bituminous Asphalt,4,0.47,18.0,9.0,0.35,19.1455,72.9281,19.14843,72.925,67
+RD_LOC_062,E Ward Sector 62 Connector Road,E,Collector Road,Mastic Asphalt,4,1.79,12.0,5.1,0.68,18.97701,72.83031,18.98781,72.84234,67
+RD_LOC_063,R/N Ward Sector 63 Connector Road,R/N,Collector Road,Bituminous Asphalt,4,1.19,12.0,3.3,1.06,19.25178,72.87349,19.24625,72.88264,40
+RD_LOC_064,C Ward Sector 64 Connector Road,C,Sub-Arterial,Mastic Asphalt,2,1.42,15.0,2.8,0.8,18.94257,72.81577,18.94442,72.80315,71
+RD_LOC_065,A Ward Sector 65 Connector Road,A,Sub-Arterial,Mastic Asphalt,2,1.13,18.0,5.2,0.78,18.90428,72.81614,18.9123,72.80987,67
+RD_LOC_066,K/W Ward Sector 66 Connector Road,K/W,Local Ward Road,Bituminous Asphalt,4,1.53,12.0,3.4,0.72,19.13921,72.84255,19.1381,72.85631,57
+RD_LOC_067,K/W Ward Sector 67 Connector Road,K/W,Sub-Arterial,Mastic Asphalt,4,0.61,15.0,4.4,1.0,19.12946,72.83552,19.12494,72.83242,70
+RD_LOC_068,F/N Ward Sector 68 Connector Road,F/N,Local Ward Road,Cement Concrete,2,1.92,15.0,2.4,0.56,19.02936,72.8587,19.0427,72.84773,89
+RD_LOC_069,D Ward Sector 69 Connector Road,D,Collector Road,Bituminous Asphalt,2,0.4,15.0,8.3,0.87,18.97523,72.80145,18.97336,72.80024,50
+RD_LOC_070,S Ward Sector 70 Connector Road,S,Sub-Arterial,Cement Concrete,4,0.93,12.0,8.6,0.15,19.16402,72.94621,19.15589,72.94839,79
+RD_LOC_071,M/E Ward Sector 71 Connector Road,M/E,Collector Road,Bituminous Asphalt,2,1.07,18.0,3.8,0.54,19.04924,72.89989,19.05517,72.90753,40
+RD_LOC_072,N Ward Sector 72 Connector Road,N,Collector Road,Mastic Asphalt,2,0.55,15.0,7.9,0.88,19.08929,72.89962,19.09382,72.89754,66
+RD_LOC_073,H/W Ward Sector 73 Connector Road,H/W,Collector Road,Mastic Asphalt,2,1.07,18.0,6.1,1.03,19.0797,72.83905,19.07361,72.83158,48
+RD_LOC_074,R/N Ward Sector 74 Connector Road,R/N,Local Ward Road,Cement Concrete,2,0.92,15.0,6.0,0.93,19.24821,72.84915,19.25648,72.84923,90
+RD_LOC_075,R/S Ward Sector 75 Connector Road,R/S,Sub-Arterial,Bituminous Asphalt,4,1.85,12.0,4.9,0.18,19.22137,72.86562,19.235,72.8561,66
+RD_LOC_076,B Ward Sector 76 Connector Road,B,Sub-Arterial,Mastic Asphalt,2,1.5,18.0,3.8,1.11,18.95415,72.82922,18.95985,72.84147,62
+RD_LOC_077,N Ward Sector 77 Connector Road,N,Sub-Arterial,Cement Concrete,4,1.34,15.0,8.6,0.52,19.07245,72.90249,19.07434,72.89056,89
+RD_LOC_078,M/E Ward Sector 78 Connector Road,M/E,Local Ward Road,Cement Concrete,4,2.27,18.0,2.5,0.17,19.05584,72.92827,19.04179,72.94319,94
+RD_LOC_079,P/N Ward Sector 79 Connector Road,P/N,Collector Road,Cement Concrete,2,1.64,12.0,6.2,0.2,19.19037,72.8379,19.17874,72.82883,85
+RD_LOC_080,N Ward Sector 80 Connector Road,N,Collector Road,Cement Concrete,4,1.54,12.0,8.6,0.24,19.07806,72.91249,19.07708,72.89869,94
+RD_LOC_081,C Ward Sector 81 Connector Road,C,Collector Road,Mastic Asphalt,4,2.28,12.0,5.1,1.16,18.93947,72.82561,18.95444,72.8397,44
+RD_LOC_082,C Ward Sector 82 Connector Road,C,Collector Road,Bituminous Asphalt,2,1.23,18.0,5.1,0.82,18.9303,72.81494,18.9359,72.80543,41
+RD_LOC_083,R/C Ward Sector 83 Connector Road,R/C,Collector Road,Mastic Asphalt,2,1.95,15.0,8.2,0.33,19.21065,72.85277,19.19732,72.8413,70
+RD_LOC_084,P/N Ward Sector 84 Connector Road,P/N,Collector Road,Bituminous Asphalt,2,1.36,12.0,6.7,0.4,19.17838,72.85189,19.19057,72.85307,42
+RD_LOC_085,P/N Ward Sector 85 Connector Road,P/N,Sub-Arterial,Bituminous Asphalt,2,0.81,12.0,4.8,1.06,19.17337,72.83615,19.1673,72.83206,46

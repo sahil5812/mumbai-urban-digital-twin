@@ -1,0 +1,279 @@
+segment_id,segment_name,corridor_code,ward,surface_type,lanes,length_km,start_lat,start_lon,end_lat,end_lon,elevation_m,pavement_age_years,pci_score,daily_pcu_traffic,nearest_drain_distance_m,baseline_pothole_prob
+SEG_WEH_001,Western Express Highway - Section 1 (H/E),WEH,H/E,Mastic Asphalt / CC,8,0.45,19.055,72.842,19.05988,72.84267,4.72,8.0,59,123250,23.0,0.207
+SEG_WEH_002,Western Express Highway - Section 2 (K/E),WEH,K/E,Mastic Asphalt / CC,8,0.55,19.05988,72.84267,19.06476,72.84333,4.55,4.0,77,131950,36.0,0.179
+SEG_WEH_003,Western Express Highway - Section 3 (P/S),WEH,P/S,Mastic Asphalt / CC,8,0.65,19.06476,72.84333,19.06964,72.844,4.4,11.0,50,140650,49.0,0.229
+SEG_WEH_004,Western Express Highway - Section 4 (R/C),WEH,R/C,Mastic Asphalt / CC,8,0.75,19.06964,72.844,19.07452,72.84467,3.08,7.0,63,149350,62.0,0.2
+SEG_WEH_005,Western Express Highway - Section 5 (R/N),WEH,R/N,Mastic Asphalt / CC,8,0.45,19.07452,72.84467,19.0794,72.84533,3.1,3.0,81,158049,75.0,0.171
+SEG_WEH_006,Western Express Highway - Section 6 (H/E),WEH,H/E,Mastic Asphalt / CC,8,0.55,19.0794,72.84533,19.08429,72.846,3.52,10.0,50,123250,88.0,0.221
+SEG_WEH_007,Western Express Highway - Section 7 (K/E),WEH,K/E,Mastic Asphalt / CC,8,0.65,19.08429,72.846,19.08917,72.84667,3.11,6.0,68,131950,21.0,0.193
+SEG_WEH_008,Western Express Highway - Section 8 (P/S),WEH,P/S,Mastic Asphalt / CC,8,0.75,19.08917,72.84667,19.09405,72.84733,4.03,2.0,86,140650,34.0,0.164
+SEG_WEH_009,Western Express Highway - Section 9 (R/C),WEH,R/C,Mastic Asphalt / CC,8,0.45,19.09405,72.84733,19.09893,72.848,4.98,9.0,54,149350,47.0,0.214
+SEG_WEH_010,Western Express Highway - Section 10 (R/N),WEH,R/N,Mastic Asphalt / CC,8,0.55,19.09893,72.848,19.10381,72.84867,4.75,5.0,72,158049,60.0,0.186
+SEG_WEH_011,Western Express Highway - Section 11 (H/E),WEH,H/E,Mastic Asphalt / CC,8,0.65,19.10381,72.84867,19.10869,72.84933,5.73,1.0,90,123250,73.0,0.157
+SEG_WEH_012,Western Express Highway - Section 12 (K/E),WEH,K/E,Mastic Asphalt / CC,8,0.75,19.10869,72.84933,19.11357,72.85,6.71,8.0,59,131950,86.0,0.207
+SEG_WEH_013,Western Express Highway - Section 13 (P/S),WEH,P/S,Mastic Asphalt / CC,8,0.45,19.11357,72.85,19.11845,72.85067,6.5,4.0,77,140650,19.0,0.179
+SEG_WEH_014,Western Express Highway - Section 14 (R/C),WEH,R/C,Mastic Asphalt / CC,8,0.55,19.11845,72.85067,19.12333,72.85133,7.48,11.0,50,149350,32.0,0.229
+SEG_WEH_015,Western Express Highway - Section 15 (R/N),WEH,R/N,Mastic Asphalt / CC,8,0.65,19.12333,72.85133,19.12821,72.852,8.47,7.0,63,158049,45.0,0.2
+SEG_WEH_016,Western Express Highway - Section 16 (H/E),WEH,H/E,Mastic Asphalt / CC,8,0.75,19.12821,72.852,19.1331,72.85267,8.26,3.0,81,123250,58.0,0.171
+SEG_WEH_017,Western Express Highway - Section 17 (K/E),WEH,K/E,Mastic Asphalt / CC,8,0.45,19.1331,72.85267,19.13798,72.85333,9.24,10.0,50,131950,71.0,0.221
+SEG_WEH_018,Western Express Highway - Section 18 (P/S),WEH,P/S,Mastic Asphalt / CC,8,0.55,19.13798,72.85333,19.14286,72.854,10.23,6.0,68,140650,84.0,0.193
+SEG_WEH_019,Western Express Highway - Section 19 (R/C),WEH,R/C,Mastic Asphalt / CC,8,0.65,19.14286,72.854,19.14774,72.85467,10.02,2.0,86,149350,17.0,0.164
+SEG_WEH_020,Western Express Highway - Section 20 (R/N),WEH,R/N,Mastic Asphalt / CC,8,0.75,19.14774,72.85467,19.15262,72.85533,11.01,9.0,54,158049,30.0,0.214
+SEG_WEH_021,Western Express Highway - Section 21 (H/E),WEH,H/E,Mastic Asphalt / CC,8,0.45,19.15262,72.85533,19.1575,72.856,12.0,5.0,72,123250,43.0,0.186
+SEG_WEH_022,Western Express Highway - Section 22 (K/E),WEH,K/E,Mastic Asphalt / CC,8,0.55,19.1575,72.856,19.16238,72.85667,11.79,1.0,90,131950,56.0,0.157
+SEG_WEH_023,Western Express Highway - Section 23 (P/S),WEH,P/S,Mastic Asphalt / CC,8,0.65,19.16238,72.85667,19.16726,72.85733,12.78,8.0,59,140650,69.0,0.207
+SEG_WEH_024,Western Express Highway - Section 24 (R/C),WEH,R/C,Mastic Asphalt / CC,8,0.75,19.16726,72.85733,19.17214,72.858,13.77,4.0,77,149350,82.0,0.179
+SEG_WEH_025,Western Express Highway - Section 25 (R/N),WEH,R/N,Mastic Asphalt / CC,8,0.45,19.17214,72.858,19.17702,72.85867,13.56,11.0,50,158049,15.0,0.229
+SEG_WEH_026,Western Express Highway - Section 26 (H/E),WEH,H/E,Mastic Asphalt / CC,8,0.55,19.17702,72.85867,19.1819,72.85933,14.5,7.0,63,123250,28.0,0.2
+SEG_WEH_027,Western Express Highway - Section 27 (K/E),WEH,K/E,Mastic Asphalt / CC,8,0.65,19.1819,72.85933,19.18679,72.86,14.5,3.0,81,131950,41.0,0.171
+SEG_WEH_028,Western Express Highway - Section 28 (P/S),WEH,P/S,Mastic Asphalt / CC,8,0.75,19.18679,72.86,19.19167,72.86067,14.5,10.0,50,140650,54.0,0.221
+SEG_WEH_029,Western Express Highway - Section 29 (R/C),WEH,R/C,Mastic Asphalt / CC,8,0.45,19.19167,72.86067,19.19655,72.86133,14.5,6.0,68,149350,67.0,0.193
+SEG_WEH_030,Western Express Highway - Section 30 (R/N),WEH,R/N,Mastic Asphalt / CC,8,0.55,19.19655,72.86133,19.20143,72.862,14.5,2.0,86,158049,80.0,0.164
+SEG_WEH_031,Western Express Highway - Section 31 (H/E),WEH,H/E,Mastic Asphalt / CC,8,0.65,19.20143,72.862,19.20631,72.86267,14.5,9.0,54,123250,13.0,0.214
+SEG_WEH_032,Western Express Highway - Section 32 (K/E),WEH,K/E,Mastic Asphalt / CC,8,0.75,19.20631,72.86267,19.21119,72.86333,14.5,5.0,72,131950,26.0,0.186
+SEG_WEH_033,Western Express Highway - Section 33 (P/S),WEH,P/S,Mastic Asphalt / CC,8,0.45,19.21119,72.86333,19.21607,72.864,14.5,1.0,90,140650,39.0,0.157
+SEG_WEH_034,Western Express Highway - Section 34 (R/C),WEH,R/C,Mastic Asphalt / CC,8,0.55,19.21607,72.864,19.22095,72.86467,14.5,8.0,59,149350,52.0,0.207
+SEG_WEH_035,Western Express Highway - Section 35 (R/N),WEH,R/N,Mastic Asphalt / CC,8,0.65,19.22095,72.86467,19.22583,72.86533,14.5,4.0,77,158049,65.0,0.179
+SEG_WEH_036,Western Express Highway - Section 36 (H/E),WEH,H/E,Mastic Asphalt / CC,8,0.75,19.22583,72.86533,19.23071,72.866,14.5,11.0,50,123250,78.0,0.229
+SEG_WEH_037,Western Express Highway - Section 37 (K/E),WEH,K/E,Mastic Asphalt / CC,8,0.45,19.23071,72.866,19.2356,72.86667,14.5,7.0,63,131950,11.0,0.2
+SEG_WEH_038,Western Express Highway - Section 38 (P/S),WEH,P/S,Mastic Asphalt / CC,8,0.55,19.2356,72.86667,19.24048,72.86733,14.5,3.0,81,140650,24.0,0.171
+SEG_WEH_039,Western Express Highway - Section 39 (R/C),WEH,R/C,Mastic Asphalt / CC,8,0.65,19.24048,72.86733,19.24536,72.868,14.5,10.0,50,149350,37.0,0.221
+SEG_WEH_040,Western Express Highway - Section 40 (R/N),WEH,R/N,Mastic Asphalt / CC,8,0.75,19.24536,72.868,19.25024,72.86867,14.5,6.0,68,158049,50.0,0.193
+SEG_WEH_041,Western Express Highway - Section 41 (H/E),WEH,H/E,Mastic Asphalt / CC,8,0.45,19.25024,72.86867,19.25512,72.86933,14.5,2.0,86,123250,63.0,0.164
+SEG_WEH_042,Western Express Highway - Section 42 (K/E),WEH,K/E,Mastic Asphalt / CC,8,0.55,19.25512,72.86933,19.26,72.87,14.5,9.0,54,131950,76.0,0.214
+SEG_EEH_001,Eastern Express Highway - Section 1 (F/N),EEH,F/N,Asphalt Over CC Base,8,0.45,19.038,72.862,19.04279,72.86484,5.64,5.0,52,110500,89.0,0.43
+SEG_EEH_002,Eastern Express Highway - Section 2 (L),EEH,L,Asphalt Over CC Base,8,0.55,19.04279,72.86484,19.04758,72.86768,5.41,1.0,82,118299,22.0,0.366
+SEG_EEH_003,Eastern Express Highway - Section 3 (N),EEH,N,Asphalt Over CC Base,8,0.65,19.04758,72.86768,19.05237,72.87053,5.21,8.0,30,126100,35.0,0.478
+SEG_EEH_004,Eastern Express Highway - Section 4 (S),EEH,S,Asphalt Over CC Base,8,0.75,19.05237,72.87053,19.05716,72.87337,3.84,4.0,60,133900,48.0,0.414
+SEG_EEH_005,Eastern Express Highway - Section 5 (T),EEH,T,Asphalt Over CC Base,8,0.45,19.05716,72.87337,19.06195,72.87621,3.78,11.0,30,141699,61.0,0.526
+SEG_EEH_006,Eastern Express Highway - Section 6 (F/N),EEH,F/N,Asphalt Over CC Base,8,0.55,19.06195,72.87621,19.06674,72.87905,3.94,7.0,37,110500,74.0,0.462
+SEG_EEH_007,Eastern Express Highway - Section 7 (L),EEH,L,Asphalt Over CC Base,8,0.65,19.06674,72.87905,19.07153,72.88189,3.26,3.0,67,118299,87.0,0.398
+SEG_EEH_008,Eastern Express Highway - Section 8 (N),EEH,N,Asphalt Over CC Base,8,0.75,19.07153,72.88189,19.07632,72.88474,4.07,10.0,30,126100,20.0,0.51
+SEG_EEH_009,Eastern Express Highway - Section 9 (S),EEH,S,Asphalt Over CC Base,8,0.45,19.07632,72.88474,19.08111,72.88758,5.0,6.0,45,133900,33.0,0.446
+SEG_EEH_010,Eastern Express Highway - Section 10 (T),EEH,T,Asphalt Over CC Base,8,0.55,19.08111,72.88758,19.08589,72.89042,4.8,2.0,75,141699,46.0,0.382
+SEG_EEH_011,Eastern Express Highway - Section 11 (F/N),EEH,F/N,Asphalt Over CC Base,8,0.65,19.08589,72.89042,19.09068,72.89326,5.82,9.0,30,110500,59.0,0.494
+SEG_EEH_012,Eastern Express Highway - Section 12 (L),EEH,L,Asphalt Over CC Base,8,0.75,19.09068,72.89326,19.09547,72.89611,6.86,5.0,52,118299,72.0,0.43
+SEG_EEH_013,Eastern Express Highway - Section 13 (N),EEH,N,Asphalt Over CC Base,8,0.45,19.09547,72.89611,19.10026,72.89895,6.7,1.0,82,126100,85.0,0.366
+SEG_EEH_014,Eastern Express Highway - Section 14 (S),EEH,S,Asphalt Over CC Base,8,0.55,19.10026,72.89895,19.10505,72.90179,7.75,8.0,30,133900,18.0,0.478
+SEG_EEH_015,Eastern Express Highway - Section 15 (T),EEH,T,Asphalt Over CC Base,8,0.65,19.10505,72.90179,19.10984,72.90463,8.81,4.0,60,141699,31.0,0.414
+SEG_EEH_016,Eastern Express Highway - Section 16 (F/N),EEH,F/N,Asphalt Over CC Base,8,0.75,19.10984,72.90463,19.11463,72.90747,8.66,11.0,30,110500,44.0,0.526
+SEG_EEH_017,Eastern Express Highway - Section 17 (L),EEH,L,Asphalt Over CC Base,8,0.45,19.11463,72.90747,19.11942,72.91032,9.72,7.0,37,118299,57.0,0.462
+SEG_EEH_018,Eastern Express Highway - Section 18 (N),EEH,N,Asphalt Over CC Base,8,0.55,19.11942,72.91032,19.12421,72.91316,10.78,3.0,67,126100,70.0,0.398
+SEG_EEH_019,Eastern Express Highway - Section 19 (S),EEH,S,Asphalt Over CC Base,8,0.65,19.12421,72.91316,19.129,72.916,10.65,10.0,30,133900,83.0,0.51
+SEG_EEH_020,Eastern Express Highway - Section 20 (T),EEH,T,Asphalt Over CC Base,8,0.75,19.129,72.916,19.13379,72.91884,11.71,6.0,45,141699,16.0,0.446
+SEG_EEH_021,Eastern Express Highway - Section 21 (F/N),EEH,F/N,Asphalt Over CC Base,8,0.45,19.13379,72.91884,19.13858,72.92168,12.77,2.0,75,110500,29.0,0.382
+SEG_EEH_022,Eastern Express Highway - Section 22 (L),EEH,L,Asphalt Over CC Base,8,0.55,19.13858,72.92168,19.14337,72.92453,12.64,9.0,30,118299,42.0,0.494
+SEG_EEH_023,Eastern Express Highway - Section 23 (N),EEH,N,Asphalt Over CC Base,8,0.65,19.14337,72.92453,19.14816,72.92737,13.7,5.0,52,126100,55.0,0.43
+SEG_EEH_024,Eastern Express Highway - Section 24 (S),EEH,S,Asphalt Over CC Base,8,0.75,19.14816,72.92737,19.15295,72.93021,14.5,1.0,82,133900,68.0,0.366
+SEG_EEH_025,Eastern Express Highway - Section 25 (T),EEH,T,Asphalt Over CC Base,8,0.45,19.15295,72.93021,19.15774,72.93305,14.5,8.0,30,141699,81.0,0.478
+SEG_EEH_026,Eastern Express Highway - Section 26 (F/N),EEH,F/N,Asphalt Over CC Base,8,0.55,19.15774,72.93305,19.16253,72.93589,14.5,4.0,60,110500,14.0,0.414
+SEG_EEH_027,Eastern Express Highway - Section 27 (L),EEH,L,Asphalt Over CC Base,8,0.65,19.16253,72.93589,19.16732,72.93874,14.5,11.0,30,118299,27.0,0.526
+SEG_EEH_028,Eastern Express Highway - Section 28 (N),EEH,N,Asphalt Over CC Base,8,0.75,19.16732,72.93874,19.17211,72.94158,14.5,7.0,37,126100,40.0,0.462
+SEG_EEH_029,Eastern Express Highway - Section 29 (S),EEH,S,Asphalt Over CC Base,8,0.45,19.17211,72.94158,19.17689,72.94442,14.5,3.0,67,133900,53.0,0.398
+SEG_EEH_030,Eastern Express Highway - Section 30 (T),EEH,T,Asphalt Over CC Base,8,0.55,19.17689,72.94442,19.18168,72.94726,14.5,10.0,30,141699,66.0,0.51
+SEG_EEH_031,Eastern Express Highway - Section 31 (F/N),EEH,F/N,Asphalt Over CC Base,8,0.65,19.18168,72.94726,19.18647,72.95011,14.5,6.0,45,110500,79.0,0.446
+SEG_EEH_032,Eastern Express Highway - Section 32 (L),EEH,L,Asphalt Over CC Base,8,0.75,19.18647,72.95011,19.19126,72.95295,14.5,2.0,75,118299,12.0,0.382
+SEG_EEH_033,Eastern Express Highway - Section 33 (N),EEH,N,Asphalt Over CC Base,8,0.45,19.19126,72.95295,19.19605,72.95579,14.5,9.0,30,126100,25.0,0.494
+SEG_EEH_034,Eastern Express Highway - Section 34 (S),EEH,S,Asphalt Over CC Base,8,0.55,19.19605,72.95579,19.20084,72.95863,14.5,5.0,52,133900,38.0,0.43
+SEG_EEH_035,Eastern Express Highway - Section 35 (T),EEH,T,Asphalt Over CC Base,8,0.65,19.20084,72.95863,19.20563,72.96147,14.5,1.0,82,141699,51.0,0.366
+SEG_EEH_036,Eastern Express Highway - Section 36 (F/N),EEH,F/N,Asphalt Over CC Base,8,0.75,19.20563,72.96147,19.21042,72.96432,14.5,8.0,30,110500,64.0,0.478
+SEG_EEH_037,Eastern Express Highway - Section 37 (L),EEH,L,Asphalt Over CC Base,8,0.45,19.21042,72.96432,19.21521,72.96716,14.5,4.0,60,118299,77.0,0.414
+SEG_EEH_038,Eastern Express Highway - Section 38 (N),EEH,N,Asphalt Over CC Base,8,0.55,19.21521,72.96716,19.22,72.97,14.5,11.0,30,126100,10.0,0.526
+SEG_SVR_001,Swami Vivekanand (SV) Road - Section 1 (H/W),SVR,H/W,Bituminous Asphalt,4,0.45,19.055,72.836,19.06028,72.83653,4.72,7.0,37,72250,23.0,0.462
+SEG_SVR_002,Swami Vivekanand (SV) Road - Section 2 (K/W),SVR,K/W,Bituminous Asphalt,4,0.55,19.06028,72.83653,19.06556,72.83706,4.49,3.0,67,77350,36.0,0.398
+SEG_SVR_003,Swami Vivekanand (SV) Road - Section 3 (P/N),SVR,P/N,Bituminous Asphalt,4,0.65,19.06556,72.83706,19.07083,72.83758,4.25,10.0,30,82450,49.0,0.51
+SEG_SVR_004,Swami Vivekanand (SV) Road - Section 4 (R/C),SVR,R/C,Bituminous Asphalt,4,0.75,19.07083,72.83758,19.07611,72.83811,2.82,6.0,45,87550,62.0,0.446
+SEG_SVR_005,Swami Vivekanand (SV) Road - Section 5 (H/W),SVR,H/W,Bituminous Asphalt,4,0.45,19.07611,72.83811,19.08139,72.83864,2.65,2.0,75,92649,75.0,0.382
+SEG_SVR_006,Swami Vivekanand (SV) Road - Section 6 (K/W),SVR,K/W,Bituminous Asphalt,4,0.55,19.08139,72.83864,19.08667,72.83917,3.3,9.0,30,72250,88.0,0.494
+SEG_SVR_007,Swami Vivekanand (SV) Road - Section 7 (P/N),SVR,P/N,Bituminous Asphalt,4,0.65,19.08667,72.83917,19.09194,72.83969,3.12,5.0,52,77350,21.0,0.43
+SEG_SVR_008,Swami Vivekanand (SV) Road - Section 8 (R/C),SVR,R/C,Bituminous Asphalt,4,0.75,19.09194,72.83969,19.09722,72.84022,4.15,1.0,82,82450,34.0,0.366
+SEG_SVR_009,Swami Vivekanand (SV) Road - Section 9 (H/W),SVR,H/W,Bituminous Asphalt,4,0.45,19.09722,72.84022,19.1025,72.84075,5.18,8.0,30,87550,47.0,0.478
+SEG_SVR_010,Swami Vivekanand (SV) Road - Section 10 (K/W),SVR,K/W,Bituminous Asphalt,4,0.55,19.1025,72.84075,19.10778,72.84128,5.02,4.0,60,92649,60.0,0.414
+SEG_SVR_011,Swami Vivekanand (SV) Road - Section 11 (P/N),SVR,P/N,Bituminous Asphalt,4,0.65,19.10778,72.84128,19.11306,72.84181,6.05,11.0,30,72250,73.0,0.526
+SEG_SVR_012,Swami Vivekanand (SV) Road - Section 12 (R/C),SVR,R/C,Bituminous Asphalt,4,0.75,19.11306,72.84181,19.11833,72.84233,7.09,7.0,37,77350,86.0,0.462
+SEG_SVR_013,Swami Vivekanand (SV) Road - Section 13 (H/W),SVR,H/W,Bituminous Asphalt,4,0.45,19.11833,72.84233,19.12361,72.84286,6.93,3.0,67,82450,19.0,0.398
+SEG_SVR_014,Swami Vivekanand (SV) Road - Section 14 (K/W),SVR,K/W,Bituminous Asphalt,4,0.55,19.12361,72.84286,19.12889,72.84339,7.96,10.0,30,87550,32.0,0.51
+SEG_SVR_015,Swami Vivekanand (SV) Road - Section 15 (P/N),SVR,P/N,Bituminous Asphalt,4,0.65,19.12889,72.84339,19.13417,72.84392,9.0,6.0,45,92649,45.0,0.446
+SEG_SVR_016,Swami Vivekanand (SV) Road - Section 16 (R/C),SVR,R/C,Bituminous Asphalt,4,0.75,19.13417,72.84392,19.13944,72.84444,8.84,2.0,75,72250,58.0,0.382
+SEG_SVR_017,Swami Vivekanand (SV) Road - Section 17 (H/W),SVR,H/W,Bituminous Asphalt,4,0.45,19.13944,72.84444,19.14472,72.84497,9.87,9.0,30,77350,71.0,0.494
+SEG_SVR_018,Swami Vivekanand (SV) Road - Section 18 (K/W),SVR,K/W,Bituminous Asphalt,4,0.55,19.14472,72.84497,19.15,72.8455,10.91,5.0,52,82450,84.0,0.43
+SEG_SVR_019,Swami Vivekanand (SV) Road - Section 19 (P/N),SVR,P/N,Bituminous Asphalt,4,0.65,19.15,72.8455,19.15528,72.84603,10.74,1.0,82,87550,17.0,0.366
+SEG_SVR_020,Swami Vivekanand (SV) Road - Section 20 (R/C),SVR,R/C,Bituminous Asphalt,4,0.75,19.15528,72.84603,19.16056,72.84656,11.78,8.0,30,92649,30.0,0.478
+SEG_SVR_021,Swami Vivekanand (SV) Road - Section 21 (H/W),SVR,H/W,Bituminous Asphalt,4,0.45,19.16056,72.84656,19.16583,72.84708,12.82,4.0,60,72250,43.0,0.414
+SEG_SVR_022,Swami Vivekanand (SV) Road - Section 22 (K/W),SVR,K/W,Bituminous Asphalt,4,0.55,19.16583,72.84708,19.17111,72.84761,12.65,11.0,30,77350,56.0,0.526
+SEG_SVR_023,Swami Vivekanand (SV) Road - Section 23 (P/N),SVR,P/N,Bituminous Asphalt,4,0.65,19.17111,72.84761,19.17639,72.84814,13.69,7.0,37,82450,69.0,0.462
+SEG_SVR_024,Swami Vivekanand (SV) Road - Section 24 (R/C),SVR,R/C,Bituminous Asphalt,4,0.75,19.17639,72.84814,19.18167,72.84867,14.5,3.0,67,87550,82.0,0.398
+SEG_SVR_025,Swami Vivekanand (SV) Road - Section 25 (H/W),SVR,H/W,Bituminous Asphalt,4,0.45,19.18167,72.84867,19.18694,72.84919,14.5,10.0,30,92649,15.0,0.51
+SEG_SVR_026,Swami Vivekanand (SV) Road - Section 26 (K/W),SVR,K/W,Bituminous Asphalt,4,0.55,19.18694,72.84919,19.19222,72.84972,14.5,6.0,45,72250,28.0,0.446
+SEG_SVR_027,Swami Vivekanand (SV) Road - Section 27 (P/N),SVR,P/N,Bituminous Asphalt,4,0.65,19.19222,72.84972,19.1975,72.85025,14.5,2.0,75,77350,41.0,0.382
+SEG_SVR_028,Swami Vivekanand (SV) Road - Section 28 (R/C),SVR,R/C,Bituminous Asphalt,4,0.75,19.1975,72.85025,19.20278,72.85078,14.5,9.0,30,82450,54.0,0.494
+SEG_SVR_029,Swami Vivekanand (SV) Road - Section 29 (H/W),SVR,H/W,Bituminous Asphalt,4,0.45,19.20278,72.85078,19.20806,72.85131,14.5,5.0,52,87550,67.0,0.43
+SEG_SVR_030,Swami Vivekanand (SV) Road - Section 30 (K/W),SVR,K/W,Bituminous Asphalt,4,0.55,19.20806,72.85131,19.21333,72.85183,14.5,1.0,82,92649,80.0,0.366
+SEG_SVR_031,Swami Vivekanand (SV) Road - Section 31 (P/N),SVR,P/N,Bituminous Asphalt,4,0.65,19.21333,72.85183,19.21861,72.85236,14.5,8.0,30,72250,13.0,0.478
+SEG_SVR_032,Swami Vivekanand (SV) Road - Section 32 (R/C),SVR,R/C,Bituminous Asphalt,4,0.75,19.21861,72.85236,19.22389,72.85289,14.5,4.0,60,77350,26.0,0.414
+SEG_SVR_033,Swami Vivekanand (SV) Road - Section 33 (H/W),SVR,H/W,Bituminous Asphalt,4,0.45,19.22389,72.85289,19.22917,72.85342,14.5,11.0,30,82450,39.0,0.526
+SEG_SVR_034,Swami Vivekanand (SV) Road - Section 34 (K/W),SVR,K/W,Bituminous Asphalt,4,0.55,19.22917,72.85342,19.23444,72.85394,14.5,7.0,37,87550,52.0,0.462
+SEG_SVR_035,Swami Vivekanand (SV) Road - Section 35 (P/N),SVR,P/N,Bituminous Asphalt,4,0.65,19.23444,72.85394,19.23972,72.85447,14.5,3.0,67,92649,65.0,0.398
+SEG_SVR_036,Swami Vivekanand (SV) Road - Section 36 (R/C),SVR,R/C,Bituminous Asphalt,4,0.75,19.23972,72.85447,19.245,72.855,14.5,10.0,30,72250,78.0,0.51
+SEG_LBS_001,LBS Marg - Section 1 (G/N),LBS,G/N,Bituminous Asphalt,4,0.45,19.04,72.87,19.045,72.87257,5.3,6.0,45,78200,11.0,0.446
+SEG_LBS_002,LBS Marg - Section 2 (L),LBS,L,Bituminous Asphalt,4,0.55,19.045,72.87257,19.05,72.87514,5.14,2.0,75,83719,24.0,0.382
+SEG_LBS_003,LBS Marg - Section 3 (N),LBS,N,Bituminous Asphalt,4,0.65,19.05,72.87514,19.055,72.87771,5.04,9.0,30,89240,37.0,0.494
+SEG_LBS_004,LBS Marg - Section 4 (S),LBS,S,Bituminous Asphalt,4,0.75,19.055,72.87771,19.06,72.88029,3.85,5.0,52,94760,50.0,0.43
+SEG_LBS_005,LBS Marg - Section 5 (T),LBS,T,Bituminous Asphalt,4,0.45,19.06,72.88029,19.065,72.88286,4.05,1.0,82,100279,63.0,0.366
+SEG_LBS_006,LBS Marg - Section 6 (G/N),LBS,G/N,Bituminous Asphalt,4,0.55,19.065,72.88286,19.07,72.88543,4.52,8.0,30,78200,76.0,0.478
+SEG_LBS_007,LBS Marg - Section 7 (L),LBS,L,Bituminous Asphalt,4,0.65,19.07,72.88543,19.075,72.888,4.03,4.0,60,83719,89.0,0.414
+SEG_LBS_008,LBS Marg - Section 8 (N),LBS,N,Bituminous Asphalt,4,0.75,19.075,72.888,19.08,72.89057,4.88,11.0,30,89240,22.0,0.526
+SEG_LBS_009,LBS Marg - Section 9 (S),LBS,S,Bituminous Asphalt,4,0.45,19.08,72.89057,19.085,72.89314,5.82,7.0,37,94760,35.0,0.462
+SEG_LBS_010,LBS Marg - Section 10 (T),LBS,T,Bituminous Asphalt,4,0.55,19.085,72.89314,19.09,72.89571,5.61,3.0,67,100279,48.0,0.398
+SEG_LBS_011,LBS Marg - Section 11 (G/N),LBS,G/N,Bituminous Asphalt,4,0.65,19.09,72.89571,19.095,72.89829,6.62,10.0,30,78200,61.0,0.51
+SEG_LBS_012,LBS Marg - Section 12 (L),LBS,L,Bituminous Asphalt,4,0.75,19.095,72.89829,19.1,72.90086,7.65,6.0,45,83719,74.0,0.446
+SEG_LBS_013,LBS Marg - Section 13 (N),LBS,N,Bituminous Asphalt,4,0.45,19.1,72.90086,19.105,72.90343,7.49,2.0,75,89240,87.0,0.382
+SEG_LBS_014,LBS Marg - Section 14 (S),LBS,S,Bituminous Asphalt,4,0.55,19.105,72.90343,19.11,72.906,8.53,9.0,30,94760,20.0,0.494
+SEG_LBS_015,LBS Marg - Section 15 (T),LBS,T,Bituminous Asphalt,4,0.65,19.11,72.906,19.115,72.90857,9.58,5.0,52,100279,33.0,0.43
+SEG_LBS_016,LBS Marg - Section 16 (G/N),LBS,G/N,Bituminous Asphalt,4,0.75,19.115,72.90857,19.12,72.91114,9.44,1.0,82,78200,46.0,0.366
+SEG_LBS_017,LBS Marg - Section 17 (L),LBS,L,Bituminous Asphalt,4,0.45,19.12,72.91114,19.125,72.91371,10.5,8.0,30,83719,59.0,0.478
+SEG_LBS_018,LBS Marg - Section 18 (N),LBS,N,Bituminous Asphalt,4,0.55,19.125,72.91371,19.13,72.91629,11.56,4.0,60,89240,72.0,0.414
+SEG_LBS_019,LBS Marg - Section 19 (S),LBS,S,Bituminous Asphalt,4,0.65,19.13,72.91629,19.135,72.91886,11.43,11.0,30,94760,85.0,0.526
+SEG_LBS_020,LBS Marg - Section 20 (T),LBS,T,Bituminous Asphalt,4,0.75,19.135,72.91886,19.14,72.92143,12.49,7.0,37,100279,18.0,0.462
+SEG_LBS_021,LBS Marg - Section 21 (G/N),LBS,G/N,Bituminous Asphalt,4,0.45,19.14,72.92143,19.145,72.924,13.56,3.0,67,78200,31.0,0.398
+SEG_LBS_022,LBS Marg - Section 22 (L),LBS,L,Bituminous Asphalt,4,0.55,19.145,72.924,19.15,72.92657,13.42,10.0,30,83719,44.0,0.51
+SEG_LBS_023,LBS Marg - Section 23 (N),LBS,N,Bituminous Asphalt,4,0.65,19.15,72.92657,19.155,72.92914,14.49,6.0,45,89240,57.0,0.446
+SEG_LBS_024,LBS Marg - Section 24 (S),LBS,S,Bituminous Asphalt,4,0.75,19.155,72.92914,19.16,72.93171,14.5,2.0,75,94760,70.0,0.382
+SEG_LBS_025,LBS Marg - Section 25 (T),LBS,T,Bituminous Asphalt,4,0.45,19.16,72.93171,19.165,72.93429,14.5,9.0,30,100279,83.0,0.494
+SEG_LBS_026,LBS Marg - Section 26 (G/N),LBS,G/N,Bituminous Asphalt,4,0.55,19.165,72.93429,19.17,72.93686,14.5,5.0,52,78200,16.0,0.43
+SEG_LBS_027,LBS Marg - Section 27 (L),LBS,L,Bituminous Asphalt,4,0.65,19.17,72.93686,19.175,72.93943,14.5,1.0,82,83719,29.0,0.366
+SEG_LBS_028,LBS Marg - Section 28 (N),LBS,N,Bituminous Asphalt,4,0.75,19.175,72.93943,19.18,72.942,14.5,8.0,30,89240,42.0,0.478
+SEG_LBS_029,LBS Marg - Section 29 (S),LBS,S,Bituminous Asphalt,4,0.45,19.18,72.942,19.185,72.94457,14.5,4.0,60,94760,55.0,0.414
+SEG_LBS_030,LBS Marg - Section 30 (T),LBS,T,Bituminous Asphalt,4,0.55,19.185,72.94457,19.19,72.94714,14.5,11.0,30,100279,68.0,0.526
+SEG_LBS_031,LBS Marg - Section 31 (G/N),LBS,G/N,Bituminous Asphalt,4,0.65,19.19,72.94714,19.195,72.94971,14.5,7.0,37,78200,81.0,0.462
+SEG_LBS_032,LBS Marg - Section 32 (L),LBS,L,Bituminous Asphalt,4,0.75,19.195,72.94971,19.2,72.95229,14.5,3.0,67,83719,14.0,0.398
+SEG_LBS_033,LBS Marg - Section 33 (N),LBS,N,Bituminous Asphalt,4,0.45,19.2,72.95229,19.205,72.95486,14.5,10.0,30,89240,27.0,0.51
+SEG_LBS_034,LBS Marg - Section 34 (S),LBS,S,Bituminous Asphalt,4,0.55,19.205,72.95486,19.21,72.95743,14.5,6.0,45,94760,40.0,0.446
+SEG_LBS_035,LBS Marg - Section 35 (T),LBS,T,Bituminous Asphalt,4,0.65,19.21,72.95743,19.215,72.96,14.5,2.0,75,100279,53.0,0.382
+SEG_BAR_001,Dr. Babasaheb Ambedkar Road - Section 1 (F/S),BAR,F/S,Cement Concrete,6,0.45,18.96,72.835,18.964,72.83625,7.78,9.0,80,93500,66.0,0.068
+SEG_BAR_002,Dr. Babasaheb Ambedkar Road - Section 2 (F/N),BAR,F/N,Cement Concrete,6,0.55,18.964,72.83625,18.968,72.8375,7.69,5.0,89,100099,79.0,0.06
+SEG_BAR_003,Dr. Babasaheb Ambedkar Road - Section 3 (F/S),BAR,F/S,Cement Concrete,6,0.65,18.968,72.8375,18.972,72.83875,7.61,1.0,97,106700,12.0,0.052
+SEG_BAR_004,Dr. Babasaheb Ambedkar Road - Section 4 (F/N),BAR,F/N,Cement Concrete,6,0.75,18.972,72.83875,18.976,72.84,6.32,8.0,82,113300,25.0,0.066
+SEG_BAR_005,Dr. Babasaheb Ambedkar Road - Section 5 (F/S),BAR,F/S,Cement Concrete,6,0.45,18.976,72.84,18.98,72.84125,6.24,4.0,91,119899,38.0,0.058
+SEG_BAR_006,Dr. Babasaheb Ambedkar Road - Section 6 (F/N),BAR,F/N,Cement Concrete,6,0.55,18.98,72.84125,18.984,72.8425,6.17,11.0,75,93500,51.0,0.072
+SEG_BAR_007,Dr. Babasaheb Ambedkar Road - Section 7 (F/S),BAR,F/S,Cement Concrete,6,0.65,18.984,72.8425,18.988,72.84375,4.9,7.0,84,100099,64.0,0.064
+SEG_BAR_008,Dr. Babasaheb Ambedkar Road - Section 8 (F/N),BAR,F/N,Cement Concrete,6,0.75,18.988,72.84375,18.992,72.845,4.86,3.0,93,106700,77.0,0.056
+SEG_BAR_009,Dr. Babasaheb Ambedkar Road - Section 9 (F/S),BAR,F/S,Cement Concrete,6,0.45,18.992,72.845,18.996,72.84625,4.84,10.0,78,113300,10.0,0.07
+SEG_BAR_010,Dr. Babasaheb Ambedkar Road - Section 10 (F/N),BAR,F/N,Cement Concrete,6,0.55,18.996,72.84625,19.0,72.8475,3.66,6.0,86,119899,23.0,0.062
+SEG_BAR_011,Dr. Babasaheb Ambedkar Road - Section 11 (F/S),BAR,F/S,Cement Concrete,6,0.65,19.0,72.8475,19.004,72.84875,3.77,2.0,95,93500,36.0,0.054
+SEG_BAR_012,Dr. Babasaheb Ambedkar Road - Section 12 (F/N),BAR,F/N,Cement Concrete,6,0.75,19.004,72.84875,19.008,72.85,4.02,9.0,80,100099,49.0,0.068
+SEG_BAR_013,Dr. Babasaheb Ambedkar Road - Section 13 (F/S),BAR,F/S,Cement Concrete,6,0.45,19.008,72.85,19.012,72.85125,3.27,5.0,89,106700,62.0,0.06
+SEG_BAR_014,Dr. Babasaheb Ambedkar Road - Section 14 (F/N),BAR,F/N,Cement Concrete,6,0.55,19.012,72.85125,19.016,72.8525,3.9,1.0,97,113300,75.0,0.052
+SEG_BAR_015,Dr. Babasaheb Ambedkar Road - Section 15 (F/S),BAR,F/S,Cement Concrete,6,0.65,19.016,72.8525,19.02,72.85375,4.64,8.0,82,119899,88.0,0.066
+SEG_BAR_016,Dr. Babasaheb Ambedkar Road - Section 16 (F/N),BAR,F/N,Cement Concrete,6,0.75,19.02,72.85375,19.024,72.855,4.25,4.0,91,93500,21.0,0.058
+SEG_BAR_017,Dr. Babasaheb Ambedkar Road - Section 17 (F/S),BAR,F/S,Cement Concrete,6,0.45,19.024,72.855,19.028,72.85625,5.08,11.0,75,100099,34.0,0.072
+SEG_BAR_018,Dr. Babasaheb Ambedkar Road - Section 18 (F/N),BAR,F/N,Cement Concrete,6,0.55,19.028,72.85625,19.032,72.8575,5.94,7.0,84,106700,47.0,0.064
+SEG_BAR_019,Dr. Babasaheb Ambedkar Road - Section 19 (F/S),BAR,F/S,Cement Concrete,6,0.65,19.032,72.8575,19.036,72.85875,5.61,3.0,93,113300,60.0,0.056
+SEG_BAR_020,Dr. Babasaheb Ambedkar Road - Section 20 (F/N),BAR,F/N,Cement Concrete,6,0.75,19.036,72.85875,19.04,72.86,6.45,10.0,78,119899,73.0,0.07
+SEG_LNK_001,Linking Road Bandra-Juhu - Section 1 (H/W),LNK,H/W,Bituminous Asphalt,4,0.45,19.06,72.832,19.06312,72.83219,4.41,6.0,45,55250,86.0,0.446
+SEG_LNK_002,Linking Road Bandra-Juhu - Section 2 (K/W),LNK,K/W,Bituminous Asphalt,4,0.55,19.06312,72.83219,19.06625,72.83237,4.46,2.0,75,59149,19.0,0.382
+SEG_LNK_003,Linking Road Bandra-Juhu - Section 3 (H/W),LNK,H/W,Bituminous Asphalt,4,0.65,19.06625,72.83237,19.06937,72.83256,4.52,9.0,30,63050,32.0,0.494
+SEG_LNK_004,Linking Road Bandra-Juhu - Section 4 (K/W),LNK,K/W,Bituminous Asphalt,4,0.75,19.06937,72.83256,19.0725,72.83275,3.4,5.0,52,66950,45.0,0.43
+SEG_LNK_005,Linking Road Bandra-Juhu - Section 5 (H/W),LNK,H/W,Bituminous Asphalt,4,0.45,19.0725,72.83275,19.07562,72.83294,3.52,1.0,82,70849,58.0,0.366
+SEG_LNK_006,Linking Road Bandra-Juhu - Section 6 (K/W),LNK,K/W,Bituminous Asphalt,4,0.55,19.07562,72.83294,19.07875,72.83312,3.7,8.0,30,55250,71.0,0.478
+SEG_LNK_007,Linking Road Bandra-Juhu - Section 7 (H/W),LNK,H/W,Bituminous Asphalt,4,0.65,19.07875,72.83312,19.08188,72.83331,2.81,4.0,60,59149,84.0,0.414
+SEG_LNK_008,Linking Road Bandra-Juhu - Section 8 (K/W),LNK,K/W,Bituminous Asphalt,4,0.75,19.08188,72.83331,19.085,72.8335,3.29,11.0,30,63050,17.0,0.526
+SEG_LNK_009,Linking Road Bandra-Juhu - Section 9 (H/W),LNK,H/W,Bituminous Asphalt,4,0.45,19.085,72.8335,19.08812,72.83369,3.9,7.0,37,66950,30.0,0.462
+SEG_LNK_010,Linking Road Bandra-Juhu - Section 10 (K/W),LNK,K/W,Bituminous Asphalt,4,0.55,19.08812,72.83369,19.09125,72.83387,3.38,3.0,67,70849,43.0,0.398
+SEG_LNK_011,Linking Road Bandra-Juhu - Section 11 (H/W),LNK,H/W,Bituminous Asphalt,4,0.65,19.09125,72.83387,19.09437,72.83406,4.1,10.0,30,55250,56.0,0.51
+SEG_LNK_012,Linking Road Bandra-Juhu - Section 12 (K/W),LNK,K/W,Bituminous Asphalt,4,0.75,19.09437,72.83406,19.0975,72.83425,4.84,6.0,45,59149,69.0,0.446
+SEG_LNK_013,Linking Road Bandra-Juhu - Section 13 (H/W),LNK,H/W,Bituminous Asphalt,4,0.45,19.0975,72.83425,19.10063,72.83444,4.39,2.0,75,63050,82.0,0.382
+SEG_LNK_014,Linking Road Bandra-Juhu - Section 14 (K/W),LNK,K/W,Bituminous Asphalt,4,0.55,19.10063,72.83444,19.10375,72.83462,5.14,9.0,30,66950,15.0,0.494
+SEG_LNK_015,Linking Road Bandra-Juhu - Section 15 (H/W),LNK,H/W,Bituminous Asphalt,4,0.65,19.10375,72.83462,19.10687,72.83481,5.9,5.0,52,70849,28.0,0.43
+SEG_LNK_016,Linking Road Bandra-Juhu - Section 16 (K/W),LNK,K/W,Bituminous Asphalt,4,0.75,19.10687,72.83481,19.11,72.835,5.47,1.0,82,55250,41.0,0.366
+SEG_SPH_001,Sion-Panvel Highway (Mumbai end) - Section 1 (F/N),SPH,F/N,Mastic Asphalt,6,0.45,19.038,72.865,19.03894,72.86861,5.8,8.0,59,97750,54.0,0.207
+SEG_SPH_002,Sion-Panvel Highway (Mumbai end) - Section 2 (M/E),SPH,M/E,Mastic Asphalt,6,0.55,19.03894,72.86861,19.03989,72.87222,6.07,4.0,77,104649,67.0,0.179
+SEG_SPH_003,Sion-Panvel Highway (Mumbai end) - Section 3 (F/N),SPH,F/N,Mastic Asphalt,6,0.65,19.03989,72.87222,19.04083,72.87583,6.39,11.0,50,111550,80.0,0.229
+SEG_SPH_004,Sion-Panvel Highway (Mumbai end) - Section 4 (M/E),SPH,M/E,Mastic Asphalt,6,0.75,19.04083,72.87583,19.04178,72.87944,5.56,7.0,63,118450,13.0,0.2
+SEG_SPH_005,Sion-Panvel Highway (Mumbai end) - Section 5 (F/N),SPH,F/N,Mastic Asphalt,6,0.45,19.04178,72.87944,19.04272,72.88306,5.99,3.0,81,125349,26.0,0.171
+SEG_SPH_006,Sion-Panvel Highway (Mumbai end) - Section 6 (M/E),SPH,M/E,Mastic Asphalt,6,0.55,19.04272,72.88306,19.04367,72.88667,6.48,10.0,50,97750,39.0,0.221
+SEG_SPH_007,Sion-Panvel Highway (Mumbai end) - Section 7 (F/N),SPH,F/N,Mastic Asphalt,6,0.65,19.04367,72.88667,19.04461,72.89028,5.81,6.0,68,104649,52.0,0.193
+SEG_SPH_008,Sion-Panvel Highway (Mumbai end) - Section 8 (M/E),SPH,M/E,Mastic Asphalt,6,0.75,19.04461,72.89028,19.04556,72.89389,6.4,2.0,86,111550,65.0,0.164
+SEG_SPH_009,Sion-Panvel Highway (Mumbai end) - Section 9 (F/N),SPH,F/N,Mastic Asphalt,6,0.45,19.04556,72.89389,19.0465,72.8975,7.02,9.0,54,118450,78.0,0.214
+SEG_SPH_010,Sion-Panvel Highway (Mumbai end) - Section 10 (M/E),SPH,M/E,Mastic Asphalt,6,0.55,19.0465,72.8975,19.04744,72.90111,6.47,5.0,72,125349,11.0,0.186
+SEG_SPH_011,Sion-Panvel Highway (Mumbai end) - Section 11 (F/N),SPH,F/N,Mastic Asphalt,6,0.65,19.04744,72.90111,19.04839,72.90472,7.16,1.0,90,97750,24.0,0.157
+SEG_SPH_012,Sion-Panvel Highway (Mumbai end) - Section 12 (M/E),SPH,M/E,Mastic Asphalt,6,0.75,19.04839,72.90472,19.04933,72.90833,7.86,8.0,59,104649,37.0,0.207
+SEG_SPH_013,Sion-Panvel Highway (Mumbai end) - Section 13 (F/N),SPH,F/N,Mastic Asphalt,6,0.45,19.04933,72.90833,19.05028,72.91194,7.39,4.0,77,111550,50.0,0.179
+SEG_SPH_014,Sion-Panvel Highway (Mumbai end) - Section 14 (M/E),SPH,M/E,Mastic Asphalt,6,0.55,19.05028,72.91194,19.05122,72.91556,8.14,11.0,50,118450,63.0,0.229
+SEG_SPH_015,Sion-Panvel Highway (Mumbai end) - Section 15 (F/N),SPH,F/N,Mastic Asphalt,6,0.65,19.05122,72.91556,19.05217,72.91917,8.89,7.0,63,125349,76.0,0.2
+SEG_SPH_016,Sion-Panvel Highway (Mumbai end) - Section 16 (M/E),SPH,M/E,Mastic Asphalt,6,0.75,19.05217,72.91917,19.05311,72.92278,8.46,3.0,81,97750,89.0,0.171
+SEG_SPH_017,Sion-Panvel Highway (Mumbai end) - Section 17 (F/N),SPH,F/N,Mastic Asphalt,6,0.45,19.05311,72.92278,19.05406,72.92639,9.24,10.0,50,104649,22.0,0.221
+SEG_SPH_018,Sion-Panvel Highway (Mumbai end) - Section 18 (M/E),SPH,M/E,Mastic Asphalt,6,0.55,19.05406,72.92639,19.055,72.93,10.03,6.0,68,111550,35.0,0.193
+SEG_SCL_001,Santacruz-Chembur Link Road (SCLR) - Section 1 (H/E),SCL,H/E,Cement Concrete,6,0.45,19.075,72.86,19.07442,72.86292,3.17,2.0,95,66300,48.0,0.054
+SEG_SCL_002,Santacruz-Chembur Link Road (SCLR) - Section 2 (L),SCL,L,Cement Concrete,6,0.55,19.07442,72.86292,19.07383,72.86583,3.24,9.0,80,70980,61.0,0.068
+SEG_SCL_003,Santacruz-Chembur Link Road (SCLR) - Section 3 (M/W),SCL,M/W,Cement Concrete,6,0.65,19.07383,72.86583,19.07325,72.86875,3.34,5.0,89,75660,74.0,0.06
+SEG_SCL_004,Santacruz-Chembur Link Road (SCLR) - Section 4 (H/E),SCL,H/E,Cement Concrete,6,0.75,19.07325,72.86875,19.07267,72.87167,2.36,1.0,97,80340,87.0,0.052
+SEG_SCL_005,Santacruz-Chembur Link Road (SCLR) - Section 5 (L),SCL,L,Cement Concrete,6,0.45,19.07267,72.87167,19.07208,72.87458,2.87,8.0,82,85019,20.0,0.066
+SEG_SCL_006,Santacruz-Chembur Link Road (SCLR) - Section 6 (M/W),SCL,M/W,Cement Concrete,6,0.55,19.07208,72.87458,19.0715,72.8775,3.56,4.0,91,66300,33.0,0.058
+SEG_SCL_007,Santacruz-Chembur Link Road (SCLR) - Section 7 (H/E),SCL,H/E,Cement Concrete,6,0.65,19.0715,72.8775,19.07092,72.88042,3.08,11.0,75,70980,46.0,0.072
+SEG_SCL_008,Santacruz-Chembur Link Road (SCLR) - Section 8 (L),SCL,L,Cement Concrete,6,0.75,19.07092,72.88042,19.07033,72.88333,3.83,7.0,84,75660,59.0,0.064
+SEG_SCL_009,Santacruz-Chembur Link Road (SCLR) - Section 9 (M/W),SCL,M/W,Cement Concrete,6,0.45,19.07033,72.88333,19.06975,72.88625,4.58,3.0,93,80340,72.0,0.056
+SEG_SCL_010,Santacruz-Chembur Link Road (SCLR) - Section 10 (H/E),SCL,H/E,Cement Concrete,6,0.55,19.06975,72.88625,19.06917,72.88917,4.13,10.0,78,85019,85.0,0.07
+SEG_SCL_011,Santacruz-Chembur Link Road (SCLR) - Section 11 (L),SCL,L,Cement Concrete,6,0.65,19.06917,72.88917,19.06858,72.89208,4.88,6.0,86,66300,18.0,0.062
+SEG_SCL_012,Santacruz-Chembur Link Road (SCLR) - Section 12 (M/W),SCL,M/W,Cement Concrete,6,0.75,19.06858,72.89208,19.068,72.895,5.63,2.0,95,70980,31.0,0.054
+SEG_JVL_001,Jogeshwari-Vikhroli Link Road (JVLR) - Section 1 (K/E),JVL,K/E,Cement Concrete,6,0.45,19.135,72.855,19.13455,72.85841,8.87,9.0,80,80750,44.0,0.068
+SEG_JVL_002,Jogeshwari-Vikhroli Link Road (JVLR) - Section 2 (S),JVL,S,Cement Concrete,6,0.55,19.13455,72.85841,19.13409,72.86182,9.35,5.0,89,86449,57.0,0.06
+SEG_JVL_003,Jogeshwari-Vikhroli Link Road (JVLR) - Section 3 (K/E),JVL,K/E,Cement Concrete,6,0.65,19.13409,72.86182,19.13364,72.86523,9.85,1.0,97,92150,70.0,0.052
+SEG_JVL_004,Jogeshwari-Vikhroli Link Road (JVLR) - Section 4 (S),JVL,S,Cement Concrete,6,0.75,19.13364,72.86523,19.13318,72.86864,9.18,8.0,82,97850,83.0,0.066
+SEG_JVL_005,Jogeshwari-Vikhroli Link Road (JVLR) - Section 5 (K/E),JVL,K/E,Cement Concrete,6,0.45,19.13318,72.86864,19.13273,72.87205,9.72,4.0,91,103549,16.0,0.058
+SEG_JVL_006,Jogeshwari-Vikhroli Link Road (JVLR) - Section 6 (S),JVL,S,Cement Concrete,6,0.55,19.13273,72.87205,19.13227,72.87545,10.29,11.0,75,80750,29.0,0.072
+SEG_JVL_007,Jogeshwari-Vikhroli Link Road (JVLR) - Section 7 (K/E),JVL,K/E,Cement Concrete,6,0.65,19.13227,72.87545,19.13182,72.87886,9.49,7.0,84,86449,42.0,0.064
+SEG_JVL_008,Jogeshwari-Vikhroli Link Road (JVLR) - Section 8 (S),JVL,S,Cement Concrete,6,0.75,19.13182,72.87886,19.13136,72.88227,9.9,3.0,93,92150,55.0,0.056
+SEG_JVL_009,Jogeshwari-Vikhroli Link Road (JVLR) - Section 9 (K/E),JVL,K/E,Cement Concrete,6,0.45,19.13136,72.88227,19.13091,72.88568,10.33,10.0,78,97850,68.0,0.07
+SEG_JVL_010,Jogeshwari-Vikhroli Link Road (JVLR) - Section 10 (S),JVL,S,Cement Concrete,6,0.55,19.13091,72.88568,19.13045,72.88909,9.57,6.0,86,103549,81.0,0.062
+SEG_JVL_011,Jogeshwari-Vikhroli Link Road (JVLR) - Section 11 (K/E),JVL,K/E,Cement Concrete,6,0.65,19.13045,72.88909,19.13,72.8925,10.05,2.0,95,80750,14.0,0.054
+SEG_JVL_012,Jogeshwari-Vikhroli Link Road (JVLR) - Section 12 (S),JVL,S,Cement Concrete,6,0.75,19.13,72.8925,19.12955,72.89591,10.54,9.0,80,86449,27.0,0.068
+SEG_JVL_013,Jogeshwari-Vikhroli Link Road (JVLR) - Section 13 (K/E),JVL,K/E,Cement Concrete,6,0.45,19.12955,72.89591,19.12909,72.89932,9.85,5.0,89,92150,40.0,0.06
+SEG_JVL_014,Jogeshwari-Vikhroli Link Road (JVLR) - Section 14 (S),JVL,S,Cement Concrete,6,0.55,19.12909,72.89932,19.12864,72.90273,10.38,1.0,97,97850,53.0,0.052
+SEG_JVL_015,Jogeshwari-Vikhroli Link Road (JVLR) - Section 15 (K/E),JVL,K/E,Cement Concrete,6,0.65,19.12864,72.90273,19.12818,72.90614,10.94,8.0,82,103549,66.0,0.066
+SEG_JVL_016,Jogeshwari-Vikhroli Link Road (JVLR) - Section 16 (S),JVL,S,Cement Concrete,6,0.75,19.12818,72.90614,19.12773,72.90955,10.31,4.0,91,80750,79.0,0.058
+SEG_JVL_017,Jogeshwari-Vikhroli Link Road (JVLR) - Section 17 (K/E),JVL,K/E,Cement Concrete,6,0.45,19.12773,72.90955,19.12727,72.91295,10.89,11.0,75,86449,12.0,0.072
+SEG_JVL_018,Jogeshwari-Vikhroli Link Road (JVLR) - Section 18 (S),JVL,S,Cement Concrete,6,0.55,19.12727,72.91295,19.12682,72.91636,11.49,7.0,84,92150,25.0,0.064
+SEG_JVL_019,Jogeshwari-Vikhroli Link Road (JVLR) - Section 19 (K/E),JVL,K/E,Cement Concrete,6,0.65,19.12682,72.91636,19.12636,72.91977,10.91,3.0,93,97850,38.0,0.056
+SEG_JVL_020,Jogeshwari-Vikhroli Link Road (JVLR) - Section 20 (S),JVL,S,Cement Concrete,6,0.75,19.12636,72.91977,19.12591,72.92318,11.54,10.0,78,103549,51.0,0.07
+SEG_JVL_021,Jogeshwari-Vikhroli Link Road (JVLR) - Section 21 (K/E),JVL,K/E,Cement Concrete,6,0.45,19.12591,72.92318,19.12545,72.92659,12.18,6.0,86,80750,64.0,0.062
+SEG_JVL_022,Jogeshwari-Vikhroli Link Road (JVLR) - Section 22 (S),JVL,S,Cement Concrete,6,0.55,19.12545,72.92659,19.125,72.93,11.64,2.0,95,86449,77.0,0.054
+SEG_BKC_001,BKC Central Avenue & Connectors - Section 1 (H/E),BKC,H/E,Cement Concrete,6,0.45,19.06,72.86,19.0608,72.861,3.62,9.0,80,68000,10.0,0.068
+SEG_BKC_002,BKC Central Avenue & Connectors - Section 2 (L),BKC,L,Cement Concrete,6,0.55,19.0608,72.861,19.0616,72.862,3.87,5.0,89,72800,23.0,0.06
+SEG_BKC_003,BKC Central Avenue & Connectors - Section 3 (H/E),BKC,H/E,Cement Concrete,6,0.65,19.0616,72.862,19.0624,72.863,4.12,1.0,97,77600,36.0,0.052
+SEG_BKC_004,BKC Central Avenue & Connectors - Section 4 (L),BKC,L,Cement Concrete,6,0.75,19.0624,72.863,19.0632,72.864,3.16,8.0,82,82400,49.0,0.066
+SEG_BKC_005,BKC Central Avenue & Connectors - Section 5 (H/E),BKC,H/E,Cement Concrete,6,0.45,19.0632,72.864,19.064,72.865,3.41,4.0,91,87199,62.0,0.058
+SEG_BKC_006,BKC Central Avenue & Connectors - Section 6 (L),BKC,L,Cement Concrete,6,0.55,19.064,72.865,19.0648,72.866,3.66,11.0,75,68000,75.0,0.072
+SEG_BKC_007,BKC Central Avenue & Connectors - Section 7 (H/E),BKC,H/E,Cement Concrete,6,0.65,19.0648,72.866,19.0656,72.867,2.71,7.0,84,72800,88.0,0.064
+SEG_BKC_008,BKC Central Avenue & Connectors - Section 8 (L),BKC,L,Cement Concrete,6,0.75,19.0656,72.867,19.0664,72.868,2.97,3.0,93,77600,21.0,0.056
+SEG_BKC_009,BKC Central Avenue & Connectors - Section 9 (H/E),BKC,H/E,Cement Concrete,6,0.45,19.0664,72.868,19.0672,72.869,3.22,10.0,78,82400,34.0,0.07
+SEG_BKC_010,BKC Central Avenue & Connectors - Section 10 (L),BKC,L,Cement Concrete,6,0.55,19.0672,72.869,19.068,72.87,2.29,6.0,86,87199,47.0,0.062
+SEG_BKC_011,BKC Central Avenue & Connectors - Section 11 (H/E),BKC,H/E,Cement Concrete,6,0.65,19.068,72.87,19.0688,72.871,2.6,2.0,95,68000,60.0,0.054
+SEG_BKC_012,BKC Central Avenue & Connectors - Section 12 (L),BKC,L,Cement Concrete,6,0.75,19.0688,72.871,19.0696,72.872,3.0,9.0,80,72800,73.0,0.068
+SEG_BKC_013,BKC Central Avenue & Connectors - Section 13 (H/E),BKC,H/E,Cement Concrete,6,0.45,19.0696,72.872,19.0704,72.873,2.3,5.0,89,77600,86.0,0.06
+SEG_BKC_014,BKC Central Avenue & Connectors - Section 14 (L),BKC,L,Cement Concrete,6,0.55,19.0704,72.873,19.0712,72.874,2.83,1.0,97,82400,19.0,0.052
+SEG_BKC_015,BKC Central Avenue & Connectors - Section 15 (H/E),BKC,H/E,Cement Concrete,6,0.65,19.0712,72.874,19.072,72.875,3.37,8.0,82,87199,32.0,0.066
+SEG_MDR_001,Marine Drive (Netaji Subhash Road) - Section 1 (A),MDR,A,Cement Concrete,8,0.45,18.925,72.822,18.928,72.8219,12.25,4.0,91,76500,45.0,0.058
+SEG_MDR_002,Marine Drive (Netaji Subhash Road) - Section 2 (C),MDR,C,Cement Concrete,8,0.55,18.928,72.8219,18.931,72.8218,12.3,11.0,75,81900,58.0,0.072
+SEG_MDR_003,Marine Drive (Netaji Subhash Road) - Section 3 (A),MDR,A,Cement Concrete,8,0.65,18.931,72.8218,18.934,72.8217,12.35,7.0,84,87300,71.0,0.064
+SEG_MDR_004,Marine Drive (Netaji Subhash Road) - Section 4 (C),MDR,C,Cement Concrete,8,0.75,18.934,72.8217,18.937,72.8216,11.21,3.0,93,92700,84.0,0.056
+SEG_MDR_005,Marine Drive (Netaji Subhash Road) - Section 5 (A),MDR,A,Cement Concrete,8,0.45,18.937,72.8216,18.94,72.8215,11.26,10.0,78,98099,17.0,0.07
+SEG_MDR_006,Marine Drive (Netaji Subhash Road) - Section 6 (C),MDR,C,Cement Concrete,8,0.55,18.94,72.8215,18.943,72.8214,11.32,6.0,86,76500,30.0,0.062
+SEG_MDR_007,Marine Drive (Netaji Subhash Road) - Section 7 (A),MDR,A,Cement Concrete,8,0.65,18.943,72.8214,18.946,72.8213,10.17,2.0,95,81900,43.0,0.054
+SEG_MDR_008,Marine Drive (Netaji Subhash Road) - Section 8 (C),MDR,C,Cement Concrete,8,0.75,18.946,72.8213,18.949,72.8212,10.23,9.0,80,87300,56.0,0.068
+SEG_MDR_009,Marine Drive (Netaji Subhash Road) - Section 9 (A),MDR,A,Cement Concrete,8,0.45,18.949,72.8212,18.952,72.8211,10.29,5.0,89,92700,69.0,0.06
+SEG_MDR_010,Marine Drive (Netaji Subhash Road) - Section 10 (C),MDR,C,Cement Concrete,8,0.55,18.952,72.8211,18.955,72.821,9.15,1.0,97,98099,82.0,0.052
+SEG_AKR_001,Andheri-Kurla Road - Section 1 (K/E),AKR,K/E,Bituminous Asphalt,4,0.45,19.115,72.855,19.11321,72.85714,6.52,8.0,30,61200,15.0,0.478
+SEG_AKR_002,Andheri-Kurla Road - Section 2 (L),AKR,L,Bituminous Asphalt,4,0.55,19.11321,72.85714,19.11143,72.85929,6.85,4.0,60,65519,28.0,0.414
+SEG_AKR_003,Andheri-Kurla Road - Section 3 (K/E),AKR,K/E,Bituminous Asphalt,4,0.65,19.11143,72.85929,19.10964,72.86143,7.2,11.0,30,69840,41.0,0.526
+SEG_AKR_004,Andheri-Kurla Road - Section 4 (L),AKR,L,Bituminous Asphalt,4,0.75,19.10964,72.86143,19.10786,72.86357,6.38,7.0,37,74160,54.0,0.462
+SEG_AKR_005,Andheri-Kurla Road - Section 5 (K/E),AKR,K/E,Bituminous Asphalt,4,0.45,19.10786,72.86357,19.10607,72.86571,6.78,3.0,67,78479,67.0,0.398
+SEG_AKR_006,Andheri-Kurla Road - Section 6 (L),AKR,L,Bituminous Asphalt,4,0.55,19.10607,72.86571,19.10429,72.86786,7.04,10.0,30,61200,80.0,0.51
+SEG_AKR_007,Andheri-Kurla Road - Section 7 (K/E),AKR,K/E,Bituminous Asphalt,4,0.65,19.10429,72.86786,19.1025,72.87,6.01,6.0,45,65519,13.0,0.446
+SEG_AKR_008,Andheri-Kurla Road - Section 8 (L),AKR,L,Bituminous Asphalt,4,0.75,19.1025,72.87,19.10071,72.87214,6.2,2.0,75,69840,26.0,0.382
+SEG_AKR_009,Andheri-Kurla Road - Section 9 (K/E),AKR,K/E,Bituminous Asphalt,4,0.45,19.10071,72.87214,19.09893,72.87429,6.4,9.0,30,74160,39.0,0.494
+SEG_AKR_010,Andheri-Kurla Road - Section 10 (L),AKR,L,Bituminous Asphalt,4,0.55,19.09893,72.87429,19.09714,72.87643,5.43,5.0,52,78479,52.0,0.43
+SEG_AKR_011,Andheri-Kurla Road - Section 11 (K/E),AKR,K/E,Bituminous Asphalt,4,0.65,19.09714,72.87643,19.09536,72.87857,5.68,1.0,82,61200,65.0,0.366
+SEG_AKR_012,Andheri-Kurla Road - Section 12 (L),AKR,L,Bituminous Asphalt,4,0.75,19.09536,72.87857,19.09357,72.88071,5.96,8.0,30,65519,78.0,0.478
+SEG_AKR_013,Andheri-Kurla Road - Section 13 (K/E),AKR,K/E,Bituminous Asphalt,4,0.45,19.09357,72.88071,19.09179,72.88286,5.07,4.0,60,69840,11.0,0.414
+SEG_AKR_014,Andheri-Kurla Road - Section 14 (L),AKR,L,Bituminous Asphalt,4,0.55,19.09179,72.88286,19.09,72.885,5.41,11.0,30,74160,24.0,0.526

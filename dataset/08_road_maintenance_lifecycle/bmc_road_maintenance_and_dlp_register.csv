@@ -1,0 +1,120 @@
+road_id,road_name,ward,surface_type,construction_concreting_year,contractor_id,contractor_name,contractor_performance_rating,project_cost_inr_crores,dlp_period_years,dlp_expiry_year,is_currently_under_dlp,free_contractor_maintenance_active,last_major_resurfacing_date,next_scheduled_audit_date
+RD_WEH_01,Western Express Highway (Bandra to Santacruz),H/E,Asphalt Over CC Base,2017,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,18.9,3,2020,False,False,2019-04-15,2025-05-10
+RD_WEH_02,Western Express Highway (Santacruz to Andheri Flyover),K/E,Mastic Asphalt,2019,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,21.84,5,2024,True,True,2019-04-15,2025-05-10
+RD_WEH_03,Western Express Highway (Andheri to Goregaon Hub),P/S,Mastic Asphalt,2022,CONTR_BMC_105,Eagle Infra India Ltd,4.1,20.16,5,2027,True,True,2022-04-15,2025-05-10
+RD_WEH_04,Western Express Highway (Goregaon to Borivali National Park),R/C,Cement Concrete,2016,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,81.25,10,2026,True,True,2018-04-15,2025-05-10
+RD_WEH_05,Western Express Highway (Borivali to Dahisar Toll Naka),R/N,Cement Concrete,2014,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,50.0,10,2024,True,True,2014-04-15,2025-05-10
+RD_SVR_01,Swami Vivekanand (SV) Road (Bandra Lucky Jn to Khar),H/W,Bituminous Asphalt,2021,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,13.44,3,2024,True,True,2021-04-15,2025-05-10
+RD_SVR_02,SV Road (Santacruz Milan Subway Approach),H/W,Bituminous Asphalt,2022,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,8.82,3,2025,True,True,2022-04-15,2025-05-10
+RD_SVR_03,SV Road (Vile Parle to Andheri Station West),K/W,Mastic Asphalt,2019,CONTR_BMC_105,Eagle Infra India Ltd,4.1,14.7,5,2024,True,True,2019-04-15,2025-05-10
+RD_SVR_04,SV Road (Andheri Subway Section to Jogeshwari),K/W,Bituminous Asphalt,2019,CONTR_BMC_102,MEP Infrastructure Developers,4.2,12.6,3,2022,False,False,2019-04-15,2025-05-10
+RD_SVR_05,SV Road (Goregaon to Malad Subway Jn),P/N,Bituminous Asphalt,2022,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,17.64,3,2025,True,True,2022-04-15,2025-05-10
+RD_SVR_06,SV Road (Kandivali to Borivali Station West),R/C,Cement Concrete,2014,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,57.5,10,2024,True,True,2023-04-15,2025-05-10
+RD_LNK_01,New Link Road (Bandra West to Khar Danda),H/W,Cement Concrete,2020,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,35.0,10,2030,True,True,2021-04-15,2025-05-10
+RD_LNK_02,New Link Road (Juhu Circle to Andheri Infinity Mall),K/W,Cement Concrete,2023,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,51.25,10,2033,True,True,2023-04-15,2025-05-10
+RD_LNK_03,New Link Road (Oshiwara to Goregaon West / Bangur Nagar),P/S,Cement Concrete,2020,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,45.0,10,2030,True,True,2020-04-15,2025-05-10
+RD_LNK_04,New Link Road (Malad Inorbit to Mith Chowki),P/N,Cement Concrete,2014,CONTR_BMC_102,MEP Infrastructure Developers,4.2,40.0,10,2024,True,True,2017-04-15,2025-05-10
+RD_LNK_05,New Link Road (Kandivali to Dahisar Link Road Extension),R/N,Cement Concrete,2018,CONTR_BMC_102,MEP Infrastructure Developers,4.2,72.5,10,2028,True,True,2020-04-15,2025-05-10
+RD_EEH_01,Eastern Express Highway (Sion Circle to Priyadarshini Park),F/N,Asphalt Over CC Base,2022,CONTR_BMC_105,Eagle Infra India Ltd,4.1,15.96,3,2025,True,True,2022-04-15,2025-05-10
+RD_EEH_02,Eastern Express Highway (Kurla Amar Mahal to Ghatkopar),L,Mastic Asphalt,2021,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,18.9,5,2026,True,True,2021-04-15,2025-05-10
+RD_EEH_03,Eastern Express Highway (Ghatkopar to Vikhroli / Godrej),N,Cement Concrete,2023,CONTR_BMC_102,MEP Infrastructure Developers,4.2,52.5,10,2033,True,True,2023-04-15,2025-05-10
+RD_EEH_04,Eastern Express Highway (Vikhroli to Bhandup / Mulund Toll),T,Cement Concrete,2016,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,85.0,10,2026,True,True,2017-04-15,2025-05-10
+RD_LBS_01,Lal Bahadur Shastri (LBS) Marg (Sion to Kurla Kamani),L,Bituminous Asphalt,2019,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,16.38,3,2022,False,False,2023-04-15,2025-05-10
+RD_LBS_02,LBS Marg (Kurla to Ghatkopar Gandhi Nagar),N,Bituminous Asphalt,2019,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,17.22,3,2022,False,False,2023-04-15,2025-05-10
+RD_LBS_03,LBS Marg (Ghatkopar to Vikhroli / Kanjurmarg),S,Cement Concrete,2020,CONTR_BMC_105,Eagle Infra India Ltd,4.1,56.25,10,2030,True,True,2023-04-15,2025-05-10
+RD_LBS_04,LBS Marg (Bhandup to Mulund Check Naka),T,Cement Concrete,2018,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,60.0,10,2028,True,True,2022-04-15,2025-05-10
+RD_JVL_01,Jogeshwari-Vikhroli Link Road (JVLR - WEH to Powai),K/E,Mastic Asphalt,2021,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,22.68,5,2026,True,True,2021-04-15,2025-05-10
+RD_JVL_02,JVLR (Powai Lake to EEH Kanjurmarg Jn),S,Cement Concrete,2020,CONTR_BMC_102,MEP Infrastructure Developers,4.2,52.5,10,2030,True,True,2022-04-15,2025-05-10
+RD_SCL_01,Santacruz-Chembur Link Road (SCLR - Kurla to Amar Mahal),L,Cement Concrete,2022,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,60.0,10,2032,True,True,2022-04-15,2025-05-10
+RD_SCL_02,BKC Connector & Extension Road,H/E,Cement Concrete,2016,CONTR_BMC_105,Eagle Infra India Ltd,4.1,32.5,10,2026,True,True,2019-04-15,2025-05-10
+RD_AMB_01,Dr. Babasaheb Ambedkar Road (Byculla to Dadar TT),F/S,Cement Concrete,2022,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,52.5,10,2032,True,True,2022-04-15,2025-05-10
+RD_AMB_02,Dr Ambedkar Road (Dadar TT to Sion Circle / Gandhi Market),F/N,Bituminous Asphalt Over CC,2019,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,13.02,3,2022,False,False,2023-04-15,2025-05-10
+RD_SNB_01,Senapati Bapat Marg (Mahalakshmi to Dadar West),G/S,Cement Concrete,2014,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,60.0,10,2024,True,True,2022-04-15,2025-05-10
+RD_MDR_01,Marine Drive / Netaji Subhash Chandra Bose Road,A,Cement Concrete,2018,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,45.0,10,2028,True,True,2022-04-15,2025-05-10
+RD_EFR_01,Eastern Freeway (Orange Gate to Chembur Panjrapol),M/W,Mastic Asphalt,2022,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,70.56,5,2027,True,True,2023-04-15,2025-05-10
+RD_CST_01,Mumbai Coastal Road (Princess Street Flyover to Worli),D,Cement Concrete,2022,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,131.25,10,2032,True,True,2022-04-15,2025-05-10
+RD_LOC_001,B Ward Sector 1 Connector Road,B,Cement Concrete,2020,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,7.12,10,2030,True,True,2023-04-15,2025-05-10
+RD_LOC_002,H/E Ward Sector 2 Connector Road,H/E,Bituminous Asphalt,2019,CONTR_BMC_102,MEP Infrastructure Developers,4.2,6.93,3,2022,False,False,2021-04-15,2025-05-10
+RD_LOC_003,S Ward Sector 3 Connector Road,S,Cement Concrete,2023,CONTR_BMC_102,MEP Infrastructure Developers,4.2,13.75,10,2033,True,True,2023-04-15,2025-05-10
+RD_LOC_004,K/E Ward Sector 4 Connector Road,K/E,Bituminous Asphalt,2021,CONTR_BMC_102,MEP Infrastructure Developers,4.2,5.21,3,2024,True,True,2022-04-15,2025-05-10
+RD_LOC_005,C Ward Sector 5 Connector Road,C,Cement Concrete,2023,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,17.62,10,2033,True,True,2023-04-15,2025-05-10
+RD_LOC_006,R/S Ward Sector 6 Connector Road,R/S,Bituminous Asphalt,2019,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,5.84,3,2022,False,False,2022-04-15,2025-05-10
+RD_LOC_007,N Ward Sector 7 Connector Road,N,Bituminous Asphalt,2023,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,6.8,3,2026,True,True,2023-04-15,2025-05-10
+RD_LOC_008,R/N Ward Sector 8 Connector Road,R/N,Cement Concrete,2022,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,11.0,10,2032,True,True,2023-04-15,2025-05-10
+RD_LOC_009,F/S Ward Sector 9 Connector Road,F/S,Bituminous Asphalt,2017,CONTR_BMC_105,Eagle Infra India Ltd,4.1,2.27,3,2020,False,False,2018-04-15,2025-05-10
+RD_LOC_010,S Ward Sector 10 Connector Road,S,Bituminous Asphalt,2022,CONTR_BMC_105,Eagle Infra India Ltd,4.1,4.33,3,2025,True,True,2023-04-15,2025-05-10
+RD_LOC_011,F/S Ward Sector 11 Connector Road,F/S,Mastic Asphalt,2021,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,1.68,5,2026,True,True,2022-04-15,2025-05-10
+RD_LOC_012,R/S Ward Sector 12 Connector Road,R/S,Mastic Asphalt,2017,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,4.75,5,2022,False,False,2018-04-15,2025-05-10
+RD_LOC_013,T Ward Sector 13 Connector Road,T,Mastic Asphalt,2019,CONTR_BMC_102,MEP Infrastructure Developers,4.2,7.43,5,2024,True,True,2019-04-15,2025-05-10
+RD_LOC_014,R/S Ward Sector 14 Connector Road,R/S,Bituminous Asphalt,2023,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,5.75,3,2026,True,True,2023-04-15,2025-05-10
+RD_LOC_015,M/E Ward Sector 15 Connector Road,M/E,Cement Concrete,2016,CONTR_BMC_102,MEP Infrastructure Developers,4.2,19.38,10,2026,True,True,2018-04-15,2025-05-10
+RD_LOC_016,K/E Ward Sector 16 Connector Road,K/E,Bituminous Asphalt,2021,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,6.34,3,2024,True,True,2023-04-15,2025-05-10
+RD_LOC_017,H/W Ward Sector 17 Connector Road,H/W,Bituminous Asphalt,2017,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,5.54,3,2020,False,False,2021-04-15,2025-05-10
+RD_LOC_018,T Ward Sector 18 Connector Road,T,Bituminous Asphalt,2019,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,6.01,3,2022,False,False,2020-04-15,2025-05-10
+RD_LOC_019,D Ward Sector 19 Connector Road,D,Cement Concrete,2023,CONTR_BMC_102,MEP Infrastructure Developers,4.2,15.5,10,2033,True,True,2023-04-15,2025-05-10
+RD_LOC_020,D Ward Sector 20 Connector Road,D,Mastic Asphalt,2023,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,6.97,5,2028,True,True,2023-04-15,2025-05-10
+RD_LOC_021,F/N Ward Sector 21 Connector Road,F/N,Bituminous Asphalt,2023,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,7.18,3,2026,True,True,2023-04-15,2025-05-10
+RD_LOC_022,D Ward Sector 22 Connector Road,D,Bituminous Asphalt,2023,CONTR_BMC_102,MEP Infrastructure Developers,4.2,4.2,3,2026,True,True,2023-04-15,2025-05-10
+RD_LOC_023,M/E Ward Sector 23 Connector Road,M/E,Bituminous Asphalt,2021,CONTR_BMC_102,MEP Infrastructure Developers,4.2,3.4,3,2024,True,True,2023-04-15,2025-05-10
+RD_LOC_024,R/C Ward Sector 24 Connector Road,R/C,Cement Concrete,2018,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,11.75,10,2028,True,True,2021-04-15,2025-05-10
+RD_LOC_025,F/S Ward Sector 25 Connector Road,F/S,Cement Concrete,2022,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,20.62,10,2032,True,True,2023-04-15,2025-05-10
+RD_LOC_026,T Ward Sector 26 Connector Road,T,Mastic Asphalt,2022,CONTR_BMC_102,MEP Infrastructure Developers,4.2,7.64,5,2027,True,True,2023-04-15,2025-05-10
+RD_LOC_027,S Ward Sector 27 Connector Road,S,Bituminous Asphalt,2022,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,5.59,3,2025,True,True,2022-04-15,2025-05-10
+RD_LOC_028,F/N Ward Sector 28 Connector Road,F/N,Cement Concrete,2023,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,22.5,10,2033,True,True,2023-04-15,2025-05-10
+RD_LOC_029,G/S Ward Sector 29 Connector Road,G/S,Cement Concrete,2022,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,6.88,10,2032,True,True,2022-04-15,2025-05-10
+RD_LOC_030,A Ward Sector 30 Connector Road,A,Cement Concrete,2014,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,24.12,10,2024,True,True,2021-04-15,2025-05-10
+RD_LOC_031,F/S Ward Sector 31 Connector Road,F/S,Mastic Asphalt,2021,CONTR_BMC_105,Eagle Infra India Ltd,4.1,7.14,5,2026,True,True,2022-04-15,2025-05-10
+RD_LOC_032,M/E Ward Sector 32 Connector Road,M/E,Bituminous Asphalt,2017,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,4.58,3,2020,False,False,2017-04-15,2025-05-10
+RD_LOC_033,R/N Ward Sector 33 Connector Road,R/N,Bituminous Asphalt,2022,CONTR_BMC_105,Eagle Infra India Ltd,4.1,3.78,3,2025,True,True,2023-04-15,2025-05-10
+RD_LOC_034,K/W Ward Sector 34 Connector Road,K/W,Cement Concrete,2022,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,22.25,10,2032,True,True,2023-04-15,2025-05-10
+RD_LOC_035,F/N Ward Sector 35 Connector Road,F/N,Cement Concrete,2020,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,22.75,10,2030,True,True,2021-04-15,2025-05-10
+RD_LOC_036,H/W Ward Sector 36 Connector Road,H/W,Cement Concrete,2022,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,26.88,10,2032,True,True,2022-04-15,2025-05-10
+RD_LOC_037,L Ward Sector 37 Connector Road,L,Mastic Asphalt,2023,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,2.56,5,2028,True,True,2023-04-15,2025-05-10
+RD_LOC_038,G/S Ward Sector 38 Connector Road,G/S,Bituminous Asphalt,2021,CONTR_BMC_102,MEP Infrastructure Developers,4.2,6.8,3,2024,True,True,2022-04-15,2025-05-10
+RD_LOC_039,R/S Ward Sector 39 Connector Road,R/S,Mastic Asphalt,2019,CONTR_BMC_105,Eagle Infra India Ltd,4.1,6.3,5,2024,True,True,2023-04-15,2025-05-10
+RD_LOC_040,L Ward Sector 40 Connector Road,L,Mastic Asphalt,2021,CONTR_BMC_102,MEP Infrastructure Developers,4.2,2.65,5,2026,True,True,2021-04-15,2025-05-10
+RD_LOC_041,T Ward Sector 41 Connector Road,T,Cement Concrete,2022,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,14.37,10,2032,True,True,2022-04-15,2025-05-10
+RD_LOC_042,R/N Ward Sector 42 Connector Road,R/N,Mastic Asphalt,2023,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,2.39,5,2028,True,True,2023-04-15,2025-05-10
+RD_LOC_043,P/N Ward Sector 43 Connector Road,P/N,Cement Concrete,2014,CONTR_BMC_102,MEP Infrastructure Developers,4.2,20.75,10,2024,True,True,2014-04-15,2025-05-10
+RD_LOC_044,P/N Ward Sector 44 Connector Road,P/N,Bituminous Asphalt,2022,CONTR_BMC_102,MEP Infrastructure Developers,4.2,3.44,3,2025,True,True,2023-04-15,2025-05-10
+RD_LOC_045,A Ward Sector 45 Connector Road,A,Bituminous Asphalt,2017,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,1.72,3,2020,False,False,2017-04-15,2025-05-10
+RD_LOC_046,M/W Ward Sector 46 Connector Road,M/W,Mastic Asphalt,2023,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,2.73,5,2028,True,True,2023-04-15,2025-05-10
+RD_LOC_047,G/N Ward Sector 47 Connector Road,G/N,Mastic Asphalt,2023,CONTR_BMC_105,Eagle Infra India Ltd,4.1,7.31,5,2028,True,True,2023-04-15,2025-05-10
+RD_LOC_048,C Ward Sector 48 Connector Road,C,Bituminous Asphalt,2017,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,7.01,3,2020,False,False,2021-04-15,2025-05-10
+RD_LOC_049,S Ward Sector 49 Connector Road,S,Cement Concrete,2014,CONTR_BMC_102,MEP Infrastructure Developers,4.2,11.25,10,2024,True,True,2021-04-15,2025-05-10
+RD_LOC_050,M/W Ward Sector 50 Connector Road,M/W,Cement Concrete,2016,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,17.0,10,2026,True,True,2018-04-15,2025-05-10
+RD_LOC_051,R/S Ward Sector 51 Connector Road,R/S,Bituminous Asphalt,2019,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,7.73,3,2022,False,False,2019-04-15,2025-05-10
+RD_LOC_052,E Ward Sector 52 Connector Road,E,Mastic Asphalt,2023,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,4.16,5,2028,True,True,2023-04-15,2025-05-10
+RD_LOC_053,P/N Ward Sector 53 Connector Road,P/N,Cement Concrete,2020,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,18.12,10,2030,True,True,2023-04-15,2025-05-10
+RD_LOC_054,K/E Ward Sector 54 Connector Road,K/E,Bituminous Asphalt,2021,CONTR_BMC_105,Eagle Infra India Ltd,4.1,6.59,3,2024,True,True,2022-04-15,2025-05-10
+RD_LOC_055,E Ward Sector 55 Connector Road,E,Bituminous Asphalt,2022,CONTR_BMC_102,MEP Infrastructure Developers,4.2,4.28,3,2025,True,True,2023-04-15,2025-05-10
+RD_LOC_056,T Ward Sector 56 Connector Road,T,Cement Concrete,2023,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,19.25,10,2033,True,True,2023-04-15,2025-05-10
+RD_LOC_057,K/E Ward Sector 57 Connector Road,K/E,Bituminous Asphalt,2021,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,6.43,3,2024,True,True,2023-04-15,2025-05-10
+RD_LOC_058,S Ward Sector 58 Connector Road,S,Bituminous Asphalt,2017,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,4.33,3,2020,False,False,2018-04-15,2025-05-10
+RD_LOC_059,B Ward Sector 59 Connector Road,B,Cement Concrete,2023,CONTR_BMC_102,MEP Infrastructure Developers,4.2,10.25,10,2033,True,True,2023-04-15,2025-05-10
+RD_LOC_060,H/E Ward Sector 60 Connector Road,H/E,Bituminous Asphalt,2019,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,3.95,3,2022,False,False,2022-04-15,2025-05-10
+RD_LOC_061,S Ward Sector 61 Connector Road,S,Bituminous Asphalt,2017,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,1.97,3,2020,False,False,2020-04-15,2025-05-10
+RD_LOC_062,E Ward Sector 62 Connector Road,E,Mastic Asphalt,2019,CONTR_BMC_102,MEP Infrastructure Developers,4.2,7.52,5,2024,True,True,2020-04-15,2025-05-10
+RD_LOC_063,R/N Ward Sector 63 Connector Road,R/N,Bituminous Asphalt,2019,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,5.0,3,2022,False,False,2019-04-15,2025-05-10
+RD_LOC_064,C Ward Sector 64 Connector Road,C,Mastic Asphalt,2022,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,5.96,5,2027,True,True,2023-04-15,2025-05-10
+RD_LOC_065,A Ward Sector 65 Connector Road,A,Mastic Asphalt,2023,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,4.75,5,2028,True,True,2023-04-15,2025-05-10
+RD_LOC_066,K/W Ward Sector 66 Connector Road,K/W,Bituminous Asphalt,2019,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,6.43,3,2022,False,False,2020-04-15,2025-05-10
+RD_LOC_067,K/W Ward Sector 67 Connector Road,K/W,Mastic Asphalt,2023,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,2.56,5,2028,True,True,2023-04-15,2025-05-10
+RD_LOC_068,F/N Ward Sector 68 Connector Road,F/N,Cement Concrete,2018,CONTR_BMC_105,Eagle Infra India Ltd,4.1,24.0,10,2028,True,True,2018-04-15,2025-05-10
+RD_LOC_069,D Ward Sector 69 Connector Road,D,Bituminous Asphalt,2021,CONTR_BMC_102,MEP Infrastructure Developers,4.2,1.68,3,2024,True,True,2021-04-15,2025-05-10
+RD_LOC_070,S Ward Sector 70 Connector Road,S,Cement Concrete,2020,CONTR_BMC_105,Eagle Infra India Ltd,4.1,11.62,10,2030,True,True,2020-04-15,2025-05-10
+RD_LOC_071,M/E Ward Sector 71 Connector Road,M/E,Bituminous Asphalt,2021,CONTR_BMC_102,MEP Infrastructure Developers,4.2,4.49,3,2024,True,True,2022-04-15,2025-05-10
+RD_LOC_072,N Ward Sector 72 Connector Road,N,Mastic Asphalt,2022,CONTR_BMC_101,L&T Infrastructure Engineering Ltd,4.8,2.31,5,2027,True,True,2022-04-15,2025-05-10
+RD_LOC_073,H/W Ward Sector 73 Connector Road,H/W,Mastic Asphalt,2023,CONTR_BMC_103,J. Kumar Infraprojects Ltd,4.5,4.49,5,2028,True,True,2023-04-15,2025-05-10
+RD_LOC_074,R/N Ward Sector 74 Connector Road,R/N,Cement Concrete,2022,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,11.5,10,2032,True,True,2023-04-15,2025-05-10
+RD_LOC_075,R/S Ward Sector 75 Connector Road,R/S,Bituminous Asphalt,2021,CONTR_BMC_102,MEP Infrastructure Developers,4.2,7.77,3,2024,True,True,2023-04-15,2025-05-10
+RD_LOC_076,B Ward Sector 76 Connector Road,B,Mastic Asphalt,2017,CONTR_BMC_102,MEP Infrastructure Developers,4.2,6.3,5,2022,False,False,2018-04-15,2025-05-10
+RD_LOC_077,N Ward Sector 77 Connector Road,N,Cement Concrete,2023,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,16.75,10,2033,True,True,2023-04-15,2025-05-10
+RD_LOC_078,M/E Ward Sector 78 Connector Road,M/E,Cement Concrete,2016,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,28.38,10,2026,True,True,2023-04-15,2025-05-10
+RD_LOC_079,P/N Ward Sector 79 Connector Road,P/N,Cement Concrete,2018,CONTR_BMC_105,Eagle Infra India Ltd,4.1,20.5,10,2028,True,True,2020-04-15,2025-05-10
+RD_LOC_080,N Ward Sector 80 Connector Road,N,Cement Concrete,2020,CONTR_BMC_106,NCC Infrastructure Ltd,4.4,19.25,10,2030,True,True,2020-04-15,2025-05-10
+RD_LOC_081,C Ward Sector 81 Connector Road,C,Mastic Asphalt,2019,CONTR_BMC_102,MEP Infrastructure Developers,4.2,9.58,5,2024,True,True,2023-04-15,2025-05-10
+RD_LOC_082,C Ward Sector 82 Connector Road,C,Bituminous Asphalt,2022,CONTR_BMC_105,Eagle Infra India Ltd,4.1,5.17,3,2025,True,True,2022-04-15,2025-05-10
+RD_LOC_083,R/C Ward Sector 83 Connector Road,R/C,Mastic Asphalt,2017,CONTR_BMC_105,Eagle Infra India Ltd,4.1,8.19,5,2022,False,False,2020-04-15,2025-05-10
+RD_LOC_084,P/N Ward Sector 84 Connector Road,P/N,Bituminous Asphalt,2019,CONTR_BMC_104,RPS Infrastructure Ltd,4.0,5.71,3,2022,False,False,2022-04-15,2025-05-10
+RD_LOC_085,P/N Ward Sector 85 Connector Road,P/N,Bituminous Asphalt,2021,CONTR_BMC_105,Eagle Infra India Ltd,4.1,3.4,3,2024,True,True,2023-04-15,2025-05-10

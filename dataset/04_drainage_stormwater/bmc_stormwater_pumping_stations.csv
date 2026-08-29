@@ -1,0 +1,9 @@
+station_id,name,ward,lat,lon,pumps_count,total_capacity_cumecs,serves_catchment,commissioned_year,status,power_backup
+PS_BRI_01,Britannia Stormwater Pumping Station,F/S,18.992,72.8445,6,36.0,"Hindmata, Lalbaug, Parel, Dadar TT",2016,Operational,100% Dual DG Sync
+PS_HAJ_02,Haji Ali Stormwater Pumping Station,D,18.978,72.812,6,36.0,"Tardeo, Mumbai Central, Worli Naka",2011,Operational,100% Dual DG Sync
+PS_LVG_03,Love Grove Stormwater Pumping Station,G/S,18.997,72.816,8,48.0,"Worli, Lower Parel, Elphinstone, Currey Road",2015,Operational,100% Dual DG Sync
+PS_CLV_04,Cleave Land Bunder Pumping Station,G/S,19.006,72.819,7,42.0,"Worli Dairy, Prabhadevi, Century Bazaar",2014,Operational,100% Dual DG Sync
+PS_IRL_05,Irla Stormwater Pumping Station,K/W,19.108,72.827,8,48.0,"Andheri West, JVPD Scheme, Milan Subway Catchment",2010,Operational,100% Dual DG Sync
+PS_GAZ_06,Gazdarband Stormwater Pumping Station,H/W,19.078,72.826,6,36.0,"Khar West, Santacruz West, Bandra West lowlines",2019,Operational,100% Dual DG Sync
+PS_MAH_07,Mahim Causeway Pumping Station,G/N,19.038,72.841,6,36.0,"Mahim, Dharavi, Matunga West, Senapati Bapat Marg",2022,Operational,100% Dual DG Sync
+PS_MOG_08,Mogra Nallah Pumping Station,K/W,19.124,72.825,6,36.0,"Andheri Subway, Veera Desai Road, Mogra Nallah",2023,Operational,100% Dual DG Sync

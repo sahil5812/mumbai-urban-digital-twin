@@ -1,0 +1,62 @@
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #020617;
+  --foreground: #f8fafc;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+}
+
+/* Leaflet Container & Dark Mode styling */
+.leaflet-container {
+  background: #020617 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 480px !important;
+  border-radius: 0.75rem;
+}
+
+/* Tactical Dark Cyber-Theme Filter on OpenStreetMap Tiles */
+.leaflet-tile-pane {
+  filter: brightness(0.65) invert(1) contrast(2.6) hue-rotate(205deg) saturate(0.25);
+}
+
+/* 3D Perspective Tilt on Map Canvas */
+.perspective-3d {
+  transform: perspective(1000px) rotateX(14deg);
+  transform-origin: center center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+/* Custom Pulsing Markers */
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}

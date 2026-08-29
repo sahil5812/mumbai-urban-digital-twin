@@ -1,0 +1,71 @@
+spot_id,location_name,ward,lat,lon,elevation_m,historical_frequency_per_monsoon,avg_water_depth_cm,primary_cause,linked_road_id,linked_drain_id,risk_severity
+WLS_HND_01,"Hindmata Cinema Junction, Dadar / Parel",F/S,19.0095,72.8425,1.8,14,65,"Saucer-shaped topographical depression, inadequate gravity fall to outfall",RD_AMB_01,DRN_HND_01,Critical
+WLS_GND_02,"Gandhi Market / King's Circle, Sion",F/N,19.0315,72.858,1.9,16,75,"Extreme low elevation, tidal backflow from Mahim Creek via railway culvert",RD_AMB_02,DRN_CHN_01,Critical
+WLS_MLN_03,"Milan Subway, Santacruz West / East",H/W,19.0865,72.8395,1.2,18,95,"Railway underpass depression below groundwater table, rapid surface runoff",RD_SVR_02,DRN_IRL_01,Critical
+WLS_AND_04,"Andheri Subway, Andheri West / East",K/W,19.119,72.844,1.1,22,120,"Severely depressed railway underpass, Mogra Nallah backflow, low suction capacity",RD_SVR_04,DRN_OSH_02,Critical
+WLS_KHR_05,"Khar Subway, Khar West / East",H/W,19.0715,72.8375,1.4,12,55,"Depressed underpass gradient, Gazdarband Nallah tidal lock",RD_SVR_01,DRN_GAZ_01,High
+WLS_KRL_06,Kurla Kamani & LBS Marg Junction,L,19.072,72.884,2.1,15,70,"Mithi River overflow overtopping road level, heavy siltation in local drains",RD_LBS_01,DRN_MIT_02,Critical
+WLS_SIO_07,Sion Circle & SIES College Lowline,F/N,19.0385,72.8625,2.0,11,50,Confluence of runoff from Sion Fort hillock and flat coastal plane,RD_EEH_01,DRN_CHN_01,High
+WLS_DDR_08,Dadar TT Circle & Swami Narayan Temple,F/N,19.0185,72.8465,2.4,9,45,High surface runoff accumulation from multiple arterial road intersections,RD_AMB_01,DRN_HND_01,Moderate-High
+WLS_CHM_09,"Postal Colony & Shell Colony, Chembur",M/W,19.0585,72.894,2.6,10,55,"Low-lying reclaimed marshland, slow gravity drainage into Mahul Creek",RD_EEH_02,DRN_MHL_01,High
+WLS_MLD_10,Malad Subway & S.V. Road Junction,P/N,19.1865,72.846,1.5,14,85,"Underpass depression, Poisar river tributary backwater effect",RD_SVR_05,DRN_POI_02,Critical
+WLS_DHS_11,"Dahisar Subway, Dahisar East / West",R/N,19.251,72.861,1.6,11,60,"Depressed railway passage, Dahisar river high stage backflow",RD_WEH_05,DRN_DAH_01,High
+WLS_CHN_12,Chunabhatti Railway Level / Sion-Trombay Road Jn,L,19.0515,72.873,1.9,13,65,"Severe railway track and road depression, low storm drain carrying capacity",RD_SCL_01,DRN_CHN_01,Critical
+WLS_WRL_13,Worli Naka & Dr Annie Besant Road Jn,G/S,19.001,72.8185,2.7,7,40,"Road junction runoff overload, Love Grove outfall high tide head",RD_SNB_01,DRN_SWD_001,Moderate
+WLS_BYC_14,Byculla Police Station / Saat Rasta (Mahalaxmi),E,18.981,72.829,2.2,8,45,"Multi-road bottleneck convergence, old British-era arch drains siltation",RD_AMB_01,DRN_SWD_002,Moderate-High
+WLS_MNK_15,Mankhurd Railway Station Low Line,M/E,19.0475,72.931,1.7,12,60,"Tidal creek proximity, insufficient retention pond capacity",RD_LOC_010,DRN_MHL_01,High
+WLS_FN_016,F/N Ward Chronic Hotspot #16 near F/N Ward Sector 28 Connec,F/N,19.02485,72.868,1.7,7,63,Insufficient Drain Gradient,RD_LOC_028,DRN_SWD_042,High
+WLS_GN_017,G/N Ward Chronic Hotspot #17 near G/N Ward Sector 47 Connec,G/N,19.02356,72.82642,3.1,5,48,Insufficient Drain Gradient,RD_LOC_047,DRN_MIT_03,Moderate
+WLS_KE_018,K/E Ward Chronic Hotspot #18 near K/E Ward Sector 57 Connec,K/E,19.11757,72.86649,7.2,12,43,Insufficient Drain Gradient,RD_LOC_057,DRN_SWD_030,Moderate
+WLS_RC_019,R/C Ward Chronic Hotspot #19 near SV Road (Kandivali to Bor,R/C,19.22608,72.84814,5.4,11,60,Insufficient Drain Gradient,RD_SVR_06,DRN_SWD_039,High
+WLS_L_020,L Ward Chronic Hotspot #20 near Lal Bahadur Shastri (LBS),L,19.08138,72.8902,1.8,6,29,Insufficient Drain Gradient,RD_LBS_01,DRN_CHN_01,High
+WLS_HW_021,H/W Ward Chronic Hotspot #21 near SV Road (Santacruz Milan ,H/W,19.05949,72.82524,4.7,15,31,Catch-pit Siltation,RD_SVR_02,DRN_GAZ_01,High
+WLS_MW_022,M/W Ward Chronic Hotspot #22 near M/W Ward Sector 50 Connec,M/W,19.04063,72.88806,4.3,6,60,Insufficient Drain Gradient,RD_LOC_050,DRN_SWD_024,High
+WLS_S_023,S Ward Chronic Hotspot #23 near S Ward Sector 70 Connecto,S,19.14862,72.92246,8.3,12,75,Railway Culvert Constriction,RD_LOC_070,DRN_SWD_044,Critical
+WLS_S_024,S Ward Chronic Hotspot #24 near S Ward Sector 3 Connector,S,19.13247,72.92148,9.0,5,60,Tidal Lockout,RD_LOC_003,DRN_MIT_01,Critical
+WLS_E_025,E Ward Chronic Hotspot #25 near E Ward Sector 62 Connecto,E,18.96529,72.83897,2.6,15,49,Tidal Lockout,RD_LOC_062,DRN_SWD_005,High
+WLS_E_026,E Ward Chronic Hotspot #26 near E Ward Sector 55 Connecto,E,18.97703,72.82286,3.1,10,30,Railway Culvert Constriction,RD_LOC_055,DRN_SWD_013,High
+WLS_GS_027,G/S Ward Chronic Hotspot #27 near Senapati Bapat Marg (Maha,G/S,18.98856,72.81851,2.6,6,31,Tidal Lockout,RD_SNB_01,DRN_SWD_031,High
+WLS_T_028,T Ward Chronic Hotspot #28 near T Ward Sector 41 Connecto,T,19.16231,72.95864,12.1,12,34,Insufficient Drain Gradient,RD_LOC_041,DRN_SWD_015,Critical
+WLS_N_029,N Ward Chronic Hotspot #29 near N Ward Sector 77 Connecto,N,19.08321,72.89979,7.7,12,47,Railway Culvert Constriction,RD_LOC_077,DRN_SWD_022,Moderate
+WLS_RS_030,R/S Ward Chronic Hotspot #30 near R/S Ward Sector 75 Connec,R/S,19.20035,72.87004,5.6,4,30,High Surface Runoff Coefficient,RD_LOC_075,DRN_SWD_041,Moderate
+WLS_KW_031,K/W Ward Chronic Hotspot #31 near New Link Road (Juhu Circl,K/W,19.12154,72.83153,2.4,15,74,Railway Culvert Constriction,RD_LNK_02,DRN_SWD_043,Critical
+WLS_L_032,L Ward Chronic Hotspot #32 near Lal Bahadur Shastri (LBS),L,19.08209,72.8857,1.4,11,67,High Surface Runoff Coefficient,RD_LBS_01,DRN_CHN_01,Critical
+WLS_L_033,L Ward Chronic Hotspot #33 near Lal Bahadur Shastri (LBS),L,19.0697,72.89018,1.9,5,61,Railway Culvert Constriction,RD_LBS_01,DRN_MIT_02,Critical
+WLS_KW_034,K/W Ward Chronic Hotspot #34 near SV Road (Vile Parle to An,K/W,19.11009,72.84069,2.3,4,65,Insufficient Drain Gradient,RD_SVR_03,DRN_SWD_016,High
+WLS_FS_035,F/S Ward Chronic Hotspot #35 near F/S Ward Sector 11 Connec,F/S,19.00362,72.83983,1.8,10,60,High Surface Runoff Coefficient,RD_LOC_011,DRN_HND_01,Moderate
+WLS_RN_036,R/N Ward Chronic Hotspot #36 near R/N Ward Sector 63 Connec,R/N,19.25715,72.87164,4.6,5,54,High Surface Runoff Coefficient,RD_LOC_063,DRN_DAH_01,Moderate
+WLS_PN_037,P/N Ward Chronic Hotspot #37 near P/N Ward Sector 53 Connec,P/N,19.17903,72.83473,3.9,6,29,Railway Culvert Constriction,RD_LOC_053,DRN_SWD_038,High
+WLS_C_038,C Ward Chronic Hotspot #38 near C Ward Sector 48 Connecto,C,18.94137,72.82218,2.5,11,28,Railway Culvert Constriction,RD_LOC_048,DRN_SWD_009,High
+WLS_E_039,E Ward Chronic Hotspot #39 near E Ward Sector 55 Connecto,E,18.97535,72.84314,2.7,10,65,Insufficient Drain Gradient,RD_LOC_055,DRN_SWD_013,Critical
+WLS_S_040,S Ward Chronic Hotspot #40 near JVLR (Powai Lake to EEH K,S,19.1339,72.94045,8.7,7,70,Catch-pit Siltation,RD_JVL_02,DRN_SWD_007,High
+WLS_RN_041,R/N Ward Chronic Hotspot #41 near R/N Ward Sector 63 Connec,R/N,19.25729,72.85922,3.7,14,33,High Surface Runoff Coefficient,RD_LOC_063,DRN_SWD_008,Moderate
+WLS_PS_042,P/S Ward Chronic Hotspot #42 near New Link Road (Oshiwara t,P/S,19.16034,72.83209,5.5,5,25,Insufficient Drain Gradient,RD_LNK_03,DRN_SWD_010,Moderate
+WLS_L_043,L Ward Chronic Hotspot #43 near Eastern Express Highway (,L,19.05624,72.87961,2.5,6,25,Catch-pit Siltation,RD_EEH_02,DRN_MIT_02,Moderate
+WLS_FN_044,F/N Ward Chronic Hotspot #44 near Eastern Express Highway (,F/N,19.02487,72.86603,1.5,12,26,High Surface Runoff Coefficient,RD_EEH_01,DRN_SWD_032,Critical
+WLS_RN_045,R/N Ward Chronic Hotspot #45 near R/N Ward Sector 8 Connect,R/N,19.25751,72.86553,3.6,5,56,High Surface Runoff Coefficient,RD_LOC_008,DRN_DAH_01,Moderate
+WLS_MW_046,M/W Ward Chronic Hotspot #46 near Eastern Freeway (Orange G,M/W,19.06239,72.90164,2.6,8,31,Insufficient Drain Gradient,RD_EFR_01,DRN_SWD_024,Critical
+WLS_C_047,C Ward Chronic Hotspot #47 near C Ward Sector 5 Connector,C,18.95062,72.82664,3.6,13,42,Tidal Lockout,RD_LOC_005,DRN_SWD_027,Critical
+WLS_B_048,B Ward Chronic Hotspot #48 near B Ward Sector 76 Connecto,B,18.9541,72.83669,3.4,8,45,Catch-pit Siltation,RD_LOC_076,DRN_SWD_006,Moderate
+WLS_PN_049,P/N Ward Chronic Hotspot #49 near SV Road (Goregaon to Mala,P/N,19.18954,72.84113,3.9,4,45,High Surface Runoff Coefficient,RD_SVR_05,DRN_POI_02,Moderate
+WLS_B_050,B Ward Chronic Hotspot #50 near B Ward Sector 76 Connecto,B,18.94868,72.82343,3.3,15,69,Tidal Lockout,RD_LOC_076,DRN_SWD_002,Critical
+WLS_MW_051,M/W Ward Chronic Hotspot #51 near M/W Ward Sector 46 Connec,M/W,19.06898,72.88091,4.0,15,41,Catch-pit Siltation,RD_LOC_046,DRN_SWD_024,Moderate
+WLS_D_052,D Ward Chronic Hotspot #52 near D Ward Sector 69 Connecto,D,18.94924,72.80593,8.1,14,35,Insufficient Drain Gradient,RD_LOC_069,DRN_SWD_036,Moderate
+WLS_FS_053,F/S Ward Chronic Hotspot #53 near Dr. Babasaheb Ambedkar Ro,F/S,18.99399,72.8393,1.7,12,40,Railway Culvert Constriction,RD_AMB_01,DRN_HND_01,High
+WLS_GS_054,G/S Ward Chronic Hotspot #54 near G/S Ward Sector 38 Connec,G/S,18.9966,72.81258,2.5,6,71,High Surface Runoff Coefficient,RD_LOC_038,DRN_SWD_031,High
+WLS_N_055,N Ward Chronic Hotspot #55 near N Ward Sector 72 Connecto,N,19.08224,72.91314,8.4,4,74,Insufficient Drain Gradient,RD_LOC_072,DRN_SWD_037,Critical
+WLS_T_056,T Ward Chronic Hotspot #56 near T Ward Sector 26 Connecto,T,19.17724,72.95193,11.7,13,69,Tidal Lockout,RD_LOC_026,DRN_SWD_015,Moderate
+WLS_S_057,S Ward Chronic Hotspot #57 near S Ward Sector 58 Connecto,S,19.14997,72.92653,9.0,11,60,Railway Culvert Constriction,RD_LOC_058,DRN_MIT_01,Moderate
+WLS_L_058,L Ward Chronic Hotspot #58 near L Ward Sector 40 Connecto,L,19.06209,72.88819,2.8,5,74,Catch-pit Siltation,RD_LOC_040,DRN_MIT_02,Critical
+WLS_T_059,T Ward Chronic Hotspot #59 near T Ward Sector 56 Connecto,T,19.17351,72.94419,10.8,13,40,Insufficient Drain Gradient,RD_LOC_056,DRN_SWD_015,Moderate
+WLS_PN_060,P/N Ward Chronic Hotspot #60 near P/N Ward Sector 53 Connec,P/N,19.18184,72.83151,3.6,12,44,Tidal Lockout,RD_LOC_053,DRN_POI_02,Critical
+WLS_KE_061,K/E Ward Chronic Hotspot #61 near K/E Ward Sector 57 Connec,K/E,19.1278,72.86955,6.8,6,57,Railway Culvert Constriction,RD_LOC_057,DRN_SWD_030,Critical
+WLS_PS_062,P/S Ward Chronic Hotspot #62 near Western Express Highway (,P/S,19.15968,72.85448,4.4,6,51,Insufficient Drain Gradient,RD_WEH_03,DRN_SWD_004,Moderate
+WLS_T_063,T Ward Chronic Hotspot #63 near T Ward Sector 41 Connecto,T,19.17627,72.9538,10.7,14,54,Railway Culvert Constriction,RD_LOC_041,DRN_SWD_015,Moderate
+WLS_GN_064,G/N Ward Chronic Hotspot #64 near G/N Ward Sector 47 Connec,G/N,19.01654,72.83393,2.2,15,25,Railway Culvert Constriction,RD_LOC_047,DRN_MIT_03,Critical
+WLS_MW_065,M/W Ward Chronic Hotspot #65 near Eastern Freeway (Orange G,M/W,19.05066,72.90894,3.7,4,56,Tidal Lockout,RD_EFR_01,DRN_SWD_024,High
+WLS_RC_066,R/C Ward Chronic Hotspot #66 near Western Express Highway (,R/C,19.22155,72.84515,5.2,5,64,High Surface Runoff Coefficient,RD_WEH_04,DRN_SWD_035,High
+WLS_E_067,E Ward Chronic Hotspot #67 near E Ward Sector 62 Connecto,E,18.95949,72.83805,3.6,9,43,High Surface Runoff Coefficient,RD_LOC_062,DRN_SWD_014,Critical
+WLS_HE_068,H/E Ward Chronic Hotspot #68 near BKC Connector & Extension,H/E,19.08212,72.85948,3.1,7,74,High Surface Runoff Coefficient,RD_SCL_02,DRN_SWD_021,Critical
+WLS_B_069,B Ward Chronic Hotspot #69 near B Ward Sector 1 Connector,B,18.93691,72.8496,2.9,4,38,Railway Culvert Constriction,RD_LOC_001,DRN_SWD_040,Moderate
+WLS_A_070,A Ward Chronic Hotspot #70 near A Ward Sector 30 Connecto,A,18.91799,72.84383,3.7,15,25,High Surface Runoff Coefficient,RD_LOC_030,DRN_SWD_011,Moderate

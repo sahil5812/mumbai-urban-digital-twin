@@ -1,0 +1,44 @@
+{
+  "target_area": "Greater Mumbai & Thane Creek (MCGM)",
+  "bounding_box_wgs84": {
+    "min_latitude": 18.85,
+    "min_longitude": 72.75,
+    "max_latitude": 19.35,
+    "max_longitude": 73.05
+  },
+  "recommended_sensors": [
+    {
+      "sensor": "Sentinel-1 C-Band SAR (Synthetic Aperture Radar)",
+      "provider": "European Space Agency (ESA) / Copernicus",
+      "access_portal": "https://dataspace.copernicus.eu/ or https://search.asf.alaska.edu/",
+      "why_use": "SAR radar penetrates heavy monsoon cloud cover and heavy rainfall to detect flood water accumulation (low backscatter, < -18 dB).",
+      "target_dates": [
+        {
+          "event": "Pre-Monsoon Baseline",
+          "date": "2024-05-20"
+        },
+        {
+          "event": "July 2024 Inundation Peak",
+          "date": "2024-07-08"
+        },
+        {
+          "event": "July 2023 Flood Event",
+          "date": "2023-07-26"
+        }
+      ]
+    },
+    {
+      "sensor": "ISRO CartoDEM (10m/30m Elevation) & Flood Inundation Layers",
+      "provider": "National Remote Sensing Centre (NRSC) / ISRO",
+      "access_portal": "https://bhoonidhi.nrsc.gov.in/ and https://bhuvan.nrsc.gov.in/",
+      "why_use": "Authoritative Indian national terrain elevation model for hydrologic slope & runoff routing."
+    },
+    {
+      "sensor": "Sentinel-2 MSI (Multispectral 10m Optical)",
+      "provider": "Copernicus / ESA",
+      "access_portal": "https://dataspace.copernicus.eu/",
+      "why_use": "Post-monsoon road network inspection, NDVI vegetation, and urban impervious surface fraction (NDBI)."
+    }
+  ],
+  "gee_script_snippet": "\n// Google Earth Engine (GEE) JavaScript Code to Extract Mumbai Flood Extent\nvar mumbai = ee.Geometry.Rectangle([72.75, 18.85, 73.05, 19.35]);\n\n// Load Sentinel-1 SAR GRD\nvar s1 = ee.ImageCollection('COPERNICUS/S1_GRD')\n  .filterBounds(mumbai)\n  .filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VH'))\n  .filter(ee.Filter.eq('instrumentMode', 'IW'));\n\n// Pre-flood & Flood periods\nvar before = s1.filterDate('2024-05-01', '2024-05-30').select('VH').mosaic().clip(mumbai);\nvar after = s1.filterDate('2024-07-05', '2024-07-15').select('VH').mosaic().clip(mumbai);\n\n// Difference for water accumulation\nvar diff = after.subtract(before);\nvar flooded = diff.lt(-3.0).and(after.lt(-18.0));\n\nMap.centerObject(mumbai, 11);\nMap.addLayer(flooded.updateMask(flooded), {palette: 'cyan'}, 'Flooded Inundation Areas');\n"
+}

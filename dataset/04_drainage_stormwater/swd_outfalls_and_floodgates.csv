@@ -1,0 +1,9 @@
+outfall_id,name,lat,lon,ward,has_flap_gate,tide_threshold_closure_m,submerged_at_high_tide,backflow_risk
+OUTF_01,Mahim Bay Outfall (Mithi River Mouth),19.04,72.839,G/N,True,3.8,True,Critical
+OUTF_02,Love Grove Outfall (Worli),18.997,72.814,G/S,True,3.85,True,High
+OUTF_03,Haji Ali Bay Outfall,18.979,72.81,D,True,3.75,True,High
+OUTF_04,Irla Outfall (Juhu Beach),19.106,72.825,K/W,True,3.8,True,High
+OUTF_05,Gazdarband Outfall (Khar Danda),19.076,72.824,H/W,True,3.8,True,High
+OUTF_06,Malad Creek Outfall (Oshiwara River),19.162,72.828,P/N,False,4.1,True,Critical
+OUTF_07,Marve Creek Outfall (Poisar River),19.195,72.818,P/N,False,4.15,True,High
+OUTF_08,Mahul Creek Outfall (Eastern Harbor),19.012,72.895,M/E,True,3.9,True,Critical

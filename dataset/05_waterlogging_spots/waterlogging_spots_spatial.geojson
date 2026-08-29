@@ -1,0 +1,1482 @@
+{
+  "type": "FeatureCollection",
+  "name": "waterlogging_spots_spatial",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_HND_01",
+        "location_name": "Hindmata Cinema Junction, Dadar / Parel",
+        "ward": "F/S",
+        "elevation_m": 1.8,
+        "historical_frequency": 14,
+        "avg_water_depth_cm": 65,
+        "primary_cause": "Saucer-shaped topographical depression, inadequate gravity fall to outfall",
+        "linked_road_id": "RD_AMB_01",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.8425,
+          19.0095
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_GND_02",
+        "location_name": "Gandhi Market / King's Circle, Sion",
+        "ward": "F/N",
+        "elevation_m": 1.9,
+        "historical_frequency": 16,
+        "avg_water_depth_cm": 75,
+        "primary_cause": "Extreme low elevation, tidal backflow from Mahim Creek via railway culvert",
+        "linked_road_id": "RD_AMB_02",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.858,
+          19.0315
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_MLN_03",
+        "location_name": "Milan Subway, Santacruz West / East",
+        "ward": "H/W",
+        "elevation_m": 1.2,
+        "historical_frequency": 18,
+        "avg_water_depth_cm": 95,
+        "primary_cause": "Railway underpass depression below groundwater table, rapid surface runoff",
+        "linked_road_id": "RD_SVR_02",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.8395,
+          19.0865
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_AND_04",
+        "location_name": "Andheri Subway, Andheri West / East",
+        "ward": "K/W",
+        "elevation_m": 1.1,
+        "historical_frequency": 22,
+        "avg_water_depth_cm": 120,
+        "primary_cause": "Severely depressed railway underpass, Mogra Nallah backflow, low suction capacity",
+        "linked_road_id": "RD_SVR_04",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.844,
+          19.119
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_KHR_05",
+        "location_name": "Khar Subway, Khar West / East",
+        "ward": "H/W",
+        "elevation_m": 1.4,
+        "historical_frequency": 12,
+        "avg_water_depth_cm": 55,
+        "primary_cause": "Depressed underpass gradient, Gazdarband Nallah tidal lock",
+        "linked_road_id": "RD_SVR_01",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.8375,
+          19.0715
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_KRL_06",
+        "location_name": "Kurla Kamani & LBS Marg Junction",
+        "ward": "L",
+        "elevation_m": 2.1,
+        "historical_frequency": 15,
+        "avg_water_depth_cm": 70,
+        "primary_cause": "Mithi River overflow overtopping road level, heavy siltation in local drains",
+        "linked_road_id": "RD_LBS_01",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.884,
+          19.072
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_SIO_07",
+        "location_name": "Sion Circle & SIES College Lowline",
+        "ward": "F/N",
+        "elevation_m": 2.0,
+        "historical_frequency": 11,
+        "avg_water_depth_cm": 50,
+        "primary_cause": "Confluence of runoff from Sion Fort hillock and flat coastal plane",
+        "linked_road_id": "RD_EEH_01",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.8625,
+          19.0385
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_DDR_08",
+        "location_name": "Dadar TT Circle & Swami Narayan Temple",
+        "ward": "F/N",
+        "elevation_m": 2.4,
+        "historical_frequency": 9,
+        "avg_water_depth_cm": 45,
+        "primary_cause": "High surface runoff accumulation from multiple arterial road intersections",
+        "linked_road_id": "RD_AMB_01",
+        "risk_severity": "Moderate-High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.8465,
+          19.0185
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_CHM_09",
+        "location_name": "Postal Colony & Shell Colony, Chembur",
+        "ward": "M/W",
+        "elevation_m": 2.6,
+        "historical_frequency": 10,
+        "avg_water_depth_cm": 55,
+        "primary_cause": "Low-lying reclaimed marshland, slow gravity drainage into Mahul Creek",
+        "linked_road_id": "RD_EEH_02",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.894,
+          19.0585
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_MLD_10",
+        "location_name": "Malad Subway & S.V. Road Junction",
+        "ward": "P/N",
+        "elevation_m": 1.5,
+        "historical_frequency": 14,
+        "avg_water_depth_cm": 85,
+        "primary_cause": "Underpass depression, Poisar river tributary backwater effect",
+        "linked_road_id": "RD_SVR_05",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.846,
+          19.1865
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_DHS_11",
+        "location_name": "Dahisar Subway, Dahisar East / West",
+        "ward": "R/N",
+        "elevation_m": 1.6,
+        "historical_frequency": 11,
+        "avg_water_depth_cm": 60,
+        "primary_cause": "Depressed railway passage, Dahisar river high stage backflow",
+        "linked_road_id": "RD_WEH_05",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.861,
+          19.251
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_CHN_12",
+        "location_name": "Chunabhatti Railway Level / Sion-Trombay Road Jn",
+        "ward": "L",
+        "elevation_m": 1.9,
+        "historical_frequency": 13,
+        "avg_water_depth_cm": 65,
+        "primary_cause": "Severe railway track and road depression, low storm drain carrying capacity",
+        "linked_road_id": "RD_SCL_01",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.873,
+          19.0515
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_WRL_13",
+        "location_name": "Worli Naka & Dr Annie Besant Road Jn",
+        "ward": "G/S",
+        "elevation_m": 2.7,
+        "historical_frequency": 7,
+        "avg_water_depth_cm": 40,
+        "primary_cause": "Road junction runoff overload, Love Grove outfall high tide head",
+        "linked_road_id": "RD_SNB_01",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.8185,
+          19.001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_BYC_14",
+        "location_name": "Byculla Police Station / Saat Rasta (Mahalaxmi)",
+        "ward": "E",
+        "elevation_m": 2.2,
+        "historical_frequency": 8,
+        "avg_water_depth_cm": 45,
+        "primary_cause": "Multi-road bottleneck convergence, old British-era arch drains siltation",
+        "linked_road_id": "RD_AMB_01",
+        "risk_severity": "Moderate-High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.829,
+          18.981
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_MNK_15",
+        "location_name": "Mankhurd Railway Station Low Line",
+        "ward": "M/E",
+        "elevation_m": 1.7,
+        "historical_frequency": 12,
+        "avg_water_depth_cm": 60,
+        "primary_cause": "Tidal creek proximity, insufficient retention pond capacity",
+        "linked_road_id": "RD_LOC_010",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.931,
+          19.0475
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_FN_016",
+        "location_name": "F/N Ward Chronic Hotspot #16 near F/N Ward Sector 28 Connec",
+        "ward": "F/N",
+        "elevation_m": 1.7,
+        "historical_frequency": 7,
+        "avg_water_depth_cm": 63,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LOC_028",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.868,
+          19.02485
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_GN_017",
+        "location_name": "G/N Ward Chronic Hotspot #17 near G/N Ward Sector 47 Connec",
+        "ward": "G/N",
+        "elevation_m": 3.1,
+        "historical_frequency": 5,
+        "avg_water_depth_cm": 48,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LOC_047",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.82642,
+          19.02356
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_KE_018",
+        "location_name": "K/E Ward Chronic Hotspot #18 near K/E Ward Sector 57 Connec",
+        "ward": "K/E",
+        "elevation_m": 7.2,
+        "historical_frequency": 12,
+        "avg_water_depth_cm": 43,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LOC_057",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.86649,
+          19.11757
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_RC_019",
+        "location_name": "R/C Ward Chronic Hotspot #19 near SV Road (Kandivali to Bor",
+        "ward": "R/C",
+        "elevation_m": 5.4,
+        "historical_frequency": 11,
+        "avg_water_depth_cm": 60,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_SVR_06",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.84814,
+          19.22608
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_L_020",
+        "location_name": "L Ward Chronic Hotspot #20 near Lal Bahadur Shastri (LBS)",
+        "ward": "L",
+        "elevation_m": 1.8,
+        "historical_frequency": 6,
+        "avg_water_depth_cm": 29,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LBS_01",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.8902,
+          19.08138
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_HW_021",
+        "location_name": "H/W Ward Chronic Hotspot #21 near SV Road (Santacruz Milan ",
+        "ward": "H/W",
+        "elevation_m": 4.7,
+        "historical_frequency": 15,
+        "avg_water_depth_cm": 31,
+        "primary_cause": "Catch-pit Siltation",
+        "linked_road_id": "RD_SVR_02",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.82524,
+          19.05949
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_MW_022",
+        "location_name": "M/W Ward Chronic Hotspot #22 near M/W Ward Sector 50 Connec",
+        "ward": "M/W",
+        "elevation_m": 4.3,
+        "historical_frequency": 6,
+        "avg_water_depth_cm": 60,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LOC_050",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.88806,
+          19.04063
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_S_023",
+        "location_name": "S Ward Chronic Hotspot #23 near S Ward Sector 70 Connecto",
+        "ward": "S",
+        "elevation_m": 8.3,
+        "historical_frequency": 12,
+        "avg_water_depth_cm": 75,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LOC_070",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.92246,
+          19.14862
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_S_024",
+        "location_name": "S Ward Chronic Hotspot #24 near S Ward Sector 3 Connector",
+        "ward": "S",
+        "elevation_m": 9.0,
+        "historical_frequency": 5,
+        "avg_water_depth_cm": 60,
+        "primary_cause": "Tidal Lockout",
+        "linked_road_id": "RD_LOC_003",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.92148,
+          19.13247
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_E_025",
+        "location_name": "E Ward Chronic Hotspot #25 near E Ward Sector 62 Connecto",
+        "ward": "E",
+        "elevation_m": 2.6,
+        "historical_frequency": 15,
+        "avg_water_depth_cm": 49,
+        "primary_cause": "Tidal Lockout",
+        "linked_road_id": "RD_LOC_062",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.83897,
+          18.96529
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_E_026",
+        "location_name": "E Ward Chronic Hotspot #26 near E Ward Sector 55 Connecto",
+        "ward": "E",
+        "elevation_m": 3.1,
+        "historical_frequency": 10,
+        "avg_water_depth_cm": 30,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LOC_055",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.82286,
+          18.97703
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_GS_027",
+        "location_name": "G/S Ward Chronic Hotspot #27 near Senapati Bapat Marg (Maha",
+        "ward": "G/S",
+        "elevation_m": 2.6,
+        "historical_frequency": 6,
+        "avg_water_depth_cm": 31,
+        "primary_cause": "Tidal Lockout",
+        "linked_road_id": "RD_SNB_01",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.81851,
+          18.98856
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_T_028",
+        "location_name": "T Ward Chronic Hotspot #28 near T Ward Sector 41 Connecto",
+        "ward": "T",
+        "elevation_m": 12.1,
+        "historical_frequency": 12,
+        "avg_water_depth_cm": 34,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LOC_041",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.95864,
+          19.16231
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_N_029",
+        "location_name": "N Ward Chronic Hotspot #29 near N Ward Sector 77 Connecto",
+        "ward": "N",
+        "elevation_m": 7.7,
+        "historical_frequency": 12,
+        "avg_water_depth_cm": 47,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LOC_077",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.89979,
+          19.08321
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_RS_030",
+        "location_name": "R/S Ward Chronic Hotspot #30 near R/S Ward Sector 75 Connec",
+        "ward": "R/S",
+        "elevation_m": 5.6,
+        "historical_frequency": 4,
+        "avg_water_depth_cm": 30,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_LOC_075",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.87004,
+          19.20035
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_KW_031",
+        "location_name": "K/W Ward Chronic Hotspot #31 near New Link Road (Juhu Circl",
+        "ward": "K/W",
+        "elevation_m": 2.4,
+        "historical_frequency": 15,
+        "avg_water_depth_cm": 74,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LNK_02",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.83153,
+          19.12154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_L_032",
+        "location_name": "L Ward Chronic Hotspot #32 near Lal Bahadur Shastri (LBS)",
+        "ward": "L",
+        "elevation_m": 1.4,
+        "historical_frequency": 11,
+        "avg_water_depth_cm": 67,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_LBS_01",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.8857,
+          19.08209
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_L_033",
+        "location_name": "L Ward Chronic Hotspot #33 near Lal Bahadur Shastri (LBS)",
+        "ward": "L",
+        "elevation_m": 1.9,
+        "historical_frequency": 5,
+        "avg_water_depth_cm": 61,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LBS_01",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.89018,
+          19.0697
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_KW_034",
+        "location_name": "K/W Ward Chronic Hotspot #34 near SV Road (Vile Parle to An",
+        "ward": "K/W",
+        "elevation_m": 2.3,
+        "historical_frequency": 4,
+        "avg_water_depth_cm": 65,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_SVR_03",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.84069,
+          19.11009
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_FS_035",
+        "location_name": "F/S Ward Chronic Hotspot #35 near F/S Ward Sector 11 Connec",
+        "ward": "F/S",
+        "elevation_m": 1.8,
+        "historical_frequency": 10,
+        "avg_water_depth_cm": 60,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_LOC_011",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.83983,
+          19.00362
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_RN_036",
+        "location_name": "R/N Ward Chronic Hotspot #36 near R/N Ward Sector 63 Connec",
+        "ward": "R/N",
+        "elevation_m": 4.6,
+        "historical_frequency": 5,
+        "avg_water_depth_cm": 54,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_LOC_063",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.87164,
+          19.25715
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_PN_037",
+        "location_name": "P/N Ward Chronic Hotspot #37 near P/N Ward Sector 53 Connec",
+        "ward": "P/N",
+        "elevation_m": 3.9,
+        "historical_frequency": 6,
+        "avg_water_depth_cm": 29,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LOC_053",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.83473,
+          19.17903
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_C_038",
+        "location_name": "C Ward Chronic Hotspot #38 near C Ward Sector 48 Connecto",
+        "ward": "C",
+        "elevation_m": 2.5,
+        "historical_frequency": 11,
+        "avg_water_depth_cm": 28,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LOC_048",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.82218,
+          18.94137
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_E_039",
+        "location_name": "E Ward Chronic Hotspot #39 near E Ward Sector 55 Connecto",
+        "ward": "E",
+        "elevation_m": 2.7,
+        "historical_frequency": 10,
+        "avg_water_depth_cm": 65,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LOC_055",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.84314,
+          18.97535
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_S_040",
+        "location_name": "S Ward Chronic Hotspot #40 near JVLR (Powai Lake to EEH K",
+        "ward": "S",
+        "elevation_m": 8.7,
+        "historical_frequency": 7,
+        "avg_water_depth_cm": 70,
+        "primary_cause": "Catch-pit Siltation",
+        "linked_road_id": "RD_JVL_02",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.94045,
+          19.1339
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_RN_041",
+        "location_name": "R/N Ward Chronic Hotspot #41 near R/N Ward Sector 63 Connec",
+        "ward": "R/N",
+        "elevation_m": 3.7,
+        "historical_frequency": 14,
+        "avg_water_depth_cm": 33,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_LOC_063",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.85922,
+          19.25729
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_PS_042",
+        "location_name": "P/S Ward Chronic Hotspot #42 near New Link Road (Oshiwara t",
+        "ward": "P/S",
+        "elevation_m": 5.5,
+        "historical_frequency": 5,
+        "avg_water_depth_cm": 25,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LNK_03",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.83209,
+          19.16034
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_L_043",
+        "location_name": "L Ward Chronic Hotspot #43 near Eastern Express Highway (",
+        "ward": "L",
+        "elevation_m": 2.5,
+        "historical_frequency": 6,
+        "avg_water_depth_cm": 25,
+        "primary_cause": "Catch-pit Siltation",
+        "linked_road_id": "RD_EEH_02",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.87961,
+          19.05624
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_FN_044",
+        "location_name": "F/N Ward Chronic Hotspot #44 near Eastern Express Highway (",
+        "ward": "F/N",
+        "elevation_m": 1.5,
+        "historical_frequency": 12,
+        "avg_water_depth_cm": 26,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_EEH_01",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.86603,
+          19.02487
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_RN_045",
+        "location_name": "R/N Ward Chronic Hotspot #45 near R/N Ward Sector 8 Connect",
+        "ward": "R/N",
+        "elevation_m": 3.6,
+        "historical_frequency": 5,
+        "avg_water_depth_cm": 56,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_LOC_008",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.86553,
+          19.25751
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_MW_046",
+        "location_name": "M/W Ward Chronic Hotspot #46 near Eastern Freeway (Orange G",
+        "ward": "M/W",
+        "elevation_m": 2.6,
+        "historical_frequency": 8,
+        "avg_water_depth_cm": 31,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_EFR_01",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.90164,
+          19.06239
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_C_047",
+        "location_name": "C Ward Chronic Hotspot #47 near C Ward Sector 5 Connector",
+        "ward": "C",
+        "elevation_m": 3.6,
+        "historical_frequency": 13,
+        "avg_water_depth_cm": 42,
+        "primary_cause": "Tidal Lockout",
+        "linked_road_id": "RD_LOC_005",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.82664,
+          18.95062
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_B_048",
+        "location_name": "B Ward Chronic Hotspot #48 near B Ward Sector 76 Connecto",
+        "ward": "B",
+        "elevation_m": 3.4,
+        "historical_frequency": 8,
+        "avg_water_depth_cm": 45,
+        "primary_cause": "Catch-pit Siltation",
+        "linked_road_id": "RD_LOC_076",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.83669,
+          18.9541
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_PN_049",
+        "location_name": "P/N Ward Chronic Hotspot #49 near SV Road (Goregaon to Mala",
+        "ward": "P/N",
+        "elevation_m": 3.9,
+        "historical_frequency": 4,
+        "avg_water_depth_cm": 45,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_SVR_05",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.84113,
+          19.18954
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_B_050",
+        "location_name": "B Ward Chronic Hotspot #50 near B Ward Sector 76 Connecto",
+        "ward": "B",
+        "elevation_m": 3.3,
+        "historical_frequency": 15,
+        "avg_water_depth_cm": 69,
+        "primary_cause": "Tidal Lockout",
+        "linked_road_id": "RD_LOC_076",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.82343,
+          18.94868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_MW_051",
+        "location_name": "M/W Ward Chronic Hotspot #51 near M/W Ward Sector 46 Connec",
+        "ward": "M/W",
+        "elevation_m": 4.0,
+        "historical_frequency": 15,
+        "avg_water_depth_cm": 41,
+        "primary_cause": "Catch-pit Siltation",
+        "linked_road_id": "RD_LOC_046",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.88091,
+          19.06898
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_D_052",
+        "location_name": "D Ward Chronic Hotspot #52 near D Ward Sector 69 Connecto",
+        "ward": "D",
+        "elevation_m": 8.1,
+        "historical_frequency": 14,
+        "avg_water_depth_cm": 35,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LOC_069",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.80593,
+          18.94924
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_FS_053",
+        "location_name": "F/S Ward Chronic Hotspot #53 near Dr. Babasaheb Ambedkar Ro",
+        "ward": "F/S",
+        "elevation_m": 1.7,
+        "historical_frequency": 12,
+        "avg_water_depth_cm": 40,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_AMB_01",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.8393,
+          18.99399
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_GS_054",
+        "location_name": "G/S Ward Chronic Hotspot #54 near G/S Ward Sector 38 Connec",
+        "ward": "G/S",
+        "elevation_m": 2.5,
+        "historical_frequency": 6,
+        "avg_water_depth_cm": 71,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_LOC_038",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.81258,
+          18.9966
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_N_055",
+        "location_name": "N Ward Chronic Hotspot #55 near N Ward Sector 72 Connecto",
+        "ward": "N",
+        "elevation_m": 8.4,
+        "historical_frequency": 4,
+        "avg_water_depth_cm": 74,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LOC_072",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.91314,
+          19.08224
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_T_056",
+        "location_name": "T Ward Chronic Hotspot #56 near T Ward Sector 26 Connecto",
+        "ward": "T",
+        "elevation_m": 11.7,
+        "historical_frequency": 13,
+        "avg_water_depth_cm": 69,
+        "primary_cause": "Tidal Lockout",
+        "linked_road_id": "RD_LOC_026",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.95193,
+          19.17724
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_S_057",
+        "location_name": "S Ward Chronic Hotspot #57 near S Ward Sector 58 Connecto",
+        "ward": "S",
+        "elevation_m": 9.0,
+        "historical_frequency": 11,
+        "avg_water_depth_cm": 60,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LOC_058",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.92653,
+          19.14997
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_L_058",
+        "location_name": "L Ward Chronic Hotspot #58 near L Ward Sector 40 Connecto",
+        "ward": "L",
+        "elevation_m": 2.8,
+        "historical_frequency": 5,
+        "avg_water_depth_cm": 74,
+        "primary_cause": "Catch-pit Siltation",
+        "linked_road_id": "RD_LOC_040",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.88819,
+          19.06209
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_T_059",
+        "location_name": "T Ward Chronic Hotspot #59 near T Ward Sector 56 Connecto",
+        "ward": "T",
+        "elevation_m": 10.8,
+        "historical_frequency": 13,
+        "avg_water_depth_cm": 40,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_LOC_056",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.94419,
+          19.17351
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_PN_060",
+        "location_name": "P/N Ward Chronic Hotspot #60 near P/N Ward Sector 53 Connec",
+        "ward": "P/N",
+        "elevation_m": 3.6,
+        "historical_frequency": 12,
+        "avg_water_depth_cm": 44,
+        "primary_cause": "Tidal Lockout",
+        "linked_road_id": "RD_LOC_053",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.83151,
+          19.18184
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_KE_061",
+        "location_name": "K/E Ward Chronic Hotspot #61 near K/E Ward Sector 57 Connec",
+        "ward": "K/E",
+        "elevation_m": 6.8,
+        "historical_frequency": 6,
+        "avg_water_depth_cm": 57,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LOC_057",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.86955,
+          19.1278
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_PS_062",
+        "location_name": "P/S Ward Chronic Hotspot #62 near Western Express Highway (",
+        "ward": "P/S",
+        "elevation_m": 4.4,
+        "historical_frequency": 6,
+        "avg_water_depth_cm": 51,
+        "primary_cause": "Insufficient Drain Gradient",
+        "linked_road_id": "RD_WEH_03",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.85448,
+          19.15968
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_T_063",
+        "location_name": "T Ward Chronic Hotspot #63 near T Ward Sector 41 Connecto",
+        "ward": "T",
+        "elevation_m": 10.7,
+        "historical_frequency": 14,
+        "avg_water_depth_cm": 54,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LOC_041",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.9538,
+          19.17627
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_GN_064",
+        "location_name": "G/N Ward Chronic Hotspot #64 near G/N Ward Sector 47 Connec",
+        "ward": "G/N",
+        "elevation_m": 2.2,
+        "historical_frequency": 15,
+        "avg_water_depth_cm": 25,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LOC_047",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.83393,
+          19.01654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_MW_065",
+        "location_name": "M/W Ward Chronic Hotspot #65 near Eastern Freeway (Orange G",
+        "ward": "M/W",
+        "elevation_m": 3.7,
+        "historical_frequency": 4,
+        "avg_water_depth_cm": 56,
+        "primary_cause": "Tidal Lockout",
+        "linked_road_id": "RD_EFR_01",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.90894,
+          19.05066
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_RC_066",
+        "location_name": "R/C Ward Chronic Hotspot #66 near Western Express Highway (",
+        "ward": "R/C",
+        "elevation_m": 5.2,
+        "historical_frequency": 5,
+        "avg_water_depth_cm": 64,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_WEH_04",
+        "risk_severity": "High"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.84515,
+          19.22155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_E_067",
+        "location_name": "E Ward Chronic Hotspot #67 near E Ward Sector 62 Connecto",
+        "ward": "E",
+        "elevation_m": 3.6,
+        "historical_frequency": 9,
+        "avg_water_depth_cm": 43,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_LOC_062",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.83805,
+          18.95949
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_HE_068",
+        "location_name": "H/E Ward Chronic Hotspot #68 near BKC Connector & Extension",
+        "ward": "H/E",
+        "elevation_m": 3.1,
+        "historical_frequency": 7,
+        "avg_water_depth_cm": 74,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_SCL_02",
+        "risk_severity": "Critical"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.85948,
+          19.08212
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_B_069",
+        "location_name": "B Ward Chronic Hotspot #69 near B Ward Sector 1 Connector",
+        "ward": "B",
+        "elevation_m": 2.9,
+        "historical_frequency": 4,
+        "avg_water_depth_cm": 38,
+        "primary_cause": "Railway Culvert Constriction",
+        "linked_road_id": "RD_LOC_001",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.8496,
+          18.93691
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "spot_id": "WLS_A_070",
+        "location_name": "A Ward Chronic Hotspot #70 near A Ward Sector 30 Connecto",
+        "ward": "A",
+        "elevation_m": 3.7,
+        "historical_frequency": 15,
+        "avg_water_depth_cm": 25,
+        "primary_cause": "High Surface Runoff Coefficient",
+        "linked_road_id": "RD_LOC_030",
+        "risk_severity": "Moderate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.84383,
+          18.91799
+        ]
+      }
+    }
+  ]
+}

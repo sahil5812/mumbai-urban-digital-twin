@@ -1,0 +1,924 @@
+{
+  "type": "FeatureCollection",
+  "name": "mumbai_flood_inundation_zones",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "A",
+        "ward_name": "Colaba / Fort / Marine Lines",
+        "vulnerability_score": 58.5,
+        "risk_category": "Moderate",
+        "chronic_flood_spots": 12,
+        "avg_flood_depth_m": 0.95
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.819,
+              18.907
+            ],
+            [
+              72.849,
+              18.907
+            ],
+            [
+              72.849,
+              18.937
+            ],
+            [
+              72.819,
+              18.937
+            ],
+            [
+              72.819,
+              18.907
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "B",
+        "ward_name": "Sandhurst Road / Dongri",
+        "vulnerability_score": 62.0,
+        "risk_category": "Moderate-High",
+        "chronic_flood_spots": 8,
+        "avg_flood_depth_m": 0.99
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.821,
+              18.934
+            ],
+            [
+              72.851,
+              18.934
+            ],
+            [
+              72.851,
+              18.964
+            ],
+            [
+              72.821,
+              18.964
+            ],
+            [
+              72.821,
+              18.934
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "C",
+        "ward_name": "Marine Lines / Pydhonie / Bhuleshwar",
+        "vulnerability_score": 67.5,
+        "risk_category": "High",
+        "chronic_flood_spots": 11,
+        "avg_flood_depth_m": 1.06
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.81,
+              18.933
+            ],
+            [
+              72.84,
+              18.933
+            ],
+            [
+              72.84,
+              18.963
+            ],
+            [
+              72.81,
+              18.963
+            ],
+            [
+              72.81,
+              18.933
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "D",
+        "ward_name": "Grant Road / Malabar Hill / Tardeo",
+        "vulnerability_score": 54.0,
+        "risk_category": "Moderate",
+        "chronic_flood_spots": 14,
+        "avg_flood_depth_m": 0.9
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.797,
+              18.948
+            ],
+            [
+              72.827,
+              18.948
+            ],
+            [
+              72.827,
+              18.978
+            ],
+            [
+              72.797,
+              18.978
+            ],
+            [
+              72.797,
+              18.948
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "E",
+        "ward_name": "Byculla / Mumbai Central / Mazagon",
+        "vulnerability_score": 76.0,
+        "risk_category": "High",
+        "chronic_flood_spots": 19,
+        "avg_flood_depth_m": 1.16
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.82,
+              18.957
+            ],
+            [
+              72.85,
+              18.957
+            ],
+            [
+              72.85,
+              18.987
+            ],
+            [
+              72.82,
+              18.987
+            ],
+            [
+              72.82,
+              18.957
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "F/N",
+        "ward_name": "Matunga / Sion / Wadala",
+        "vulnerability_score": 92.5,
+        "risk_category": "Critical",
+        "chronic_flood_spots": 34,
+        "avg_flood_depth_m": 1.36
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.845,
+              19.015
+            ],
+            [
+              72.875,
+              19.015
+            ],
+            [
+              72.875,
+              19.045
+            ],
+            [
+              72.845,
+              19.045
+            ],
+            [
+              72.845,
+              19.015
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "F/S",
+        "ward_name": "Parel / Sewri / Hindmata",
+        "vulnerability_score": 89.0,
+        "risk_category": "Critical",
+        "chronic_flood_spots": 28,
+        "avg_flood_depth_m": 1.32
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.827,
+              18.986
+            ],
+            [
+              72.857,
+              18.986
+            ],
+            [
+              72.857,
+              19.016
+            ],
+            [
+              72.827,
+              19.016
+            ],
+            [
+              72.827,
+              18.986
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "G/N",
+        "ward_name": "Dadar / Mahim / Dharavi",
+        "vulnerability_score": 91.0,
+        "risk_category": "Critical",
+        "chronic_flood_spots": 31,
+        "avg_flood_depth_m": 1.34
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.825,
+              19.013
+            ],
+            [
+              72.855,
+              19.013
+            ],
+            [
+              72.855,
+              19.043
+            ],
+            [
+              72.825,
+              19.043
+            ],
+            [
+              72.825,
+              19.013
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "G/S",
+        "ward_name": "Worli / Lower Parel / Prabhadevi",
+        "vulnerability_score": 74.0,
+        "risk_category": "High",
+        "chronic_flood_spots": 22,
+        "avg_flood_depth_m": 1.14
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.803,
+              18.98
+            ],
+            [
+              72.833,
+              18.98
+            ],
+            [
+              72.833,
+              19.01
+            ],
+            [
+              72.803,
+              19.01
+            ],
+            [
+              72.803,
+              18.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "H/E",
+        "ward_name": "Bandra East / Santacruz East / Vakola",
+        "vulnerability_score": 86.5,
+        "risk_category": "Critical",
+        "chronic_flood_spots": 29,
+        "avg_flood_depth_m": 1.29
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.837,
+              19.06
+            ],
+            [
+              72.867,
+              19.06
+            ],
+            [
+              72.867,
+              19.09
+            ],
+            [
+              72.837,
+              19.09
+            ],
+            [
+              72.837,
+              19.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "H/W",
+        "ward_name": "Bandra West / Khar / Santacruz West",
+        "vulnerability_score": 68.0,
+        "risk_category": "High",
+        "chronic_flood_spots": 18,
+        "avg_flood_depth_m": 1.07
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.819,
+              19.045
+            ],
+            [
+              72.849,
+              19.045
+            ],
+            [
+              72.849,
+              19.075
+            ],
+            [
+              72.819,
+              19.075
+            ],
+            [
+              72.819,
+              19.045
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "K/E",
+        "ward_name": "Andheri East / Jogeshwari East / Vile Parle E",
+        "vulnerability_score": 75.5,
+        "risk_category": "High",
+        "chronic_flood_spots": 26,
+        "avg_flood_depth_m": 1.16
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85,
+              19.1
+            ],
+            [
+              72.88,
+              19.1
+            ],
+            [
+              72.88,
+              19.13
+            ],
+            [
+              72.85,
+              19.13
+            ],
+            [
+              72.85,
+              19.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "K/W",
+        "ward_name": "Andheri West / Juhu / Versova",
+        "vulnerability_score": 88.0,
+        "risk_category": "Critical",
+        "chronic_flood_spots": 32,
+        "avg_flood_depth_m": 1.31
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.815,
+              19.11
+            ],
+            [
+              72.845,
+              19.11
+            ],
+            [
+              72.845,
+              19.14
+            ],
+            [
+              72.815,
+              19.14
+            ],
+            [
+              72.815,
+              19.11
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "L",
+        "ward_name": "Kurla / Chunabhatti / Asalpha",
+        "vulnerability_score": 95.0,
+        "risk_category": "Critical",
+        "chronic_flood_spots": 38,
+        "avg_flood_depth_m": 1.39
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865,
+              19.053
+            ],
+            [
+              72.895,
+              19.053
+            ],
+            [
+              72.895,
+              19.083
+            ],
+            [
+              72.865,
+              19.083
+            ],
+            [
+              72.865,
+              19.053
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "M/E",
+        "ward_name": "Govandi / Mankhurd / Shivaji Nagar",
+        "vulnerability_score": 81.0,
+        "risk_category": "High",
+        "chronic_flood_spots": 24,
+        "avg_flood_depth_m": 1.22
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.9,
+              19.03
+            ],
+            [
+              72.93,
+              19.03
+            ],
+            [
+              72.93,
+              19.06
+            ],
+            [
+              72.9,
+              19.06
+            ],
+            [
+              72.9,
+              19.03
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "M/W",
+        "ward_name": "Chembur / Mahul / Tilak Nagar",
+        "vulnerability_score": 77.0,
+        "risk_category": "High",
+        "chronic_flood_spots": 21,
+        "avg_flood_depth_m": 1.17
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.88,
+              19.04
+            ],
+            [
+              72.91,
+              19.04
+            ],
+            [
+              72.91,
+              19.07
+            ],
+            [
+              72.88,
+              19.07
+            ],
+            [
+              72.88,
+              19.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "N",
+        "ward_name": "Ghatkopar / Vikhroli West",
+        "vulnerability_score": 64.0,
+        "risk_category": "Moderate-High",
+        "chronic_flood_spots": 17,
+        "avg_flood_depth_m": 1.02
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.89,
+              19.07
+            ],
+            [
+              72.92,
+              19.07
+            ],
+            [
+              72.92,
+              19.1
+            ],
+            [
+              72.89,
+              19.1
+            ],
+            [
+              72.89,
+              19.07
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "P/N",
+        "ward_name": "Malad / Marve / Manori",
+        "vulnerability_score": 79.5,
+        "risk_category": "High",
+        "chronic_flood_spots": 27,
+        "avg_flood_depth_m": 1.2
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.825,
+              19.17
+            ],
+            [
+              72.855,
+              19.17
+            ],
+            [
+              72.855,
+              19.2
+            ],
+            [
+              72.825,
+              19.2
+            ],
+            [
+              72.825,
+              19.17
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "P/S",
+        "ward_name": "Goregaon / Oshiwara",
+        "vulnerability_score": 71.0,
+        "risk_category": "High",
+        "chronic_flood_spots": 19,
+        "avg_flood_depth_m": 1.1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.83,
+              19.14
+            ],
+            [
+              72.86,
+              19.14
+            ],
+            [
+              72.86,
+              19.17
+            ],
+            [
+              72.83,
+              19.17
+            ],
+            [
+              72.83,
+              19.14
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "R/C",
+        "ward_name": "Borivali / Gorai",
+        "vulnerability_score": 59.0,
+        "risk_category": "Moderate",
+        "chronic_flood_spots": 15,
+        "avg_flood_depth_m": 0.96
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.84,
+              19.215
+            ],
+            [
+              72.87,
+              19.215
+            ],
+            [
+              72.87,
+              19.245
+            ],
+            [
+              72.84,
+              19.245
+            ],
+            [
+              72.84,
+              19.215
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "R/N",
+        "ward_name": "Dahisar",
+        "vulnerability_score": 73.0,
+        "risk_category": "High",
+        "chronic_flood_spots": 18,
+        "avg_flood_depth_m": 1.13
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.845,
+              19.24
+            ],
+            [
+              72.875,
+              19.24
+            ],
+            [
+              72.875,
+              19.27
+            ],
+            [
+              72.845,
+              19.27
+            ],
+            [
+              72.845,
+              19.24
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "R/S",
+        "ward_name": "Kandivali / Charkop",
+        "vulnerability_score": 66.0,
+        "risk_category": "Moderate-High",
+        "chronic_flood_spots": 16,
+        "avg_flood_depth_m": 1.04
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85,
+              19.19
+            ],
+            [
+              72.88,
+              19.19
+            ],
+            [
+              72.88,
+              19.22
+            ],
+            [
+              72.85,
+              19.22
+            ],
+            [
+              72.85,
+              19.19
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "S",
+        "ward_name": "Bhandup / Powai / Kanjurmarg",
+        "vulnerability_score": 57.0,
+        "risk_category": "Moderate",
+        "chronic_flood_spots": 15,
+        "avg_flood_depth_m": 0.93
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.915,
+              19.13
+            ],
+            [
+              72.945,
+              19.13
+            ],
+            [
+              72.945,
+              19.16
+            ],
+            [
+              72.915,
+              19.16
+            ],
+            [
+              72.915,
+              19.13
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ward_id": "T",
+        "ward_name": "Mulund / Nahur",
+        "vulnerability_score": 48.0,
+        "risk_category": "Low-Moderate",
+        "chronic_flood_spots": 11,
+        "avg_flood_depth_m": 0.83
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.94,
+              19.16
+            ],
+            [
+              72.97,
+              19.16
+            ],
+            [
+              72.97,
+              19.19
+            ],
+            [
+              72.94,
+              19.19
+            ],
+            [
+              72.94,
+              19.16
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

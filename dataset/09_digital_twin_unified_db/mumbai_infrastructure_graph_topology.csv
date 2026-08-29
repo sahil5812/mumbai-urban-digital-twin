@@ -1,0 +1,23 @@
+source_node_id,target_node_id,relationship_type,weight_impact_factor,description
+RD_WEH_01,DRN_VAK_01,HYDRAULIC_RUNOFF,0.85,Runoff drains into Vakola Nallah
+RD_WEH_02,DRN_IRL_01,HYDRAULIC_RUNOFF,0.75,Runoff drains into Irla Nallah
+RD_WEH_03,DRN_OSH_01,HYDRAULIC_RUNOFF,0.8,Runoff drains into Oshiwara River
+RD_WEH_04,DRN_POI_01,HYDRAULIC_RUNOFF,0.78,Runoff drains into Poisar River
+RD_WEH_05,DRN_DAH_01,HYDRAULIC_RUNOFF,0.9,Runoff drains into Dahisar River
+RD_EEH_01,DRN_HND_01,HYDRAULIC_RUNOFF,0.88,Sion-Hindmata SWD conduit linkage
+RD_EEH_02,DRN_MIT_02,HYDRAULIC_RUNOFF,0.92,Kurla runoff into Mithi River Reach II
+RD_EEH_03,DRN_MHL_01,HYDRAULIC_RUNOFF,0.7,Ghatkopar runoff into Mahul Creek
+RD_SVR_02,DRN_GAZ_01,HYDRAULIC_RUNOFF,0.95,Milan Subway lowline drains to Gazdarband
+RD_SVR_04,DRN_IRL_01,HYDRAULIC_RUNOFF,0.9,Andheri Subway lowline drains to Irla
+DRN_MIT_03,PMP_MAHIM_01,HYDRAULIC_CONVEYANCE,0.98,Mithi discharge to Mahim Tidal Outfall
+DRN_VAK_01,DRN_MIT_02,HYDRAULIC_CONVEYANCE,0.9,Vakola confluence into Mithi at BKC
+DRN_HND_01,PMP_BRITANNIA_01,HYDRAULIC_CONVEYANCE,0.95,Hindmata underground sump pumped to Britannia PS
+DRN_GAZ_01,PMP_GAZDARBAND_01,HYDRAULIC_CONVEYANCE,0.92,Gazdarband pumped to Arabian Sea
+DRN_IRL_01,PMP_IRLA_01,HYDRAULIC_CONVEYANCE,0.94,Irla pumped to Juhu Arabian Sea Outfall
+WL_HND_01,RD_BAR_01,DISRUPTION_SPILLOVER,0.95,Hindmata flooding shuts Dr. Ambedkar Rd
+WL_HND_01,RD_EEH_01,DISRUPTION_SPILLOVER,0.82,Traffic diverted to Sion/EEH causing 45m jam
+WL_MLN_01,RD_SVR_02,DISRUPTION_SPILLOVER,0.98,"Milan Subway closed, SV Road paralyzed"
+WL_MLN_01,RD_WEH_01,DISRUPTION_SPILLOVER,0.75,Traffic diverts to WEH Santacruz flyover
+WL_AND_01,RD_SVR_04,DISRUPTION_SPILLOVER,0.98,"Andheri Subway closed, traffic chokes SV Rd"
+WL_KRL_01,RD_EEH_02,DISRUPTION_SPILLOVER,0.9,"Kurla Kamani flooded, LBS and EEH snarled"
+WL_SION_01,RD_EEH_01,DISRUPTION_SPILLOVER,0.95,"Gandhi Market flooded, Sion Circle jammed"

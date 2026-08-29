@@ -1,0 +1,9 @@
+corridor_id,corridor_name,length_km,free_flow_speed_kmh,normal_peak_speed_kmh,daily_pcu_volume,linked_road_ids
+COR_WEH,Western Express Highway (Dahisar to Bandra),25.5,65.0,28.0,280000,"RD_WEH_01,RD_WEH_02,RD_WEH_03,RD_WEH_04,RD_WEH_05"
+COR_EEH,Eastern Express Highway (Mulund to Sion),23.5,70.0,32.0,220000,"RD_EEH_01,RD_EEH_02,RD_EEH_03,RD_EEH_04"
+COR_SVR,Swami Vivekanand (SV) Road Corridor,21.0,45.0,14.0,140000,"RD_SVR_01,RD_SVR_02,RD_SVR_03,RD_SVR_04,RD_SVR_05,RD_SVR_06"
+COR_LBS,LBS Marg Corridor (Sion to Mulund),19.5,40.0,12.0,160000,"RD_LBS_01,RD_LBS_02,RD_LBS_03,RD_LBS_04"
+COR_LNK,New Link Road (Andheri West to Dahisar),18.0,50.0,22.0,150000,"RD_LNK_01,RD_LNK_02,RD_LNK_03,RD_LNK_04,RD_LNK_05"
+COR_JVL,Jogeshwari Vikhroli Link Road (JVLR),10.6,55.0,18.0,130000,"RD_JVL_01,RD_JVL_02"
+COR_SCL,Santacruz Chembur Link Road (SCLR),7.4,55.0,20.0,95000,"RD_SCL_01,RD_SCL_02"
+COR_AMB,Dr. Ambedkar Road (Byculla to Sion),8.5,50.0,16.0,175000,"RD_AMB_01,RD_AMB_02"

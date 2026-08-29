@@ -1,0 +1,106 @@
+road_id,road_name,ward,survey_cycle,surface_type,iri_roughness_m_per_km,riding_quality,structural_crack_index_pct,rutting_depth_mm
+RD_WEH_01,Western Express Highway (Bandra to Santacruz),H/E,Pre-Monsoon 2024,Asphalt Over CC Base,3.9,Fair,5.8,14.5
+RD_WEH_01,Western Express Highway (Bandra to Santacruz),H/E,Mid-Monsoon 2024,Asphalt Over CC Base,6.03,Poor / Degraded,11.4,15.4
+RD_WEH_01,Western Express Highway (Bandra to Santacruz),H/E,Post-Monsoon 2024,Asphalt Over CC Base,5.19,Poor / Degraded,5.6,14.0
+RD_WEH_02,Western Express Highway (Santacruz to Andheri Flyover),K/E,Pre-Monsoon 2024,Mastic Asphalt,3.08,Fair,12.4,17.7
+RD_WEH_02,Western Express Highway (Santacruz to Andheri Flyover),K/E,Mid-Monsoon 2024,Mastic Asphalt,6.2,Poor / Degraded,4.6,10.4
+RD_WEH_02,Western Express Highway (Santacruz to Andheri Flyover),K/E,Post-Monsoon 2024,Mastic Asphalt,5.68,Poor / Degraded,11.0,12.9
+RD_WEH_03,Western Express Highway (Andheri to Goregaon Hub),P/S,Pre-Monsoon 2024,Mastic Asphalt,3.34,Fair,10.2,18.5
+RD_WEH_03,Western Express Highway (Andheri to Goregaon Hub),P/S,Mid-Monsoon 2024,Mastic Asphalt,6.43,Poor / Degraded,8.9,8.3
+RD_WEH_03,Western Express Highway (Andheri to Goregaon Hub),P/S,Post-Monsoon 2024,Mastic Asphalt,5.24,Poor / Degraded,9.0,6.3
+RD_WEH_04,Western Express Highway (Goregaon to Borivali National Park),R/C,Pre-Monsoon 2024,Cement Concrete,2.05,Good,2.0,1.0
+RD_WEH_04,Western Express Highway (Goregaon to Borivali National Park),R/C,Mid-Monsoon 2024,Cement Concrete,2.53,Good,1.1,0.6
+RD_WEH_04,Western Express Highway (Goregaon to Borivali National Park),R/C,Post-Monsoon 2024,Cement Concrete,2.39,Good,2.7,0.0
+RD_WEH_05,Western Express Highway (Borivali to Dahisar Toll Naka),R/N,Pre-Monsoon 2024,Cement Concrete,2.08,Good,1.8,1.7
+RD_WEH_05,Western Express Highway (Borivali to Dahisar Toll Naka),R/N,Mid-Monsoon 2024,Cement Concrete,2.46,Good,3.8,1.3
+RD_WEH_05,Western Express Highway (Borivali to Dahisar Toll Naka),R/N,Post-Monsoon 2024,Cement Concrete,2.37,Good,1.8,0.5
+RD_SVR_01,Swami Vivekanand (SV) Road (Bandra Lucky Jn to Khar),H/W,Pre-Monsoon 2024,Bituminous Asphalt,3.9,Fair,3.9,21.7
+RD_SVR_01,Swami Vivekanand (SV) Road (Bandra Lucky Jn to Khar),H/W,Mid-Monsoon 2024,Bituminous Asphalt,6.48,Poor / Degraded,10.0,7.5
+RD_SVR_01,Swami Vivekanand (SV) Road (Bandra Lucky Jn to Khar),H/W,Post-Monsoon 2024,Bituminous Asphalt,5.34,Poor / Degraded,13.8,21.8
+RD_SVR_02,SV Road (Santacruz Milan Subway Approach),H/W,Pre-Monsoon 2024,Bituminous Asphalt,4.23,Fair,3.7,10.8
+RD_SVR_02,SV Road (Santacruz Milan Subway Approach),H/W,Mid-Monsoon 2024,Bituminous Asphalt,6.05,Poor / Degraded,9.0,21.9
+RD_SVR_02,SV Road (Santacruz Milan Subway Approach),H/W,Post-Monsoon 2024,Bituminous Asphalt,5.38,Poor / Degraded,2.9,17.9
+RD_SVR_03,SV Road (Vile Parle to Andheri Station West),K/W,Pre-Monsoon 2024,Mastic Asphalt,4.21,Fair,5.4,6.1
+RD_SVR_03,SV Road (Vile Parle to Andheri Station West),K/W,Mid-Monsoon 2024,Mastic Asphalt,6.25,Poor / Degraded,5.9,7.2
+RD_SVR_03,SV Road (Vile Parle to Andheri Station West),K/W,Post-Monsoon 2024,Mastic Asphalt,5.11,Poor / Degraded,9.8,5.0
+RD_SVR_04,SV Road (Andheri Subway Section to Jogeshwari),K/W,Pre-Monsoon 2024,Bituminous Asphalt,3.53,Fair,11.1,5.6
+RD_SVR_04,SV Road (Andheri Subway Section to Jogeshwari),K/W,Mid-Monsoon 2024,Bituminous Asphalt,6.21,Poor / Degraded,6.4,20.0
+RD_SVR_04,SV Road (Andheri Subway Section to Jogeshwari),K/W,Post-Monsoon 2024,Bituminous Asphalt,5.34,Poor / Degraded,11.2,7.0
+RD_SVR_05,SV Road (Goregaon to Malad Subway Jn),P/N,Pre-Monsoon 2024,Bituminous Asphalt,3.85,Fair,6.6,13.1
+RD_SVR_05,SV Road (Goregaon to Malad Subway Jn),P/N,Mid-Monsoon 2024,Bituminous Asphalt,5.97,Poor / Degraded,2.6,12.0
+RD_SVR_05,SV Road (Goregaon to Malad Subway Jn),P/N,Post-Monsoon 2024,Bituminous Asphalt,5.45,Poor / Degraded,4.4,6.0
+RD_SVR_06,SV Road (Kandivali to Borivali Station West),R/C,Pre-Monsoon 2024,Cement Concrete,1.73,Good,2.2,2.9
+RD_SVR_06,SV Road (Kandivali to Borivali Station West),R/C,Mid-Monsoon 2024,Cement Concrete,2.63,Good,2.6,1.8
+RD_SVR_06,SV Road (Kandivali to Borivali Station West),R/C,Post-Monsoon 2024,Cement Concrete,1.99,Good,3.3,2.2
+RD_LNK_01,New Link Road (Bandra West to Khar Danda),H/W,Pre-Monsoon 2024,Cement Concrete,2.5,Good,2.5,0.7
+RD_LNK_01,New Link Road (Bandra West to Khar Danda),H/W,Mid-Monsoon 2024,Cement Concrete,2.58,Good,1.5,2.2
+RD_LNK_01,New Link Road (Bandra West to Khar Danda),H/W,Post-Monsoon 2024,Cement Concrete,2.67,Good,2.4,0.9
+RD_LNK_02,New Link Road (Juhu Circle to Andheri Infinity Mall),K/W,Pre-Monsoon 2024,Cement Concrete,2.41,Good,0.6,2.7
+RD_LNK_02,New Link Road (Juhu Circle to Andheri Infinity Mall),K/W,Mid-Monsoon 2024,Cement Concrete,2.74,Good,2.9,3.5
+RD_LNK_02,New Link Road (Juhu Circle to Andheri Infinity Mall),K/W,Post-Monsoon 2024,Cement Concrete,1.82,Good,0.7,0.0
+RD_LNK_03,New Link Road (Oshiwara to Goregaon West / Bangur Nagar),P/S,Pre-Monsoon 2024,Cement Concrete,1.61,Good,2.6,2.5
+RD_LNK_03,New Link Road (Oshiwara to Goregaon West / Bangur Nagar),P/S,Mid-Monsoon 2024,Cement Concrete,1.96,Good,3.4,3.1
+RD_LNK_03,New Link Road (Oshiwara to Goregaon West / Bangur Nagar),P/S,Post-Monsoon 2024,Cement Concrete,1.98,Good,3.3,2.7
+RD_LNK_04,New Link Road (Malad Inorbit to Mith Chowki),P/N,Pre-Monsoon 2024,Cement Concrete,2.4,Good,3.2,1.0
+RD_LNK_04,New Link Road (Malad Inorbit to Mith Chowki),P/N,Mid-Monsoon 2024,Cement Concrete,1.95,Good,3.1,3.8
+RD_LNK_04,New Link Road (Malad Inorbit to Mith Chowki),P/N,Post-Monsoon 2024,Cement Concrete,2.34,Good,1.7,0.5
+RD_LNK_05,New Link Road (Kandivali to Dahisar Link Road Extension),R/N,Pre-Monsoon 2024,Cement Concrete,2.07,Good,1.5,3.0
+RD_LNK_05,New Link Road (Kandivali to Dahisar Link Road Extension),R/N,Mid-Monsoon 2024,Cement Concrete,3.02,Good,1.5,3.2
+RD_LNK_05,New Link Road (Kandivali to Dahisar Link Road Extension),R/N,Post-Monsoon 2024,Cement Concrete,1.82,Good,0.6,3.8
+RD_EEH_01,Eastern Express Highway (Sion Circle to Priyadarshini Park),F/N,Pre-Monsoon 2024,Asphalt Over CC Base,3.63,Fair,9.7,9.1
+RD_EEH_01,Eastern Express Highway (Sion Circle to Priyadarshini Park),F/N,Mid-Monsoon 2024,Asphalt Over CC Base,6.36,Poor / Degraded,6.0,19.4
+RD_EEH_01,Eastern Express Highway (Sion Circle to Priyadarshini Park),F/N,Post-Monsoon 2024,Asphalt Over CC Base,4.92,Poor / Degraded,11.5,18.8
+RD_EEH_02,Eastern Express Highway (Kurla Amar Mahal to Ghatkopar),L,Pre-Monsoon 2024,Mastic Asphalt,3.08,Fair,14.0,9.8
+RD_EEH_02,Eastern Express Highway (Kurla Amar Mahal to Ghatkopar),L,Mid-Monsoon 2024,Mastic Asphalt,6.11,Poor / Degraded,7.2,6.3
+RD_EEH_02,Eastern Express Highway (Kurla Amar Mahal to Ghatkopar),L,Post-Monsoon 2024,Mastic Asphalt,5.51,Poor / Degraded,14.4,10.0
+RD_EEH_03,Eastern Express Highway (Ghatkopar to Vikhroli / Godrej),N,Pre-Monsoon 2024,Cement Concrete,2.5,Good,1.8,3.8
+RD_EEH_03,Eastern Express Highway (Ghatkopar to Vikhroli / Godrej),N,Mid-Monsoon 2024,Cement Concrete,2.78,Good,1.9,2.8
+RD_EEH_03,Eastern Express Highway (Ghatkopar to Vikhroli / Godrej),N,Post-Monsoon 2024,Cement Concrete,2.24,Good,2.1,1.7
+RD_EEH_04,Eastern Express Highway (Vikhroli to Bhandup / Mulund Toll),T,Pre-Monsoon 2024,Cement Concrete,1.79,Good,1.7,2.3
+RD_EEH_04,Eastern Express Highway (Vikhroli to Bhandup / Mulund Toll),T,Mid-Monsoon 2024,Cement Concrete,2.51,Good,2.5,3.8
+RD_EEH_04,Eastern Express Highway (Vikhroli to Bhandup / Mulund Toll),T,Post-Monsoon 2024,Cement Concrete,2.02,Good,3.6,1.3
+RD_LBS_01,Lal Bahadur Shastri (LBS) Marg (Sion to Kurla Kamani),L,Pre-Monsoon 2024,Bituminous Asphalt,4.59,Fair,14.9,11.8
+RD_LBS_01,Lal Bahadur Shastri (LBS) Marg (Sion to Kurla Kamani),L,Mid-Monsoon 2024,Bituminous Asphalt,5.91,Poor / Degraded,4.7,20.5
+RD_LBS_01,Lal Bahadur Shastri (LBS) Marg (Sion to Kurla Kamani),L,Post-Monsoon 2024,Bituminous Asphalt,5.23,Poor / Degraded,10.5,12.0
+RD_LBS_02,LBS Marg (Kurla to Ghatkopar Gandhi Nagar),N,Pre-Monsoon 2024,Bituminous Asphalt,3.76,Fair,4.0,16.3
+RD_LBS_02,LBS Marg (Kurla to Ghatkopar Gandhi Nagar),N,Mid-Monsoon 2024,Bituminous Asphalt,6.8,Poor / Degraded,10.0,13.7
+RD_LBS_02,LBS Marg (Kurla to Ghatkopar Gandhi Nagar),N,Post-Monsoon 2024,Bituminous Asphalt,4.95,Poor / Degraded,2.8,16.7
+RD_LBS_03,LBS Marg (Ghatkopar to Vikhroli / Kanjurmarg),S,Pre-Monsoon 2024,Cement Concrete,1.95,Good,3.6,0.5
+RD_LBS_03,LBS Marg (Ghatkopar to Vikhroli / Kanjurmarg),S,Mid-Monsoon 2024,Cement Concrete,2.3,Good,2.6,1.9
+RD_LBS_03,LBS Marg (Ghatkopar to Vikhroli / Kanjurmarg),S,Post-Monsoon 2024,Cement Concrete,2.45,Good,3.0,1.5
+RD_LBS_04,LBS Marg (Bhandup to Mulund Check Naka),T,Pre-Monsoon 2024,Cement Concrete,3.13,Good,0.9,3.8
+RD_LBS_04,LBS Marg (Bhandup to Mulund Check Naka),T,Mid-Monsoon 2024,Cement Concrete,2.55,Good,3.5,1.5
+RD_LBS_04,LBS Marg (Bhandup to Mulund Check Naka),T,Post-Monsoon 2024,Cement Concrete,1.98,Good,3.1,0.0
+RD_JVL_01,Jogeshwari-Vikhroli Link Road (JVLR - WEH to Powai),K/E,Pre-Monsoon 2024,Mastic Asphalt,3.89,Fair,2.4,16.2
+RD_JVL_01,Jogeshwari-Vikhroli Link Road (JVLR - WEH to Powai),K/E,Mid-Monsoon 2024,Mastic Asphalt,6.14,Poor / Degraded,5.7,17.3
+RD_JVL_01,Jogeshwari-Vikhroli Link Road (JVLR - WEH to Powai),K/E,Post-Monsoon 2024,Mastic Asphalt,5.31,Poor / Degraded,6.1,17.4
+RD_JVL_02,JVLR (Powai Lake to EEH Kanjurmarg Jn),S,Pre-Monsoon 2024,Cement Concrete,1.67,Good,3.1,1.7
+RD_JVL_02,JVLR (Powai Lake to EEH Kanjurmarg Jn),S,Mid-Monsoon 2024,Cement Concrete,1.88,Good,1.6,0.7
+RD_JVL_02,JVLR (Powai Lake to EEH Kanjurmarg Jn),S,Post-Monsoon 2024,Cement Concrete,2.36,Good,1.3,0.1
+RD_SCL_01,Santacruz-Chembur Link Road (SCLR - Kurla to Amar Mahal),L,Pre-Monsoon 2024,Cement Concrete,2.81,Good,1.5,2.4
+RD_SCL_01,Santacruz-Chembur Link Road (SCLR - Kurla to Amar Mahal),L,Mid-Monsoon 2024,Cement Concrete,2.85,Good,3.4,1.4
+RD_SCL_01,Santacruz-Chembur Link Road (SCLR - Kurla to Amar Mahal),L,Post-Monsoon 2024,Cement Concrete,2.26,Good,0.7,3.4
+RD_SCL_02,BKC Connector & Extension Road,H/E,Pre-Monsoon 2024,Cement Concrete,1.88,Good,3.2,1.6
+RD_SCL_02,BKC Connector & Extension Road,H/E,Mid-Monsoon 2024,Cement Concrete,2.62,Good,1.7,0.4
+RD_SCL_02,BKC Connector & Extension Road,H/E,Post-Monsoon 2024,Cement Concrete,2.27,Good,3.3,3.3
+RD_AMB_01,Dr. Babasaheb Ambedkar Road (Byculla to Dadar TT),F/S,Pre-Monsoon 2024,Cement Concrete,2.06,Good,4.0,2.3
+RD_AMB_01,Dr. Babasaheb Ambedkar Road (Byculla to Dadar TT),F/S,Mid-Monsoon 2024,Cement Concrete,2.24,Good,3.8,0.3
+RD_AMB_01,Dr. Babasaheb Ambedkar Road (Byculla to Dadar TT),F/S,Post-Monsoon 2024,Cement Concrete,2.18,Good,2.2,1.8
+RD_AMB_02,Dr Ambedkar Road (Dadar TT to Sion Circle / Gandhi Market),F/N,Pre-Monsoon 2024,Bituminous Asphalt Over CC,3.55,Fair,11.4,17.2
+RD_AMB_02,Dr Ambedkar Road (Dadar TT to Sion Circle / Gandhi Market),F/N,Mid-Monsoon 2024,Bituminous Asphalt Over CC,5.97,Poor / Degraded,13.2,11.0
+RD_AMB_02,Dr Ambedkar Road (Dadar TT to Sion Circle / Gandhi Market),F/N,Post-Monsoon 2024,Bituminous Asphalt Over CC,4.94,Poor / Degraded,8.9,13.1
+RD_SNB_01,Senapati Bapat Marg (Mahalakshmi to Dadar West),G/S,Pre-Monsoon 2024,Cement Concrete,2.25,Good,1.5,0.5
+RD_SNB_01,Senapati Bapat Marg (Mahalakshmi to Dadar West),G/S,Mid-Monsoon 2024,Cement Concrete,2.79,Good,0.9,1.1
+RD_SNB_01,Senapati Bapat Marg (Mahalakshmi to Dadar West),G/S,Post-Monsoon 2024,Cement Concrete,2.7,Good,2.3,3.2
+RD_MDR_01,Marine Drive / Netaji Subhash Chandra Bose Road,A,Pre-Monsoon 2024,Cement Concrete,2.64,Good,2.5,2.0
+RD_MDR_01,Marine Drive / Netaji Subhash Chandra Bose Road,A,Mid-Monsoon 2024,Cement Concrete,2.73,Good,1.6,3.1
+RD_MDR_01,Marine Drive / Netaji Subhash Chandra Bose Road,A,Post-Monsoon 2024,Cement Concrete,2.57,Good,3.3,3.2
+RD_EFR_01,Eastern Freeway (Orange Gate to Chembur Panjrapol),M/W,Pre-Monsoon 2024,Mastic Asphalt,3.22,Fair,12.6,19.6
+RD_EFR_01,Eastern Freeway (Orange Gate to Chembur Panjrapol),M/W,Mid-Monsoon 2024,Mastic Asphalt,6.73,Poor / Degraded,2.5,5.1
+RD_EFR_01,Eastern Freeway (Orange Gate to Chembur Panjrapol),M/W,Post-Monsoon 2024,Mastic Asphalt,4.93,Poor / Degraded,2.3,20.3
+RD_CST_01,Mumbai Coastal Road (Princess Street Flyover to Worli),D,Pre-Monsoon 2024,Cement Concrete,2.53,Good,3.2,3.6
+RD_CST_01,Mumbai Coastal Road (Princess Street Flyover to Worli),D,Mid-Monsoon 2024,Cement Concrete,2.83,Good,0.9,1.0
+RD_CST_01,Mumbai Coastal Road (Princess Street Flyover to Worli),D,Post-Monsoon 2024,Cement Concrete,2.32,Good,3.8,2.0
+RD_LOC_001,B Ward Sector 1 Connector Road,B,Pre-Monsoon 2024,Cement Concrete,1.91,Good,2.9,2.4
+RD_LOC_001,B Ward Sector 1 Connector Road,B,Mid-Monsoon 2024,Cement Concrete,2.67,Good,1.3,0.8
+RD_LOC_001,B Ward Sector 1 Connector Road,B,Post-Monsoon 2024,Cement Concrete,2.37,Good,2.0,0.9
