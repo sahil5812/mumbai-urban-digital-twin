@@ -1,4 +1,3 @@
-from app.models.dem_flow_engine import DEM2DSurfaceFlowEngine
 from fastapi import APIRouter
 from app.models.schemas import SimulationRequest, SimulationResponse, ComponentTelemetry, CitySummary, TopPriorityHotspot, TimelineForecastStep
 from app.models.flood_model import MumbaiFloodModel
@@ -6,8 +5,8 @@ from app.models.road_model import MumbaiRoadModel
 from app.models.drainage_model import DrainageHydraulicEngine
 from app.models.priority_engine import PriorityDispatchEngine
 from app.data.mumbai_data_loader import load_master_infrastructure
+from app.models.dem_flow_engine import DEM2DSurfaceFlowEngine
 import math
-import numpy as np
 
 router = APIRouter(prefix="/api/simulation", tags=["Simulation Engine"])
 
@@ -15,21 +14,22 @@ flood_model = MumbaiFloodModel()
 road_model = MumbaiRoadModel()
 drainage_engine = DrainageHydraulicEngine()
 priority_engine = PriorityDispatchEngine()
-infra_data = load_master_infrastructure()
 dem_engine = DEM2DSurfaceFlowEngine()
-
+infra_data = load_master_infrastructure()
 
 def compute_component_state(node: dict, rain_mm: float, tide_m: float, silt_pct: float) -> ComponentTelemetry:
     c_type = node.get("type", "HOTSPOT")
-    elev = node.get("elevation_m", 2.0)
-    is_subway = "subway" in node.get("name", "").lower() or c_type == "HOTSPOT"
+    elev = node.get("elevation_m", 2.5)
+    name = node.get("name", "Node")
 
     flood_res = flood_model.calculate_inundation_depth(
         rainfall_mm_hr=rain_mm,
         tide_level_m=tide_m,
         elevation_m=elev,
         siltation_pct=silt_pct,
-        is_subway=is_subway
+        component_type=c_type,
+        name=name,
+        historical_avg_depth=node.get("historical_avg_depth_cm", 50.0)
     )
 
     depth = flood_res["water_depth_cm"]
@@ -43,13 +43,13 @@ def compute_component_state(node: dict, rain_mm: float, tide_m: float, silt_pct:
     speed = max(4.0, 45.0 * (1.0 - (depth / 85.0)))
     congestion = min(100.0, (depth / 60.0) * 100.0)
 
-    rec_action = f"Deploy dewatering pumps & open relief gates at {node['name']}." if depth > 20 else "Standard storm surveillance."
+    rec_action = f"Deploy dewatering pumps & open relief gates at {name}." if depth > 20 else "Standard storm surveillance."
     cascading_summary = f"Inundation: {depth:.1f} cm | Risk: {risk:.0f}% | Traffic: {speed:.1f} km/h"
 
     return ComponentTelemetry(
         component_id=node["id"],
         component_type=c_type,
-        name=node["name"],
+        name=name,
         ward=node.get("ward", "F/S"),
         health_score=round(health, 1),
         failure_risk_score=round(risk, 1),
@@ -77,7 +77,6 @@ def run_simulation(req: SimulationRequest):
     active_components = [compute_component_state(n, req.rainfall_mm_hr, req.tide_level_m, req.siltation_pct) for n in all_nodes]
 
     # 2. 0-3 Hour Multi-Timestep Discrete Forecast Timeline
-    # Slots: T+0 (Now), T+15m, T+30m, T+60m, T+120m, T+180m
     timeline_slots = [
         ("+0m (Now)", 0, 1.0),
         ("+15m", 15, 1.15 if req.rainfall_mm_hr > 0 else 1.0),
@@ -119,7 +118,7 @@ def run_simulation(req: SimulationRequest):
         active_submerged_hotspots=crit_hotspots,
         roads_critical_count=crit_roads,
         drains_overloaded_count=crit_drains,
-        pumping_stations_active=6,
+        pumping_stations_active=8,
         citywide_avg_water_depth_cm=round(avg_depth, 1),
         high_tide_warning=req.tide_level_m >= 3.5,
         disruption_severity=severity
@@ -135,7 +134,8 @@ def run_simulation(req: SimulationRequest):
         simulation_metadata={
             "engine": "Physics-Informed Manning Runoff & Scikit-Learn ML Ensemble",
             "active_scenario": req.active_scenario_name,
-            "timesteps_generated": len(timeline_forecast)
+            "timesteps_generated": len(timeline_forecast),
+            "total_nodes_evaluated": len(active_components)
         }
     )
 
