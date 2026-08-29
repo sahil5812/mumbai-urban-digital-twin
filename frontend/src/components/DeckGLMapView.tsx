@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import DeckGL from "@deck.gl/react";
-import maplibregl from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
 import { Map } from "react-map-gl/maplibre";
 import { ColumnLayer, PathLayer, ArcLayer, TextLayer, ScatterplotLayer } from "@deck.gl/layers";
 import { ComponentTelemetry } from "../lib/types";

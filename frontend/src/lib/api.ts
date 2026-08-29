@@ -1,6 +1,6 @@
 import { SimulationRequest, SimulationResponse, CascadingGraphResponse, CitizenReportRequest, CitizenReportResponse } from './types';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = '/api';
 
 export interface MinutelyForecast {
   time_offset: string;
