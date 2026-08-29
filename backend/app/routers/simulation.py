@@ -1,3 +1,4 @@
+from app.models.dem_flow_engine import DEM2DSurfaceFlowEngine
 from fastapi import APIRouter
 from app.models.schemas import SimulationRequest, SimulationResponse, ComponentTelemetry, CitySummary, TopPriorityHotspot, TimelineForecastStep
 from app.models.flood_model import MumbaiFloodModel
@@ -15,6 +16,8 @@ road_model = MumbaiRoadModel()
 drainage_engine = DrainageHydraulicEngine()
 priority_engine = PriorityDispatchEngine()
 infra_data = load_master_infrastructure()
+dem_engine = DEM2DSurfaceFlowEngine()
+
 
 def compute_component_state(node: dict, rain_mm: float, tide_m: float, silt_pct: float) -> ComponentTelemetry:
     c_type = node.get("type", "HOTSPOT")
@@ -135,3 +138,7 @@ def run_simulation(req: SimulationRequest):
             "timesteps_generated": len(timeline_forecast)
         }
     )
+
+@router.get("/dem-surface-grid")
+def get_dem_surface_grid(rainfall_mm_hr: float = 45.0, tide_level_m: float = 2.8):
+    return dem_engine.route_2d_surface_rainfall(rainfall_mm_hr, tide_level_m)
