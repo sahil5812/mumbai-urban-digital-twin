@@ -120,7 +120,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   const [showArcs, setShowArcs] = useState<boolean>(true);
 
   // Basemap Theme: 'DARK' | 'SATELLITE' | 'STREET' (ALL ZERO WATERMARK)
-  const [mapTheme, setMapTheme] = useState<"DARK" | "SATELLITE" | "STREET">("DARK");
+  const [mapTheme, setMapTheme] = useState<"DARK" | "SATELLITE" | "STREET">("STREET");
 
   // 360° Cinematic Orbit State
   const [isOrbiting, setIsOrbiting] = useState<boolean>(false);
