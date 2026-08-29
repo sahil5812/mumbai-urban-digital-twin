@@ -1,76 +1,135 @@
 """
-Mumbai Infrastructure Master Data Loader
-Loads and initializes roads, drains, hotspots, and topology edges.
+Mumbai Infrastructure Real-Data Loader (Exact CSV Schema Match)
+Dynamically ingests CSV and GeoJSON datasets from dataset/ directory
+and builds the coupled GIS infrastructure node-edge topology.
 """
 
-def load_master_infrastructure():
-    roads = [
-        {"id": "RD_WEH_01", "name": "Western Express Highway (Bandra-Santacruz)", "type": "ROAD", "ward": "H/E", "surface": "Asphalt Over CC", "lanes": 8, "elev_m": 5.2, "pci": 72, "pcu": 145000, "lat": 19.068, "lon": 72.847},
-        {"id": "RD_WEH_02", "name": "Western Express Highway (Santacruz-Andheri)", "type": "ROAD", "ward": "K/E", "surface": "Mastic Asphalt", "lanes": 8, "elev_m": 6.8, "pci": 68, "pcu": 140000, "lat": 19.105, "lon": 72.855},
-        {"id": "RD_SVR_02", "name": "SV Road (Milan Subway Approach)", "type": "ROAD", "ward": "H/W", "surface": "Bituminous Asphalt", "lanes": 4, "elev_m": 2.2, "pci": 44, "pcu": 85000, "lat": 19.083, "lon": 72.838},
-        {"id": "RD_SVR_04", "name": "SV Road (Andheri Subway Section)", "type": "ROAD", "ward": "K/W", "surface": "Bituminous Asphalt", "lanes": 4, "elev_m": 1.9, "pci": 39, "pcu": 88000, "lat": 19.125, "lon": 72.841},
-        {"id": "RD_EEH_01", "name": "Eastern Express Highway (Sion-Priyadarshini)", "type": "ROAD", "ward": "F/N", "surface": "Asphalt Over CC", "lanes": 8, "elev_m": 2.3, "pci": 62, "pcu": 130000, "lat": 19.045, "lon": 72.871},
-        {"id": "RD_EEH_02", "name": "Eastern Express Highway (Kurla-Ghatkopar)", "type": "ROAD", "ward": "L", "surface": "Mastic Asphalt", "lanes": 8, "elev_m": 3.5, "pci": 70, "pcu": 125000, "lat": 19.078, "lon": 72.892},
-        {"id": "RD_BAR_01", "name": "Dr. Babasaheb Ambedkar Road (Hindmata)", "type": "ROAD", "ward": "F/S", "surface": "Cement Concrete", "lanes": 6, "elev_m": 2.4, "pci": 65, "pcu": 110000, "lat": 19.012, "lon": 72.843},
-        {"id": "RD_LBS_01", "name": "LBS Marg (Kurla Kamani Section)", "type": "ROAD", "ward": "L", "surface": "Bituminous Asphalt", "lanes": 4, "elev_m": 2.1, "pci": 42, "pcu": 92000, "lat": 19.068, "lon": 72.881},
-        {"id": "RD_MDR_01", "name": "Marine Drive (Netaji Subhash Road)", "type": "ROAD", "ward": "A", "surface": "Cement Concrete", "lanes": 8, "elev_m": 5.8, "pci": 92, "pcu": 90000, "lat": 18.941, "lon": 72.822},
-        {"id": "RD_BKC_01", "name": "BKC Avenue / G-Block Central", "type": "ROAD", "ward": "H/E", "surface": "Cement Concrete", "lanes": 6, "elev_m": 4.5, "pci": 88, "pcu": 80000, "lat": 19.065, "lon": 72.868},
-    ]
+import os
+import pandas as pd
+from typing import Dict, List, Any
 
-    hotspots = [
-        {"id": "WL_HND_01", "name": "Hindmata Cinema Junction", "type": "HOTSPOT", "ward": "F/S", "elev_m": 2.2, "lat": 19.0125, "lon": 72.8432, "is_subway": False, "pop_exposure": 9.5, "traffic_exposure": 9.2},
-        {"id": "WL_MLN_01", "name": "Milan Subway (Santacruz)", "type": "HOTSPOT", "ward": "H/W", "elev_m": 1.8, "lat": 19.0832, "lon": 72.8395, "is_subway": True, "pop_exposure": 8.8, "traffic_exposure": 9.5},
-        {"id": "WL_AND_01", "name": "Andheri Subway", "type": "HOTSPOT", "ward": "K/W", "elev_m": 1.6, "lat": 19.1194, "lon": 72.8441, "is_subway": True, "pop_exposure": 9.0, "traffic_exposure": 9.6},
-        {"id": "WL_KRL_01", "name": "Kurla Kamani / LBS Jn", "type": "HOTSPOT", "ward": "L", "elev_m": 2.1, "lat": 19.0682, "lon": 72.8814, "is_subway": False, "pop_exposure": 9.8, "traffic_exposure": 9.0},
-        {"id": "WL_SION_01", "name": "Sion Circle / Gandhi Market", "type": "HOTSPOT", "ward": "F/N", "elev_m": 2.0, "lat": 19.0385, "lon": 72.8621, "is_subway": False, "pop_exposure": 9.2, "traffic_exposure": 9.4},
-        {"id": "WL_CHM_01", "name": "Chembur Postal Colony", "type": "HOTSPOT", "ward": "M/W", "elev_m": 2.3, "lat": 19.0581, "lon": 72.8954, "is_subway": False, "pop_exposure": 8.5, "traffic_exposure": 7.8},
-        {"id": "WL_DAH_01", "name": "Dahisar Check Naka Lowline", "type": "HOTSPOT", "ward": "R/N", "elev_m": 3.2, "lat": 19.2562, "lon": 72.8681, "is_subway": False, "pop_exposure": 8.2, "traffic_exposure": 8.5},
-    ]
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATASET_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "dataset"))
 
-    drains = [
-        {"id": "DRN_MIT_02", "name": "Mithi River (Powai to Kurla SCLR)", "type": "DRAIN", "ward": "L", "elev_m": 2.5, "capacity_cumecs": 280.0, "catchment_sqkm": 45.0, "lat": 19.072, "lon": 72.875},
-        {"id": "DRN_MIT_03", "name": "Mithi River (Kurla to Mahim Bay)", "type": "DRAIN", "ward": "G/N", "elev_m": 1.2, "capacity_cumecs": 450.0, "catchment_sqkm": 72.0, "lat": 19.055, "lon": 72.852},
-        {"id": "DRN_VAK_01", "name": "Vakola Nallah (Santacruz to Mithi)", "type": "DRAIN", "ward": "H/E", "elev_m": 3.2, "capacity_cumecs": 85.0, "catchment_sqkm": 14.2, "lat": 19.078, "lon": 72.858},
-        {"id": "DRN_IRL_01", "name": "Irla Nallah (Andheri to Juhu Sea)", "type": "DRAIN", "ward": "K/W", "elev_m": 2.2, "capacity_cumecs": 80.0, "catchment_sqkm": 15.2, "lat": 19.112, "lon": 72.835},
-        {"id": "DRN_GAZ_01", "name": "Gazdarband Nallah (Khar Danda)", "type": "DRAIN", "ward": "H/W", "elev_m": 2.0, "capacity_cumecs": 65.0, "catchment_sqkm": 11.0, "lat": 19.076, "lon": 72.832},
-        {"id": "DRN_HND_01", "name": "Hindmata Underground Tank & Box Drain", "type": "DRAIN", "ward": "F/S", "elev_m": 1.8, "capacity_cumecs": 55.0, "catchment_sqkm": 8.5, "lat": 19.011, "lon": 72.842},
-    ]
+def load_master_infrastructure() -> Dict[str, Any]:
+    hotspots = []
+    roads = []
+    drains = []
+    pumps = []
+    edges = []
 
-    pumping_stations = [
-        {"id": "PMP_BRITANNIA_01", "name": "Britannia Stormwater Pumping Station (Reay Road)", "type": "PUMP", "ward": "E", "elev_m": 1.5, "capacity_cumecs": 36.0, "lat": 18.985, "lon": 72.845},
-        {"id": "PMP_HAJIALI_01", "name": "Haji Ali Stormwater Pumping Station", "type": "PUMP", "ward": "D", "elev_m": 1.8, "capacity_cumecs": 36.0, "lat": 18.978, "lon": 72.812},
-        {"id": "PMP_LOVEGROVE_01", "name": "Love Grove Pumping Station (Worli)", "type": "PUMP", "ward": "G/S", "elev_m": 1.6, "capacity_cumecs": 42.0, "lat": 19.002, "lon": 72.815},
-        {"id": "PMP_IRLA_01", "name": "Irla Pumping Station (Juhu)", "type": "PUMP", "ward": "K/W", "elev_m": 1.4, "capacity_cumecs": 24.0, "lat": 19.102, "lon": 72.825},
-        {"id": "PMP_GAZDARBAND_01", "name": "Gazdarband Pumping Station (Khar Danda)", "type": "PUMP", "ward": "H/W", "elev_m": 1.5, "capacity_cumecs": 30.0, "lat": 19.072, "lon": 72.828},
-    ]
+    # 1. Load Chronic Waterlogging Hotspots CSV (72 real spots)
+    hotspots_csv = os.path.join(DATASET_DIR, "05_waterlogging_spots", "bmc_chronic_waterlogging_hotspots.csv")
+    if os.path.exists(hotspots_csv):
+        df_h = pd.read_csv(hotspots_csv)
+        for _, row in df_h.head(15).iterrows():
+            clean_name = str(row["location_name"]).split(",")[0].strip()
+            hotspots.append({
+                "id": str(row["spot_id"]),
+                "name": clean_name,
+                "type": "HOTSPOT",
+                "ward": str(row.get("ward", "F/S")),
+                "latitude": float(row["lat"]),
+                "longitude": float(row["lon"]),
+                "elevation_m": float(row.get("elevation_m", 2.0)),
+                "historical_avg_depth_cm": float(row.get("avg_water_depth_cm", 60.0)),
+                "primary_cause": str(row.get("primary_cause", "Saucer Depression")),
+                "linked_road_id": str(row.get("linked_road_id", "RD_WEH_01")),
+                "linked_drain_id": str(row.get("linked_drain_id", "DRN_MIT_01")),
+                "risk_severity": str(row.get("risk_severity", "High")),
+                "health_score": 80.0,
+                "failure_risk_score": 20.0,
+                "water_depth_cm": 0.0,
+                "status": "SAFE"
+            })
+            if pd.notna(row.get("linked_road_id")):
+                edges.append({
+                    "source_node_id": str(row["spot_id"]),
+                    "target_node_id": str(row["linked_road_id"]),
+                    "relationship_type": "SURCHARGE_TO_ROAD",
+                    "weight_impact_factor": 0.95,
+                    "description": f"{clean_name} waterlogging inundates arterial road"
+                })
+            if pd.notna(row.get("linked_drain_id")):
+                edges.append({
+                    "source_node_id": str(row["spot_id"]),
+                    "target_node_id": str(row["linked_drain_id"]),
+                    "relationship_type": "HYDRAULIC_RUNOFF_DISCHARGE",
+                    "weight_impact_factor": 0.85,
+                    "description": f"Surface runoff converges into {row['linked_drain_id']}"
+                })
 
-    edges = [
-        {"source_node_id": "RD_WEH_01", "target_node_id": "DRN_VAK_01", "relationship_type": "HYDRAULIC_RUNOFF", "weight_impact_factor": 0.85, "description": "WEH Bandra runoff drains to Vakola Nallah"},
-        {"source_node_id": "RD_SVR_02", "target_node_id": "DRN_GAZ_01", "relationship_type": "HYDRAULIC_RUNOFF", "weight_impact_factor": 0.95, "description": "Milan Subway runoff drains to Gazdarband Nallah"},
-        {"source_node_id": "RD_SVR_04", "target_node_id": "DRN_IRL_01", "relationship_type": "HYDRAULIC_RUNOFF", "weight_impact_factor": 0.90, "description": "Andheri Subway runoff drains to Irla Nallah"},
-        {"source_node_id": "RD_EEH_01", "target_node_id": "DRN_HND_01", "relationship_type": "HYDRAULIC_RUNOFF", "weight_impact_factor": 0.88, "description": "Sion-Hindmata SWD conduit connection"},
-        {"source_node_id": "RD_EEH_02", "target_node_id": "DRN_MIT_02", "relationship_type": "HYDRAULIC_RUNOFF", "weight_impact_factor": 0.92, "description": "Kurla runoff into Mithi River Reach II"},
-        {"source_node_id": "RD_BAR_01", "target_node_id": "DRN_HND_01", "relationship_type": "HYDRAULIC_RUNOFF", "weight_impact_factor": 0.96, "description": "Dr. Ambedkar Road runoff into Hindmata Tank"},
-        
-        {"source_node_id": "DRN_VAK_01", "target_node_id": "DRN_MIT_02", "relationship_type": "HYDRAULIC_CONVEYANCE", "weight_impact_factor": 0.90, "description": "Vakola confluence into Mithi at BKC"},
-        {"source_node_id": "DRN_MIT_02", "target_node_id": "DRN_MIT_03", "relationship_type": "HYDRAULIC_CONVEYANCE", "weight_impact_factor": 0.98, "description": "Mithi River discharge towards Mahim Bay"},
-        {"source_node_id": "DRN_HND_01", "target_node_id": "PMP_BRITANNIA_01", "relationship_type": "HYDRAULIC_CONVEYANCE", "weight_impact_factor": 0.95, "description": "Hindmata tank pumped to Britannia Outfall"},
-        {"source_node_id": "DRN_GAZ_01", "target_node_id": "PMP_GAZDARBAND_01", "relationship_type": "HYDRAULIC_CONVEYANCE", "weight_impact_factor": 0.92, "description": "Gazdarband pumped to Arabian Sea"},
-        {"source_node_id": "DRN_IRL_01", "target_node_id": "PMP_IRLA_01", "relationship_type": "HYDRAULIC_CONVEYANCE", "weight_impact_factor": 0.94, "description": "Irla pumped to Juhu Arabian Sea Outfall"},
+    # 2. Load Road Network Master CSV
+    roads_csv = os.path.join(DATASET_DIR, "03_road_network", "mumbai_road_network_master.csv")
+    if os.path.exists(roads_csv):
+        df_r = pd.read_csv(roads_csv)
+        for _, row in df_r.head(10).iterrows():
+            roads.append({
+                "id": str(row["road_id"]),
+                "name": str(row.get("road_name", row["road_id"])),
+                "type": "ROAD",
+                "ward": str(row.get("ward", "H/E")),
+                "latitude": float(row.get("start_lat", 19.07)),
+                "longitude": float(row.get("start_lon", 72.85)),
+                "elevation_m": float(row.get("elevation_m", 4.5)),
+                "pci": float(row.get("pci", 75.0)),
+                "lanes": int(row.get("lanes", 6)),
+                "daily_traffic": int(row.get("avg_daily_traffic", 150000)),
+                "health_score": 85.0,
+                "failure_risk_score": 15.0,
+                "water_depth_cm": 0.0,
+                "status": "SAFE"
+            })
 
-        {"source_node_id": "WL_HND_01", "target_node_id": "RD_BAR_01", "relationship_type": "DISRUPTION_SPILLOVER", "weight_impact_factor": 0.95, "description": "Hindmata flood paralyzes Dr. Ambedkar Road"},
-        {"source_node_id": "WL_HND_01", "target_node_id": "RD_EEH_01", "relationship_type": "DISRUPTION_SPILLOVER", "weight_impact_factor": 0.85, "description": "Traffic spillover causes severe EEH Sion bottleneck"},
-        {"source_node_id": "WL_MLN_01", "target_node_id": "RD_SVR_02", "relationship_type": "DISRUPTION_SPILLOVER", "weight_impact_factor": 0.98, "description": "Milan Subway closed, SV Road gridlocked"},
-        {"source_node_id": "WL_MLN_01", "target_node_id": "RD_WEH_01", "relationship_type": "DISRUPTION_SPILLOVER", "weight_impact_factor": 0.78, "description": "Traffic spillover to Western Express Highway"},
-        {"source_node_id": "WL_AND_01", "target_node_id": "RD_SVR_04", "relationship_type": "DISRUPTION_SPILLOVER", "weight_impact_factor": 0.98, "description": "Andheri Subway closed, arterial traffic halted"},
-        {"source_node_id": "WL_KRL_01", "target_node_id": "RD_LBS_01", "relationship_type": "DISRUPTION_SPILLOVER", "weight_impact_factor": 0.95, "description": "Kurla flooded, LBS Marg and SCLR jammed"},
-        {"source_node_id": "WL_SION_01", "target_node_id": "RD_EEH_01", "relationship_type": "DISRUPTION_SPILLOVER", "weight_impact_factor": 0.94, "description": "Gandhi Market submerged, Sion Circle halted"},
-    ]
+    # 3. Load Major Drains & Rivers CSV (60 real channels)
+    drains_csv = os.path.join(DATASET_DIR, "04_drainage_stormwater", "mumbai_major_nallahs_and_rivers.csv")
+    if os.path.exists(drains_csv):
+        df_d = pd.read_csv(drains_csv)
+        for _, row in df_d.head(8).iterrows():
+            drains.append({
+                "id": str(row["drain_id"]),
+                "name": str(row["name"]),
+                "type": "DRAIN",
+                "ward": str(row.get("ward", "G/N")),
+                "latitude": 19.065,
+                "longitude": 72.860,
+                "elevation_m": 1.5,
+                "width_m": float(row.get("width_m", 25.0)),
+                "capacity_cumecs": float(row.get("capacity_cumecs", 120.0)),
+                "siltation_pct": float(row.get("siltation_pct", 35.0)),
+                "outfall_location": str(row.get("outfall_location", "Arabian Sea")),
+                "health_score": 80.0,
+                "failure_risk_score": 20.0,
+                "water_depth_cm": 0.0,
+                "status": "SAFE"
+            })
+
+    # 4. Load Stormwater Pumping Stations (SPS) CSV (8 real stations)
+    pumps_csv = os.path.join(DATASET_DIR, "04_drainage_stormwater", "bmc_stormwater_pumping_stations.csv")
+    if os.path.exists(pumps_csv):
+        df_p = pd.read_csv(pumps_csv)
+        for _, row in df_p.head(8).iterrows():
+            pumps.append({
+                "id": str(row["station_id"]),
+                "name": str(row["name"]),
+                "type": "PUMP",
+                "ward": str(row.get("ward", "F/S")),
+                "latitude": float(row.get("lat", 18.992)),
+                "longitude": float(row.get("lon", 72.8445)),
+                "elevation_m": 1.2,
+                "capacity_cumecs": float(row.get("total_capacity_cumecs", 36.0)),
+                "number_of_pumps": int(row.get("pumps_count", 6)),
+                "tide_gate_installed": True,
+                "health_score": 90.0,
+                "failure_risk_score": 10.0,
+                "water_depth_cm": 0.0,
+                "status": "SAFE"
+            })
 
     return {
-        "roads": roads,
         "hotspots": hotspots,
+        "roads": roads,
         "drains": drains,
-        "pumping_stations": pumping_stations,
+        "pumping_stations": pumps,
         "edges": edges
     }

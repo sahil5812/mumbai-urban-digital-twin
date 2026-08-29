@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Navbar } from "../components/Navbar";
 import { EarlyWarningBanner } from "../components/EarlyWarningBanner";
 import { ScenarioControls } from "../components/ScenarioControls";
@@ -21,6 +21,9 @@ export default function Home() {
   const [isCitizenModalOpen, setIsCitizenModalOpen] = useState(false);
   const [isScenarioControlsOpen, setIsScenarioControlsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  // 0-3h Timeline Selection State
+  const [selectedTimelineIndex, setSelectedTimelineIndex] = useState<number>(0);
 
   // Live Mode State
   const [isLiveMode, setIsLiveMode] = useState(false);
@@ -48,7 +51,7 @@ export default function Home() {
     try {
       const res = await runSimulation(params);
       setSimResult(res);
-      // Only updates data, DOES NOT auto-open inspector unless user explicitly clicked
+      setSelectedTimelineIndex(0);
     } catch (e) {
       console.error(e);
     } finally {
@@ -125,6 +128,14 @@ export default function Home() {
     }
   };
 
+  // Active Components to render on 3D Map (respects 0-3h timeline scrubber)
+  const displayedComponents = useMemo(() => {
+    if (simResult?.timeline_forecast && simResult.timeline_forecast[selectedTimelineIndex]) {
+      return simResult.timeline_forecast[selectedTimelineIndex].components;
+    }
+    return simResult?.components || [];
+  }, [simResult, selectedTimelineIndex]);
+
   if (!mounted) {
     return (
       <div className="h-screen w-screen bg-slate-950 flex items-center justify-center text-slate-400 font-mono text-xs select-none">
@@ -152,7 +163,7 @@ export default function Home() {
       {/* 30-Minute Predictive Radar Early Warning Banner */}
       <EarlyWarningBanner
         telemetry={liveTelemetry}
-        components={simResult?.components || []}
+        components={displayedComponents}
         currentRainfallMmHr={simParams.rainfall_mm_hr}
         onSimulateRainfall={(rain) => handleApplyPreset("Incoming Storm (+30m Nowcast)", rain, 4.1, 45)}
         onSelectComponent={(c) => setSelectedComponent(c)}
@@ -162,7 +173,7 @@ export default function Home() {
       <div className="flex-1 relative w-full h-[calc(100vh-4rem)] overflow-hidden">
         {/* Full-Screen Background Deck.gl 3D Digital Twin Map */}
         <DeckGLMapView
-          components={simResult?.components || []}
+          components={displayedComponents}
           selectedComponentId={selectedComponent?.component_id || null}
           onSelectComponent={(c) => setSelectedComponent(c)}
           viewMode={viewMode}
@@ -170,7 +181,7 @@ export default function Home() {
           tide_level_m={simParams.tide_level_m}
         />
 
-        {/* Floating Left: Scenario Sandbox Deck */}
+        {/* Floating Left: Scenario Sandbox Deck with 0-3h Timeline Scrubber */}
         <div className="absolute top-4 left-4 z-20 flex flex-col items-start gap-2">
           {isScenarioControlsOpen ? (
             <div className="w-80 relative">
@@ -179,6 +190,9 @@ export default function Home() {
                 onChange={handleParamChange}
                 isLoading={isLoading}
                 onApplyPreset={handleApplyPreset}
+                timelineForecast={simResult?.timeline_forecast || []}
+                selectedTimelineIndex={selectedTimelineIndex}
+                onSelectTimelineStep={(idx) => setSelectedTimelineIndex(idx)}
               />
               <button
                 type="button"
@@ -263,14 +277,14 @@ export default function Home() {
             <div className="flex-1 overflow-y-auto">
               <CascadingGraphView
                 graphData={graphData}
-                components={simResult?.components || []}
+                components={displayedComponents}
                 selectedNodeId={selectedComponent?.component_id || null}
                 onSelectNode={(id) => {
-                  const found = simResult?.components.find((c) => c.component_id === id);
+                  const found = displayedComponents.find((c) => c.component_id === id);
                   if (found) setSelectedComponent(found);
                 }}
                 onCloseAndFocus={(id) => {
-                  const found = simResult?.components.find((c) => c.component_id === id);
+                  const found = displayedComponents.find((c) => c.component_id === id);
                   if (found) setSelectedComponent(found);
                   setIsGraphModalOpen(false);
                 }}
