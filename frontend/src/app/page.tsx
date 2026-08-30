@@ -239,19 +239,6 @@ export default function Home() {
               {graphData?.total_impacted_nodes || 4}
             </span>
           </button>
-
-          {/* SIH Priority Queue Modal Trigger */}
-          <button
-            type="button"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsPriorityModalOpen(true); }}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-900/60 to-orange-900/60 hover:from-amber-800/80 hover:to-orange-800/80 border border-amber-500/40 text-xs font-bold text-amber-200 shadow-lg transition-all hover:scale-105"
-          >
-            <Trophy className="w-4 h-4 text-amber-400" />
-            <span>SIH Priority Dispatch Queue</span>
-            <span className="px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono text-[10px]">
-              {simResult?.top_priorities.length || 0}
-            </span>
-          </button>
         </div>
       </div>
 
