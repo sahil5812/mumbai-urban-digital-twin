@@ -189,7 +189,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         return viewMode === "3D" ? baseHeight + waterHeight + riskHeight : 0;
       },
       elevationScale: 1,
-      radius: (d: ComponentTelemetry) => d.component_type === "HOTSPOT" ? 160 : (d.component_type === "PUMP" ? 210 : 130),
+      radius: 175,
       diskResolution: 32,
       extruded: viewMode === "3D",
       getFillColor: (d: ComponentTelemetry) => {
