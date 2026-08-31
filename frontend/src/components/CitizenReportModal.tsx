@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Send, AlertTriangle, CheckCircle2, MapPin } from "lucide-react";
+import { X, Send, AlertTriangle, CheckCircle2, MapPin, Camera } from "lucide-react";
 import { submitCitizenReport } from "../lib/api";
 import { CitizenReportResponse } from "../lib/types";
 
@@ -34,7 +34,7 @@ export const CitizenReportModal: React.FC<CitizenReportModalProps> = ({ isOpen, 
       latitude: 19.0125,
       longitude: 72.8432,
       ward: "F/S",
-      estimated_water_depth_cm: Number(waterDepth),
+      estimated_water_depth_cm: waterDepth,
     });
     setResponse(res);
     setIsSubmitting(false);
@@ -117,10 +117,7 @@ export const CitizenReportModal: React.FC<CitizenReportModalProps> = ({ isOpen, 
             </div>
 
             <div>
-              <label className="text-slate-400 flex items-center gap-1 mb-1">
-                <MapPin className="w-3.5 h-3.5 text-blue-400" />
-                <span>Landmark / Location</span>
-              </label>
+              <label className="text-slate-400 block mb-1">Landmark / Location</label>
               <input
                 type="text"
                 value={landmark}
@@ -130,19 +127,7 @@ export const CitizenReportModal: React.FC<CitizenReportModalProps> = ({ isOpen, 
             </div>
 
             <div>
-              <label className="text-slate-400 block mb-1">Estimated Water Depth (cm)</label>
-              <input
-                type="number"
-                min={0}
-                max={200}
-                value={waterDepth}
-                onChange={(e) => setWaterDepth(Number(e.target.value))}
-                className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-slate-200 focus:border-blue-500 outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="text-slate-400 block mb-1">Description / Details</label>
+               <label className="text-slate-400 block mb-1">Description / Details</label>
               <textarea
                 rows={2}
                 value={description}

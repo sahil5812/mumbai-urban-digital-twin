@@ -1,21 +1,15 @@
 "use client";
 
 import React from "react";
-import { TopPriorityHotspot } from "../lib/types";
+import { PriorityIntervention } from "../lib/types";
 import { Trophy, Wrench, Clock, DollarSign, ArrowUpRight } from "lucide-react";
 
 interface PriorityMatrixProps {
-  priorities: TopPriorityHotspot[];
-  onSelectComponent?: (id: string) => void;
-  onSelectHotspot?: (id: string) => void;
+  priorities: PriorityIntervention[];
+  onSelectComponent: (id: string) => void;
 }
 
-export const PriorityMatrix: React.FC<PriorityMatrixProps> = ({ priorities, onSelectComponent, onSelectHotspot }) => {
-  const handleSelect = (id: string) => {
-    if (onSelectComponent) onSelectComponent(id);
-    if (onSelectHotspot) onSelectHotspot(id);
-  };
-
+export const PriorityMatrix: React.FC<PriorityMatrixProps> = ({ priorities, onSelectComponent }) => {
   return (
     <div className="bg-slate-950/90 backdrop-blur-md border border-slate-800 rounded-xl p-4 text-slate-200 shadow-2xl flex flex-col gap-3">
       {/* Title */}
@@ -62,25 +56,24 @@ export const PriorityMatrix: React.FC<PriorityMatrixProps> = ({ priorities, onSe
                   </span>
                 </td>
                 <td className="py-2.5 px-2.5 font-semibold text-slate-100">
-                  {p.name || p.component_name}
+                  {p.component_name}
                 </td>
-                <td className="py-2.5 px-2.5 text-slate-300 font-mono">
+                <td className="py-2.5 px-2.5 font-mono text-slate-400">
                   {p.ward}
                 </td>
-                <td className="py-2.5 px-2.5 font-mono text-amber-400 font-bold">
-                  {(p.composite_priority_score || p.priority_score || 85).toFixed(1)}
+                <td className="py-2.5 px-2.5 font-mono font-bold text-amber-400">
+                  {p.priority_score} / 100
                 </td>
-                <td className="py-2.5 px-2.5 text-slate-300">
-                  {p.recommended_intervention || p.recommended_action || "Deploy dewatering pumps"}
+                <td className="py-2.5 px-2.5 text-slate-300 max-w-xs truncate" title={p.action_description}>
+                  {p.action_description}
                 </td>
                 <td className="py-2.5 px-2.5 font-mono text-emerald-400">
-                  ₹{p.estimated_cost_inr_lakhs || (p.estimated_cost_inr ? (p.estimated_cost_inr / 100000).toFixed(1) : 4.5)}L
+                  ₹{p.estimated_cost_inr_lakhs} L
                 </td>
                 <td className="py-2.5 px-2.5">
                   <button
-                    type="button"
-                    onClick={() => handleSelect(p.component_id)}
-                    className="flex items-center gap-1 px-2 py-1 bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/40 text-blue-300 rounded text-[11px] font-medium transition-colors"
+                    onClick={() => onSelectComponent(p.component_id)}
+                    className="flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 font-medium"
                   >
                     <span>Inspect</span>
                     <ArrowUpRight className="w-3 h-3" />
