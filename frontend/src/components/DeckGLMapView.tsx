@@ -216,15 +216,16 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     });
   }, [components, selectedComponentId, viewMode, show3DColumns]);
 
-  // 3. Clean Billboard Text Tags (Prioritizes Key Hotspots & Selected Node)
+  // 3. Clean Billboard Text Tags (Shows Location Names on All Hotspots & Stations)
   const textTagsLayer = useMemo(() => {
     if (!components.length) return null;
 
-    // Filter to avoid clutter: show Critical hotspots, Subways, SPS stations, or currently selected node
+    // Show labels for all Hotspots & Stations (Kurla, Mumbra, Dahisar, etc.), any Warning/Critical nodes, or selected node
     const filtered = components.filter((d) => {
       if (d.component_id === selectedComponentId) return true;
-      if (d.status === "CRITICAL" || (d.water_depth_cm || 0) > 30) return true;
-      if (d.component_type === "PUMP") return true;
+      if (d.component_type === "HOTSPOT") return true; // Always show location names for all stations & subways!
+      if (d.status === "CRITICAL" || d.status === "WARNING" || (d.water_depth_cm || 0) > 15) return true;
+      if (d.component_type === "PUMP" && ((d.water_depth_cm || 0) > 0 || d.component_id === selectedComponentId)) return true;
       return false;
     });
 
@@ -241,7 +242,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       getText: (d: ComponentTelemetry) => {
         const nameClean = (d.name || "Hotspot").split("/")[0].split("(")[0].trim();
         const depth = Math.round(d.water_depth_cm || 0);
-        return `${nameClean} (${depth}cm)`;
+        return depth > 0 ? `${nameClean} (${depth}cm)` : nameClean;
       },
       getSize: 11,
       getColor: [255, 255, 255, 255],
@@ -249,13 +250,13 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       getAlignmentBaseline: "bottom",
       background: true,
       getBackgroundColor: (d: ComponentTelemetry) => {
-        if (d.component_id === selectedComponentId) return [2, 132, 199, 240];
-        if (d.status === "CRITICAL") return [185, 28, 28, 230];
-        if (d.status === "WARNING") return [217, 119, 6, 230];
+        if (d.component_id === selectedComponentId) return [2, 132, 199, 245];
+        if (d.status === "CRITICAL" || (d.water_depth_cm || 0) >= 50) return [185, 28, 28, 235];
+        if (d.status === "WARNING" || (d.water_depth_cm || 0) >= 20) return [217, 119, 6, 235];
         if (d.component_type === "PUMP") return [8, 145, 178, 230];
-        return [4, 120, 87, 230];
+        return [15, 23, 42, 225]; // Dark slate badge for safe green locations
       },
-      backgroundPadding: [5, 3, 5, 3],
+      backgroundPadding: [6, 3, 6, 3],
       pickable: true,
       onClick: (info: any) => info.object && onSelectComponent(info.object),
     });
