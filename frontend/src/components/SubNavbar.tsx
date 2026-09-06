@@ -13,7 +13,9 @@ import {
   TrendingUp,
   BarChart3,
   Waves,
-  X
+  X,
+  MapPin,
+  CloudSun
 } from "lucide-react";
 
 export type SubNavTab = 
@@ -23,7 +25,6 @@ export type SubNavTab =
   | "RADAR" 
   | "MINUTECAST" 
   | "MONTHLY" 
-  | "AIR QUALITY" 
   | "HEALTH & ACTIVITIES";
 
 interface SubNavbarProps {
@@ -33,6 +34,8 @@ interface SubNavbarProps {
   onOpenGraphModal?: () => void;
   onToggleScenarioControls?: () => void;
   isLiveMode?: boolean;
+  viewModeType?: "PORTAL" | "MAP";
+  onToggleViewModeType?: () => void;
 }
 
 export const SubNavbar: React.FC<SubNavbarProps> = ({
@@ -42,9 +45,12 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
   onOpenGraphModal,
   onToggleScenarioControls,
   isLiveMode = false,
+  viewModeType = "PORTAL",
+  onToggleViewModeType,
 }) => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
+  // Tabs without Air Quality (per user request)
   const TABS: { id: SubNavTab; label: string; badge?: string }[] = [
     { id: "TODAY", label: "TODAY" },
     { id: "HOURLY", label: "HOURLY", badge: "0-3h" },
@@ -52,7 +58,6 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
     { id: "RADAR", label: "RADAR", badge: "LIVE" },
     { id: "MINUTECAST", label: "MINUTECAST™" },
     { id: "MONTHLY", label: "MONTHLY" },
-    { id: "AIR QUALITY", label: "AIR QUALITY" },
     { id: "HEALTH & ACTIVITIES", label: "HEALTH & ACTIVITIES" },
   ];
 
@@ -63,7 +68,8 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
       onOpenPriorityModal();
     } else if (tabId === "RADAR" && onToggleScenarioControls) {
       onToggleScenarioControls();
-    } else if (tabId === "10-DAY" || tabId === "MONTHLY" || tabId === "AIR QUALITY" || tabId === "MINUTECAST") {
+    } else if (tabId === "10-DAY" || tabId === "MONTHLY" || tabId === "MINUTECAST") {
+      // If in MAP view mode, we can show modal or navigate
       setActiveModal(tabId);
     } else {
       setActiveModal(null);
@@ -108,12 +114,34 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
             })}
           </div>
 
-          {/* Right Indicator Divider & Status */}
-          <div className="hidden lg:flex items-center gap-3 text-[11px] font-mono text-slate-400 border-l border-slate-800 pl-3">
-            <span className="flex items-center gap-1 text-slate-300">
+          {/* Right Action: Mode Switcher & Status Indicator */}
+          <div className="flex items-center gap-3 border-l border-slate-800 pl-3 shrink-0">
+            {onToggleViewModeType && (
+              <button
+                type="button"
+                onClick={onToggleViewModeType}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-cyan-300 hover:text-cyan-200 border border-slate-750 text-[11px] font-semibold transition-all shadow-sm"
+              >
+                {viewModeType === "PORTAL" ? (
+                  <>
+                    <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+                    <span className="hidden sm:inline">Switch to</span>
+                    <span>3D Twin Map</span>
+                  </>
+                ) : (
+                  <>
+                    <CloudSun className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="hidden sm:inline">Switch to</span>
+                    <span>Weather Portal</span>
+                  </>
+                )}
+              </button>
+            )}
+
+            <div className="hidden xl:flex items-center gap-2 text-[11px] font-mono text-slate-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              MUMBAI-THANE METRO RADAR
-            </span>
+              <span>MUMBAI-THANE METRO RADAR</span>
+            </div>
           </div>
         </div>
       </nav>
@@ -195,34 +223,6 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
                   <div className="flex justify-between">
                     <span className="text-slate-400">ML Model Verified R²:</span>
                     <span className="text-amber-400 font-bold">0.9855 (MAE 1.43 cm)</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeModal === "AIR QUALITY" && (
-              <div className="flex flex-col gap-3 text-xs">
-                <p className="text-slate-400">Current Environmental & Meteorological Telemetry:</p>
-                <div className="grid grid-cols-2 gap-2 font-mono">
-                  <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                    <span className="text-[10px] text-slate-400">AIR QUALITY (AQI)</span>
-                    <p className="text-lg font-bold text-emerald-400">42 (GOOD)</p>
-                    <span className="text-[10px] text-slate-400">Rain wash scrubbed PM2.5</span>
-                  </div>
-                  <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                    <span className="text-[10px] text-slate-400">RELATIVE HUMIDITY</span>
-                    <p className="text-lg font-bold text-teal-400">76%</p>
-                    <span className="text-[10px] text-slate-400">Coastal maritime vapor</span>
-                  </div>
-                  <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                    <span className="text-[10px] text-slate-400">WIND VELOCITY</span>
-                    <p className="text-lg font-bold text-indigo-400">18 km/h WSW</p>
-                    <span className="text-[10px] text-slate-400">Arabian Sea Monsoon Drift</span>
-                  </div>
-                  <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                    <span className="text-[10px] text-slate-400">ATMOSPHERIC PRESSURE</span>
-                    <p className="text-lg font-bold text-cyan-400">1008.4 hPa</p>
-                    <span className="text-[10px] text-slate-400">Monsoon Depression Trough</span>
                   </div>
                 </div>
               </div>

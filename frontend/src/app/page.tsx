@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Navbar } from "../components/Navbar";
 import { SubNavbar, SubNavTab } from "../components/SubNavbar";
+import { WeatherPortalView } from "../components/WeatherPortalView";
 import { EarlyWarningBanner } from "../components/EarlyWarningBanner";
 import { ScenarioControls } from "../components/ScenarioControls";
 import { DeckGLMapView } from "../components/DeckGLMapView";
@@ -25,6 +26,9 @@ export default function Home() {
 
   // Sub-Navbar Active Tab State
   const [activeSubNavTab, setActiveSubNavTab] = useState<SubNavTab>("TODAY");
+
+  // Portal View Mode ("PORTAL" for weather dashboard, "MAP" for 3D digital twin map)
+  const [portalViewMode, setPortalViewMode] = useState<"PORTAL" | "MAP">("PORTAL");
 
   // 0-3h Timeline Selection State
   const [selectedTimelineIndex, setSelectedTimelineIndex] = useState<number>(0);
@@ -169,16 +173,19 @@ export default function Home() {
         activeTab={activeSubNavTab}
         onTabChange={(tab) => {
           setActiveSubNavTab(tab);
-          if (tab === "HOURLY") {
+          if (tab === "RADAR") {
+            setPortalViewMode("MAP");
             setIsScenarioControlsOpen(true);
-          } else if (tab === "TODAY") {
-            setSelectedTimelineIndex(0);
+          } else if (tab === "HOURLY" || tab === "10-DAY" || tab === "TODAY") {
+            setPortalViewMode("PORTAL");
           }
         }}
         onOpenPriorityModal={() => setIsPriorityModalOpen(true)}
         onOpenGraphModal={() => setIsGraphModalOpen(true)}
         onToggleScenarioControls={() => setIsScenarioControlsOpen((prev) => !prev)}
         isLiveMode={isLiveMode}
+        viewModeType={portalViewMode}
+        onToggleViewModeType={() => setPortalViewMode((prev) => (prev === "PORTAL" ? "MAP" : "PORTAL"))}
       />
 
       {/* 30-Minute Predictive Radar Early Warning Banner */}
@@ -187,81 +194,102 @@ export default function Home() {
         components={displayedComponents}
         currentRainfallMmHr={simParams.rainfall_mm_hr}
         onSimulateRainfall={(rain) => handleApplyPreset("Incoming Storm (+30m Nowcast)", rain, 4.1, 45)}
-        onSelectComponent={(c) => setSelectedComponent(c)}
+        onSelectComponent={(c) => {
+          setPortalViewMode("MAP");
+          setSelectedComponent(c);
+        }}
       />
 
-      {/* Full-Screen Immersive Map Viewport */}
-      <div className="flex-1 relative w-full overflow-hidden">
-        {/* Full-Screen Background Deck.gl 3D Digital Twin Map */}
-        <DeckGLMapView
-          components={displayedComponents}
-          selectedComponentId={selectedComponent?.component_id || null}
-          onSelectComponent={(c) => setSelectedComponent(c)}
-          viewMode={viewMode}
-          rainfall_mm_hr={simParams.rainfall_mm_hr}
-          tide_level_m={simParams.tide_level_m}
-        />
+      {/* Main Viewport: Either Full Weather Portal Dashboard OR 3D Digital Twin Map */}
+      {portalViewMode === "PORTAL" ? (
+        <div className="flex-1 relative w-full overflow-hidden bg-slate-950">
+          <WeatherPortalView
+            currentRainfallMmHr={simParams.rainfall_mm_hr}
+            currentTideLevelM={simParams.tide_level_m}
+            liveTelemetry={liveTelemetry}
+            onSimulateScenario={(scenarioName, rain, tide, silt) => {
+              handleApplyPreset(scenarioName, rain, tide, silt);
+            }}
+            onOpenMap={() => {
+              setPortalViewMode("MAP");
+              setActiveSubNavTab("RADAR");
+            }}
+            onOpenPriorityModal={() => setIsPriorityModalOpen(true)}
+          />
+        </div>
+      ) : (
+        <div className="flex-1 relative w-full overflow-hidden">
+          {/* Full-Screen Background Deck.gl 3D Digital Twin Map */}
+          <DeckGLMapView
+            components={displayedComponents}
+            selectedComponentId={selectedComponent?.component_id || null}
+            onSelectComponent={(c) => setSelectedComponent(c)}
+            viewMode={viewMode}
+            rainfall_mm_hr={simParams.rainfall_mm_hr}
+            tide_level_m={simParams.tide_level_m}
+          />
 
-        {/* Floating Left: Scenario Sandbox Deck with 0-3h Timeline Scrubber */}
-        <div className="absolute top-4 left-4 z-20 flex flex-col items-start gap-2">
-          {isScenarioControlsOpen ? (
-            <div className="w-80 relative">
-              <ScenarioControls
-                params={simParams}
-                onChange={handleParamChange}
-                isLoading={isLoading}
-                onApplyPreset={handleApplyPreset}
-                timelineForecast={simResult?.timeline_forecast || []}
-                selectedTimelineIndex={selectedTimelineIndex}
-                onSelectTimelineStep={(idx) => setSelectedTimelineIndex(idx)}
-              />
+          {/* Floating Left: Scenario Sandbox Deck with 0-3h Timeline Scrubber */}
+          <div className="absolute top-4 left-4 z-20 flex flex-col items-start gap-2">
+            {isScenarioControlsOpen ? (
+              <div className="w-80 relative">
+                <ScenarioControls
+                  params={simParams}
+                  onChange={handleParamChange}
+                  isLoading={isLoading}
+                  onApplyPreset={handleApplyPreset}
+                  timelineForecast={simResult?.timeline_forecast || []}
+                  selectedTimelineIndex={selectedTimelineIndex}
+                  onSelectTimelineStep={(idx) => setSelectedTimelineIndex(idx)}
+                />
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsScenarioControlsOpen(false); }}
+                  className="absolute top-3 right-3 p-1 rounded-md bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/60"
+                  title="Minimize Sandbox"
+                >
+                  <Minimize2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
               <button
                 type="button"
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsScenarioControlsOpen(false); }}
-                className="absolute top-3 right-3 p-1 rounded-md bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/60"
-                title="Minimize Sandbox"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsScenarioControlsOpen(true); }}
+                className="flex items-center gap-2 bg-slate-950/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-800 text-xs font-semibold text-amber-300 shadow-2xl hover:border-amber-500/50 transition-all"
               >
-                <Minimize2 className="w-3.5 h-3.5" />
+                <Sliders className="w-4 h-4 text-amber-400" />
+                <span>Scenario Sandbox</span>
               </button>
+            )}
+          </div>
+
+          {/* Floating Right: Component Inspector Panel */}
+          {selectedComponent && (
+            <div className="absolute top-4 right-4 z-20 animate-fadeIn">
+              <ComponentInspector
+                component={selectedComponent}
+                onClose={() => setSelectedComponent(null)}
+              />
             </div>
-          ) : (
+          )}
+
+          {/* Floating Bottom Command Bar: Action Buttons */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-slate-950/90 backdrop-blur-md p-2 rounded-2xl border border-slate-800 shadow-2xl">
+            {/* Cascading Graph Modal Trigger */}
             <button
               type="button"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsScenarioControlsOpen(true); }}
-              className="flex items-center gap-2 bg-slate-950/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-800 text-xs font-semibold text-amber-300 shadow-2xl hover:border-amber-500/50 transition-all"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsGraphModalOpen(true); }}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-900/60 to-indigo-900/60 hover:from-purple-800/80 hover:to-indigo-800/80 border border-purple-500/40 text-xs font-bold text-purple-200 shadow-lg transition-all hover:scale-105"
             >
-              <Sliders className="w-4 h-4 text-amber-400" />
-              <span>Scenario Sandbox</span>
+              <GitBranch className="w-4 h-4 text-purple-400" />
+              <span>Cascading Failure Graph</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-mono text-[10px]">
+                {graphData?.total_impacted_nodes || 4}
+              </span>
             </button>
-          )}
-        </div>
-
-        {/* Floating Right: Component Inspector Panel */}
-        {selectedComponent && (
-          <div className="absolute top-4 right-4 z-20 animate-fadeIn">
-            <ComponentInspector
-              component={selectedComponent}
-              onClose={() => setSelectedComponent(null)}
-            />
           </div>
-        )}
-
-        {/* Floating Bottom Command Bar: Action Buttons */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-slate-950/90 backdrop-blur-md p-2 rounded-2xl border border-slate-800 shadow-2xl">
-          {/* Cascading Graph Modal Trigger */}
-          <button
-            type="button"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsGraphModalOpen(true); }}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-900/60 to-indigo-900/60 hover:from-purple-800/80 hover:to-indigo-800/80 border border-purple-500/40 text-xs font-bold text-purple-200 shadow-lg transition-all hover:scale-105"
-          >
-            <GitBranch className="w-4 h-4 text-purple-400" />
-            <span>Cascading Failure Graph</span>
-            <span className="px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-mono text-[10px]">
-              {graphData?.total_impacted_nodes || 4}
-            </span>
-          </button>
         </div>
-      </div>
+      )}
 
       {/* Cascading Failure Graph Modal Overlay */}
       {isGraphModalOpen && graphData && (
