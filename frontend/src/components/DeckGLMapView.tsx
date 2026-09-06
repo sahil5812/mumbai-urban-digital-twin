@@ -56,7 +56,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   rainfall_mm_hr = 45,
   tide_level_m = 2.8,
 }) => {
-  const [show3DColumns, setShow3DColumns] = useState<boolean>(true);
+  const [showMarkers, setShowMarkers] = useState<boolean>(true);
   const [showRoads, setShowRoads] = useState<boolean>(true);
   const [showDrains, setShowDrains] = useState<boolean>(true);
   const [showArcs, setShowArcs] = useState<boolean>(true);
@@ -152,73 +152,69 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     };
   }, [mapTheme]);
 
-  // 1. Radar Inundation Disks
+  // 1. Inundation Radar Pulse Disks (Halo ring on inundated spots)
   const groundRadarLayer = useMemo(() => {
-    if (!components.length) return null;
+    if (!components.length || !showMarkers) return null;
 
     return new ScatterplotLayer({
       id: "ground-radar-disks",
-      data: components,
+      data: components.filter(d => (d.water_depth_cm || 0) > 10 || d.component_id === selectedComponentId),
       getPosition: (d: ComponentTelemetry) => [d.longitude || 72.85, d.latitude || 19.06],
-      getRadius: (d: ComponentTelemetry) => Math.max(120, (d.water_depth_cm || 0) * 16),
+      getRadius: (d: ComponentTelemetry) => Math.max(140, (d.water_depth_cm || 0) * 18),
       getFillColor: (d: ComponentTelemetry) => {
-        if (d.status === "CRITICAL" || (d.failure_risk_score || 0) > 65) return [239, 68, 68, 190];
-        if (d.status === "WARNING" || (d.failure_risk_score || 0) > 35) return [245, 158, 11, 190];
-        if (d.component_type === "PUMP") return [6, 182, 212, 190];
-        return [16, 185, 129, 190];
+        if (d.component_id === selectedComponentId) return [0, 242, 254, 110];
+        if (d.status === "CRITICAL" || (d.failure_risk_score || 0) > 65) return [239, 68, 68, 120];
+        if (d.status === "WARNING" || (d.failure_risk_score || 0) > 35) return [245, 158, 11, 120];
+        return [16, 185, 129, 90];
       },
-      getLineColor: [255, 255, 255, 240],
-      getLineWidth: 2,
+      getLineColor: (d: ComponentTelemetry) => {
+        if (d.component_id === selectedComponentId) return [0, 242, 254, 255];
+        if (d.status === "CRITICAL") return [239, 68, 68, 200];
+        if (d.status === "WARNING") return [245, 158, 11, 200];
+        return [16, 185, 129, 160];
+      },
+      lineWidthMinPixels: 1.5,
       stroked: true,
       filled: true,
-      radiusMinPixels: 6,
-      radiusMaxPixels: 28,
-      pickable: true,
-      onClick: (info: any) => info.object && onSelectComponent(info.object),
+      radiusMinPixels: 12,
+      radiusMaxPixels: 36,
+      pickable: false,
     });
-  }, [components, selectedComponentId]);
+  }, [components, selectedComponentId, showMarkers]);
 
-  // 2. 3D Extruded Building Towers (Differentiated Physical Heights)
-  const columnsLayer = useMemo(() => {
-    if (!show3DColumns || !components.length) return null;
+  // 2. Clean Solid Station & Hotspot Pin Markers (Like Before - NO 3D Towers!)
+  const stationMarkersLayer = useMemo(() => {
+    if (!components.length || !showMarkers) return null;
 
-    return new ColumnLayer({
-      id: "3d-building-columns",
+    return new ScatterplotLayer({
+      id: "station-point-markers",
       data: components,
       getPosition: (d: ComponentTelemetry) => [d.longitude || 72.85, d.latitude || 19.06],
-      getElevation: (d: ComponentTelemetry) => {
-        const depth = d.water_depth_cm || 0;
-        const risk = d.failure_risk_score || 0;
-        // Physical visual scaling: Subways shoot up, safe roads stay grounded
-        const waterHeight = depth * 35;
-        const riskHeight = risk * 12;
-        const baseHeight = d.component_type === "HOTSPOT" ? 180 : (d.component_type === "ROAD" ? 120 : 90);
-        return viewMode === "3D" ? baseHeight + waterHeight + riskHeight : 0;
-      },
-      elevationScale: 1,
-      radius: 175,
-      diskResolution: 32,
-      extruded: viewMode === "3D",
+      getRadius: (d: ComponentTelemetry) => (d.component_id === selectedComponentId ? 220 : 160),
       getFillColor: (d: ComponentTelemetry) => {
         if (d.component_id === selectedComponentId) return [0, 242, 254, 255]; // Selected Neon Cyan
         if (d.component_type === "PUMP") return [6, 182, 212, 245]; // SPS Cyan
-        if (d.status === "CRITICAL" || (d.failure_risk_score || 0) > 65) return [239, 68, 68, 245]; // Critical Red
-        if (d.status === "WARNING" || (d.failure_risk_score || 0) > 35) return [245, 158, 11, 245]; // Warning Amber
+        if (d.status === "CRITICAL" || (d.failure_risk_score || 0) > 65) return [239, 68, 68, 250]; // Critical Red
+        if (d.status === "WARNING" || (d.failure_risk_score || 0) > 35) return [245, 158, 11, 250]; // Warning Amber
         if (d.component_type === "DRAIN") return [14, 165, 233, 245]; // Drain Blue
-        return [16, 185, 129, 245]; // Safe Emerald
+        return [16, 185, 129, 250]; // Safe Emerald
       },
-      getLineColor: [255, 255, 255, 240],
-      lineWidthMinPixels: 2,
+      getLineColor: [255, 255, 255, 255],
+      lineWidthMinPixels: 2.5,
+      stroked: true,
+      filled: true,
+      radiusMinPixels: 8,
+      radiusMaxPixels: 18,
       pickable: true,
       autoHighlight: true,
-      highlightColor: [255, 255, 255, 200],
+      highlightColor: [255, 255, 255, 180],
       onClick: (info: any) => info.object && onSelectComponent(info.object),
     });
-  }, [components, selectedComponentId, viewMode, show3DColumns]);
+  }, [components, selectedComponentId, showMarkers]);
 
-  // 3. Clean Billboard Text Tags (Shows Location Names on All Hotspots & Stations)
+  // 3. Clean Text Labels Anchored Right Above Ground Markers
   const textTagsLayer = useMemo(() => {
-    if (!components.length) return null;
+    if (!components.length || !showMarkers) return null;
 
     // Show labels for all Hotspots & Stations (Kurla, Mumbra, Dahisar, etc.), any Warning/Critical nodes, or selected node
     const filtered = components.filter((d) => {
@@ -232,13 +228,8 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     return new TextLayer({
       id: "floating-text-tags",
       data: filtered,
-      getPosition: (d: ComponentTelemetry) => {
-        const depth = d.water_depth_cm || 0;
-        const risk = d.failure_risk_score || 0;
-        const baseHeight = d.component_type === "HOTSPOT" ? 180 : 100;
-        const height = viewMode === "3D" ? baseHeight + depth * 35 + risk * 12 + 60 : 0;
-        return [d.longitude || 72.85, d.latitude || 19.06, height];
-      },
+      getPosition: (d: ComponentTelemetry) => [d.longitude || 72.85, d.latitude || 19.06, 0],
+      pixelOffset: [0, -16], // Placed neatly 16px right above the circular mark on the map!
       getText: (d: ComponentTelemetry) => {
         const nameClean = (d.name || "Hotspot").split("/")[0].split("(")[0].trim();
         const depth = Math.round(d.water_depth_cm || 0);
@@ -260,7 +251,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       pickable: true,
       onClick: (info: any) => info.object && onSelectComponent(info.object),
     });
-  }, [components, selectedComponentId, viewMode]);
+  }, [components, selectedComponentId, showMarkers]);
 
   // 4. Arterial Roads
   const roadsLayer = useMemo(() => {
@@ -310,7 +301,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     });
   }, [showArcs, viewMode]);
 
-  const layers = [roadsLayer, drainsLayer, arcsLayer, groundRadarLayer, columnsLayer, textTagsLayer].filter(Boolean);
+  const layers = [roadsLayer, drainsLayer, arcsLayer, groundRadarLayer, stationMarkersLayer, textTagsLayer].filter(Boolean);
 
   return (
     <div className="relative w-full h-full bg-slate-950 overflow-hidden select-none">
@@ -376,15 +367,15 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         {/* Layer Visibility Toggles */}
         <button
           type="button"
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShow3DColumns(!show3DColumns); }}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowMarkers(!showMarkers); }}
           className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border font-medium transition-all ${
-            show3DColumns
-              ? "bg-purple-600/30 border-purple-500 text-purple-300"
+            showMarkers
+              ? "bg-emerald-600/30 border-emerald-500 text-emerald-300"
               : "bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200"
           }`}
         >
-          <Rotate3d className="w-3.5 h-3.5 text-purple-400" />
-          <span>Towers</span>
+          <Compass className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Markers</span>
         </button>
 
         <button
