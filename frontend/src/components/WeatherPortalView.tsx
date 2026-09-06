@@ -193,7 +193,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
   ];
 
   return (
-    <div className="w-full h-full overflow-y-auto bg-slate-950 text-slate-100 p-4 sm:p-6 font-sans">
+    <div className="w-full h-full overflow-y-auto bg-transparent text-slate-100 p-4 sm:p-6 font-sans">
       <div className="max-w-4xl mx-auto space-y-4 pb-16">
         
         {/* CARD 1: TONIGHT'S WEATHER & ALERTS */}

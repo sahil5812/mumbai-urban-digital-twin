@@ -153,7 +153,7 @@ export default function Home() {
   }
 
   return (
-    <main className="h-screen w-screen bg-slate-950 text-slate-100 flex flex-col font-sans overflow-hidden">
+    <main className="h-screen w-screen bg-transparent text-slate-100 flex flex-col font-sans overflow-hidden">
       {/* Top Tactical Command Header */}
       <Navbar
         viewMode={viewMode}
@@ -202,7 +202,7 @@ export default function Home() {
 
       {/* Main Viewport: Either Full Weather Portal Dashboard OR 3D Digital Twin Map */}
       {portalViewMode === "PORTAL" ? (
-        <div className="flex-1 relative w-full overflow-hidden bg-slate-950">
+        <div className="flex-1 relative w-full overflow-hidden bg-transparent">
           <WeatherPortalView
             currentRainfallMmHr={simParams.rainfall_mm_hr}
             currentTideLevelM={simParams.tide_level_m}
