@@ -18,15 +18,15 @@ class DEM2DSurfaceFlowEngine:
         self.lat_min = 18.90
         self.lat_max = 19.28
         self.lon_min = 72.80
-        self.lon_max = 72.98
+        self.lon_max = 73.06
         self.elevation_grid = self._initialize_mumbai_dem()
         self.flow_direction_grid, self.flow_accumulation_grid = self._compute_d8_flow_routing()
 
     def _initialize_mumbai_dem(self) -> np.ndarray:
         """
-        Synthesizes 2D Mumbai DEM THD elevation grid:
-        High ridges: Sanjay Gandhi NP / Powai (+15m to +45m), Bandra West (+6.5m), Malabar Hill (+25m)
-        Low depressions: Milan Subway (+1.8m), Hindmata (+1.9m), Kurla Mithi (+2.1m), Mahul Basin (+1.5m)
+        Synthesizes 2D Mumbai-Thane-Mumbra DEM THD elevation grid:
+        High ridges: Sanjay Gandhi NP / Powai (+15m to +45m), Parsik Hills Mumbra (+40m to +85m), Malabar Hill (+25m)
+        Low depressions: Milan Subway (+1.8m), Hindmata (+1.9m), Mumbra Station (+2.3m), Reti Bunder Basin (+1.8m)
         """
         grid = np.zeros((self.rows, self.cols), dtype=float)
         lats = np.linspace(self.lat_max, self.lat_min, self.rows)
@@ -40,11 +40,21 @@ class DEM2DSurfaceFlowEngine:
                 base_elev = 3.5 + 2.0 * np.sin(r * 0.4) + 1.5 * np.cos(c * 0.3)
                 
                 # Northern SGNP Hill Range
-                if lat > 19.18 and lon > 72.88:
+                if lat > 19.18 and (72.88 <= lon <= 72.96):
                     base_elev += 28.0 * np.exp(-((lat - 19.22)**2 + (lon - 72.91)**2) / 0.005)
+                
+                # Eastern Parsik Hill Range (Thane-Mumbra Ridge)
+                if (19.16 <= lat <= 19.23) and (73.00 <= lon <= 73.05):
+                    base_elev += 45.0 * np.exp(-((lat - 19.19)**2 + (lon - 73.02)**2) / 0.003)
+
                 # Central Saucers (Hindmata / Kurla / Milan)
                 if (19.00 <= lat <= 19.12) and (72.83 <= lon <= 72.89):
                     base_elev = max(1.2, base_elev - 3.2)
+                
+                # Mumbra-Reti Bunder Lowline Basin
+                if (19.17 <= lat <= 19.21) and (73.01 <= lon <= 73.03) and base_elev < 25.0:
+                    base_elev = max(1.8, base_elev - 1.8)
+
                 # Coastal margin
                 if lon < 72.82:
                     base_elev = max(0.8, base_elev - 2.0)

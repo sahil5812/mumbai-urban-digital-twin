@@ -1,0 +1,2 @@
+station_id,name,ward,lat,lon,elevation_m,total_capacity_cumecs,pumps_count,tide_gate_installed
+SPS_TMC_MBR_01,Reti Bunder Stormwater Dewatering Station (Mumbra),TMC-Ward-1,19.198,73.016,1.5,24.0,4,True

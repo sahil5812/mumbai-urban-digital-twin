@@ -1,0 +1,4 @@
+drain_id,name,ward,width_m,capacity_cumecs,siltation_pct,outfall_location
+DRN_TMC_MBR_01,Mumbra Creek & Reti Bunder Outfall Nallah,TMC-Ward-1,35.0,140.0,45.0,Thane Creek / Ulhas Estuary
+DRN_TMC_MBR_02,Parsik Hill Torrent Cascade Storm Nallah,TMC-Ward-1,18.0,75.0,55.0,Mumbra Basin Collector
+DRN_TMC_MBR_03,Kausa-Shilphata Interceptor Drain,TMC-Ward-1,22.0,90.0,40.0,Diva Creek Marshland

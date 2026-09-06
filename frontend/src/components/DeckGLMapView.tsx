@@ -17,6 +17,8 @@ const MUMBAI_ROADS = [
   { id: "BAR", name: "Dr. B.A. Road (Hindmata Corridor)", path: [[72.8330, 18.9600], [72.8380, 18.9900], [72.8432, 19.0125], [72.8550, 19.0400], [72.8620, 19.0600]], width: 26, color: [6, 182, 212, 250] },
   { id: "MDR", name: "Marine Drive", path: [[72.8220, 18.9250], [72.8235, 18.9420], [72.8180, 18.9550]], width: 26, color: [0, 245, 212, 250] },
   { id: "BKC", name: "BKC Connector", path: [[72.8550, 19.0600], [72.8680, 19.0660], [72.8780, 19.0640]], width: 24, color: [103, 232, 249, 250] },
+  { id: "MBR_HWY", name: "Old Mumbai-Pune Hwy (Mumbra Corridor)", path: [[72.9700, 19.2200], [72.9950, 19.2100], [73.0180, 19.1950], [73.0229, 19.1906], [73.0298, 19.1764], [73.0380, 19.1550]], width: 30, color: [234, 179, 8, 250] },
+  { id: "MBR_BYP", name: "Mumbra Bypass Road (Elevated Parsik)", path: [[72.9900, 19.2050], [73.0080, 19.1980], [73.0120, 19.1950], [73.0195, 19.1700], [73.0350, 19.1550]], width: 28, color: [34, 197, 94, 250] },
 ];
 
 const MUMBAI_DRAINS = [
@@ -24,6 +26,8 @@ const MUMBAI_DRAINS = [
   { id: "VAKOLA", name: "Vakola Nallah", path: [[72.8650, 19.0900], [72.8600, 19.0780], [72.8550, 19.0650]], width: 28, color: [0, 191, 255, 250] },
   { id: "IRLA", name: "Irla Nallah", path: [[72.8420, 19.1250], [72.8350, 19.1100], [72.8280, 19.1000]], width: 24, color: [72, 209, 204, 250] },
   { id: "GAZDAR", name: "Gazdarband Nallah", path: [[72.8400, 19.0880], [72.8320, 19.0820], [72.8240, 19.0800]], width: 24, color: [127, 255, 212, 250] },
+  { id: "MBR_CREEK", name: "Mumbra Creek & Reti Bunder Outfall", path: [[73.0300, 19.1850], [73.0229, 19.1906], [73.0180, 19.1960], [73.0165, 19.1995]], width: 38, color: [16, 185, 129, 250] },
+  { id: "PARSIK_NAL", name: "Parsik Hill Cascade Storm Nallah", path: [[73.0350, 19.2050], [73.0280, 19.1980], [73.0229, 19.1906]], width: 26, color: [52, 211, 153, 250] },
 ];
 
 const DISCHARGE_ARCS = [
@@ -31,6 +35,8 @@ const DISCHARGE_ARCS = [
   { name: "Milan Subway -> Gazdarband Outfall", source: [72.8395, 19.0832], target: [72.8260, 19.0780] },
   { name: "Andheri Subway -> Irla Outfall", source: [72.8441, 19.1194], target: [72.8270, 19.1080] },
   { name: "Kurla LBS -> Mithi River Surge", source: [72.8800, 19.0700], target: [72.8350, 19.0450] },
+  { name: "Mumbra Station -> Reti Bunder SPS", source: [73.0229, 19.1906], target: [73.0160, 19.1980] },
+  { name: "Kausa Junction -> Reti Bunder Outfall", source: [73.0298, 19.1764], target: [73.0165, 19.1995] },
 ];
 
 interface DeckGLMapViewProps {
@@ -61,10 +67,11 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   // 360° Cinematic Orbit State
   const [isOrbiting, setIsOrbiting] = useState<boolean>(false);
 
+  // Camera State - Centered to span Mumbai, Thane & Mumbra
   const [viewState, setViewState] = useState({
-    longitude: 72.8480,
-    latitude: 19.0400,
-    zoom: 11.5,
+    longitude: 72.8950,
+    latitude: 19.1050,
+    zoom: 11.2,
     pitch: viewMode === "3D" ? 55 : 0,
     bearing: viewMode === "3D" ? -15 : 0,
     maxPitch: 75,
@@ -189,7 +196,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         return viewMode === "3D" ? baseHeight + waterHeight + riskHeight : 0;
       },
       elevationScale: 1,
-      radius: (d: ComponentTelemetry) => d.component_type === "HOTSPOT" ? 160 : (d.component_type === "PUMP" ? 210 : 130),
+      radius: 175,
       diskResolution: 32,
       extruded: viewMode === "3D",
       getFillColor: (d: ComponentTelemetry) => {

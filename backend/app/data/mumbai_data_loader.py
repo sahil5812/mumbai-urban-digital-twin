@@ -126,6 +126,130 @@ def load_master_infrastructure() -> Dict[str, Any]:
                 "status": "SAFE"
             })
 
+    # 5. Ingest Thane Mumbra Chronic Hotspots CSV
+    tmc_hotspots_csv = os.path.join(DATASET_DIR, "05_waterlogging_spots", "thane_mumbra_chronic_waterlogging_hotspots.csv")
+    if os.path.exists(tmc_hotspots_csv):
+        df_tmc_h = pd.read_csv(tmc_hotspots_csv)
+        for _, row in df_tmc_h.iterrows():
+            clean_name = str(row["location_name"]).split(",")[0].strip()
+            hotspots.append({
+                "id": str(row["spot_id"]),
+                "name": clean_name,
+                "type": "HOTSPOT",
+                "ward": str(row.get("ward", "TMC-Ward-1")),
+                "latitude": float(row["lat"]),
+                "longitude": float(row["lon"]),
+                "elevation_m": float(row.get("elevation_m", 2.3)),
+                "historical_avg_depth_cm": float(row.get("avg_water_depth_cm", 75.0)),
+                "primary_cause": str(row.get("primary_cause", "Saucer Underpass & Parsik Runoff")),
+                "linked_road_id": str(row.get("linked_road_id", "RD_TMC_MBR_01")),
+                "linked_drain_id": str(row.get("linked_drain_id", "DRN_TMC_MBR_01")),
+                "risk_severity": str(row.get("risk_severity", "Critical")),
+                "health_score": 80.0,
+                "failure_risk_score": 20.0,
+                "water_depth_cm": 0.0,
+                "status": "SAFE"
+            })
+            if pd.notna(row.get("linked_road_id")):
+                edges.append({
+                    "source_node_id": str(row["spot_id"]),
+                    "target_node_id": str(row["linked_road_id"]),
+                    "relationship_type": "SURCHARGE_TO_ROAD",
+                    "weight_impact_factor": 0.95,
+                    "description": f"{clean_name} inundates {row['linked_road_id']}"
+                })
+            if pd.notna(row.get("linked_drain_id")):
+                edges.append({
+                    "source_node_id": str(row["spot_id"]),
+                    "target_node_id": str(row["linked_drain_id"]),
+                    "relationship_type": "HYDRAULIC_RUNOFF_DISCHARGE",
+                    "weight_impact_factor": 0.90,
+                    "description": f"Runoff discharges into {row['linked_drain_id']}"
+                })
+
+    # 6. Ingest Thane Mumbra Road Network CSV
+    tmc_roads_csv = os.path.join(DATASET_DIR, "03_road_network", "thane_mumbra_road_network.csv")
+    if os.path.exists(tmc_roads_csv):
+        df_tmc_r = pd.read_csv(tmc_roads_csv)
+        for _, row in df_tmc_r.iterrows():
+            roads.append({
+                "id": str(row["road_id"]),
+                "name": str(row.get("road_name", row["road_id"])),
+                "type": "ROAD",
+                "ward": str(row.get("ward", "TMC-Ward-1")),
+                "latitude": float(row.get("start_lat", 19.185)),
+                "longitude": float(row.get("start_lon", 73.022)),
+                "elevation_m": float(row.get("elevation_m", 4.8)),
+                "pci": float(row.get("pci", 75.0)),
+                "lanes": int(row.get("lanes", 6)),
+                "daily_traffic": int(row.get("avg_daily_traffic", 120000)),
+                "health_score": 85.0,
+                "failure_risk_score": 15.0,
+                "water_depth_cm": 0.0,
+                "status": "SAFE"
+            })
+        # Connect Eastern Express Highway (EEH) to Old Mumbai-Pune Highway (Mumbra)
+        edges.append({
+            "source_node_id": "RD_EEH_01",
+            "target_node_id": "RD_TMC_MBR_01",
+            "relationship_type": "INTER_CITY_CORRIDOR",
+            "weight_impact_factor": 0.70,
+            "description": "Eastern Express Highway connects to Old Mumbai-Pune Highway via Thane Kalwa Bridge"
+        })
+
+    # 7. Ingest Thane Mumbra Drains & Rivers CSV
+    tmc_drains_csv = os.path.join(DATASET_DIR, "04_drainage_stormwater", "thane_mumbra_major_nallahs.csv")
+    if os.path.exists(tmc_drains_csv):
+        df_tmc_d = pd.read_csv(tmc_drains_csv)
+        for _, row in df_tmc_d.iterrows():
+            drains.append({
+                "id": str(row["drain_id"]),
+                "name": str(row["name"]),
+                "type": "DRAIN",
+                "ward": str(row.get("ward", "TMC-Ward-1")),
+                "latitude": 19.195,
+                "longitude": 73.018,
+                "elevation_m": 1.8,
+                "width_m": float(row.get("width_m", 25.0)),
+                "capacity_cumecs": float(row.get("capacity_cumecs", 100.0)),
+                "siltation_pct": float(row.get("siltation_pct", 45.0)),
+                "outfall_location": str(row.get("outfall_location", "Thane Creek")),
+                "health_score": 80.0,
+                "failure_risk_score": 20.0,
+                "water_depth_cm": 0.0,
+                "status": "SAFE"
+            })
+
+    # 8. Ingest Thane Mumbra Stormwater Pumping Stations CSV
+    tmc_pumps_csv = os.path.join(DATASET_DIR, "04_drainage_stormwater", "thane_mumbra_pumping_stations.csv")
+    if os.path.exists(tmc_pumps_csv):
+        df_tmc_p = pd.read_csv(tmc_pumps_csv)
+        for _, row in df_tmc_p.iterrows():
+            pumps.append({
+                "id": str(row["station_id"]),
+                "name": str(row["name"]),
+                "type": "PUMP",
+                "ward": str(row.get("ward", "TMC-Ward-1")),
+                "latitude": float(row.get("lat", 19.198)),
+                "longitude": float(row.get("lon", 73.016)),
+                "elevation_m": float(row.get("elevation_m", 1.5)),
+                "capacity_cumecs": float(row.get("total_capacity_cumecs", 24.0)),
+                "number_of_pumps": int(row.get("pumps_count", 4)),
+                "tide_gate_installed": True,
+                "health_score": 90.0,
+                "failure_risk_score": 10.0,
+                "water_depth_cm": 0.0,
+                "status": "SAFE"
+            })
+            # Connect Mumbra Station Underpass to Reti Bunder SPS
+            edges.append({
+                "source_node_id": "HOT_TMC_MBR_01",
+                "target_node_id": str(row["station_id"]),
+                "relationship_type": "PUMP_RELIEF_DISPATCH",
+                "weight_impact_factor": 0.85,
+                "description": "Reti Bunder Dewatering SPS evacuates stormwater from Mumbra Station underpass"
+            })
+
     return {
         "hotspots": hotspots,
         "roads": roads,

@@ -17,22 +17,41 @@ DATASET_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "dataset"))
 MODEL_OUT = os.path.join(BASE_DIR, "app", "models", "mumbai_ml_ensemble.joblib")
 
 def load_and_prepare_real_dataset():
-    rain_csv = os.path.join(DATASET_DIR, "01_rainfall_weather", "mumbai_hourly_monsoon_rainfall_2021_2024.csv")
+    rain_mumbai_csv = os.path.join(DATASET_DIR, "01_rainfall_weather", "mumbai_hourly_monsoon_rainfall_2021_2024.csv")
+    rain_mumbra_csv = os.path.join(DATASET_DIR, "01_rainfall_weather", "thane_mumbra_hourly_monsoon_rainfall_2021_2024.csv")
     tide_csv = os.path.join(DATASET_DIR, "01_rainfall_weather", "mumbai_tide_levels_2021_2024.csv")
-    hotspot_csv = os.path.join(DATASET_DIR, "05_waterlogging_spots", "bmc_chronic_waterlogging_hotspots.csv")
+    hotspot_mumbai_csv = os.path.join(DATASET_DIR, "05_waterlogging_spots", "bmc_chronic_waterlogging_hotspots.csv")
+    hotspot_mumbra_csv = os.path.join(DATASET_DIR, "05_waterlogging_spots", "thane_mumbra_chronic_waterlogging_hotspots.csv")
     drains_csv = os.path.join(DATASET_DIR, "04_drainage_stormwater", "mumbai_major_nallahs_and_rivers.csv")
 
-    df_rain = pd.read_csv(rain_csv)
+    df_rain_mumbai = pd.read_csv(rain_mumbai_csv)
     df_tide = pd.read_csv(tide_csv)
-    df_hotspots = pd.read_csv(hotspot_csv)
+    df_hotspots_mumbai = pd.read_csv(hotspot_mumbai_csv)
     df_drains = pd.read_csv(drains_csv)
 
-    print(f"Loaded {len(df_rain)} real hourly monsoon rainfall records from Mumbai AWS.")
+    print(f"Loaded {len(df_rain_mumbai)} real hourly monsoon rainfall records from Mumbai AWS.")
     print(f"Loaded {len(df_tide)} Arabian Sea tide observations (2021-2024).")
-    print(f"Loaded {len(df_hotspots)} chronic waterlogging hotspot records.")
+
+    # Ingest Thane Mumbra data if present
+    if os.path.exists(rain_mumbra_csv):
+        df_rain_mumbra = pd.read_csv(rain_mumbra_csv)
+        print(f"Loaded {len(df_rain_mumbra)} real hourly monsoon rainfall records from Thane Mumbra (2021-2024).")
+        df_rain = pd.concat([df_rain_mumbai, df_rain_mumbra], ignore_index=True)
+    else:
+        df_rain = df_rain_mumbai
+
+    if os.path.exists(hotspot_mumbra_csv):
+        df_hotspots_mumbra = pd.read_csv(hotspot_mumbra_csv)
+        print(f"Loaded {len(df_hotspots_mumbra)} chronic waterlogging hotspot records from Thane Mumbra.")
+        df_hotspots = pd.concat([df_hotspots_mumbai, df_hotspots_mumbra], ignore_index=True)
+    else:
+        df_hotspots = df_hotspots_mumbai
+
+    print(f"Total combined rainfall records: {len(df_rain)}")
+    print(f"Total combined chronic hotspots: {len(df_hotspots)}")
 
     # Filter rainy events (rainfall > 0)
-    df_rain_active = df_rain[df_rain["rainfall_mm_per_hr"] > 5.0].sample(n=min(8000, len(df_rain[df_rain["rainfall_mm_per_hr"] > 5.0])), random_state=42)
+    df_rain_active = df_rain[df_rain["rainfall_mm_per_hr"] > 5.0].sample(n=min(10000, len(df_rain[df_rain["rainfall_mm_per_hr"] > 5.0])), random_state=42)
 
     records = []
     tide_vals = df_tide["tide_height_meters"].dropna().values

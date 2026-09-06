@@ -1,0 +1,7 @@
+spot_id,location_name,ward,lat,lon,elevation_m,avg_water_depth_cm,primary_cause,linked_road_id,linked_drain_id,risk_severity
+HOT_TMC_MBR_01,"Mumbra Railway Station Underpass & Bazar, Mumbra",TMC-Ward-1,19.1906,73.0229,2.3,78.0,Saucer Underpass Depression & Parsik Hill Storm Runoff,RD_TMC_MBR_01,DRN_TMC_MBR_01,Critical
+HOT_TMC_MBR_02,"Kausa Junction & Almas Colony, Kausa Mumbra",TMC-Ward-1,19.1764,73.0298,2.8,65.0,High Impervious Density & Inadequate Culvert Flow,RD_TMC_MBR_01,DRN_TMC_MBR_03,High
+HOT_TMC_MBR_03,"Reti Bunder Lowline Basin, Mumbra",TMC-Ward-1,19.1995,73.0165,1.8,85.0,Thane Creek Tidal Surcharge & Coastal Backflow,RD_TMC_MBR_02,DRN_TMC_MBR_01,Critical
+HOT_TMC_MBR_04,"Shilphata Junction Lowline, Mumbra-Kalyan Link",TMC-Ward-1,19.155,73.038,4.0,52.0,Major Arterial Bottleneck & Unregulated Surface Runoff,RD_TMC_MBR_01,DRN_TMC_MBR_03,High
+HOT_TMC_MBR_05,Diva Station Level Crossing & Agasan Basin,TMC-Ward-1,19.1885,73.042,2.1,82.0,Suburban Railway Tracks Lowline & Marsh Overflow,RD_TMC_MBR_01,DRN_TMC_MBR_03,Critical
+HOT_TMC_MBR_06,Parsik Foothills & Amrut Nagar Nallah Corridor,TMC-Ward-1,19.1945,73.0195,3.2,58.0,Steep Hill Slope Runoff Velocity & Heavy Siltation,RD_TMC_MBR_02,DRN_TMC_MBR_02,Moderate

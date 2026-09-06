@@ -1,0 +1,4 @@
+road_id,road_name,ward,start_lat,start_lon,elevation_m,pci,lanes,avg_daily_traffic
+RD_TMC_MBR_01,Old Mumbai-Pune Highway (Mumbra-Kausa Corridor),TMC-Ward-1,19.185,73.022,4.8,70.0,6,125000
+RD_TMC_MBR_02,Mumbra Bypass Road (Elevated Parsik Corridor),TMC-Ward-1,19.195,73.012,12.5,82.0,6,95000
+RD_TMC_MBR_03,Thane-Belapur Road (Kalwa-Vitawa-Mumbra Link),TMC-Ward-1,19.17,73.01,5.2,76.0,6,140000
