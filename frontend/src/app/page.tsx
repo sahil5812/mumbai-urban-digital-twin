@@ -29,12 +29,12 @@ export default function Home() {
   const [isLiveMode, setIsLiveMode] = useState(false);
   const [liveTelemetry, setLiveTelemetry] = useState<LiveTelemetry | null>(null);
 
-  // Simulation State
+  // Simulation State - Starts with Clear Sky (No Rain) Baseline
   const [simParams, setSimParams] = useState<SimulationRequest>({
-    rainfall_mm_hr: 45.0,
-    tide_level_m: 2.8,
-    siltation_pct: 30.0,
-    active_scenario_name: "Normal Monsoon",
+    rainfall_mm_hr: 0.0,
+    tide_level_m: 2.4,
+    siltation_pct: 25.0,
+    active_scenario_name: "Clear Weather Baseline",
   });
 
   const [simResult, setSimResult] = useState<SimulationResponse | null>(null);

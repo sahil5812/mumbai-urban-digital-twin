@@ -24,7 +24,8 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
   onSelectTimelineStep,
 }) => {
   const presets = [
-    { name: "Normal Monsoon", rain: 35, tide: 2.5, silt: 20, label: "Normal", icon: "🌤️", desc: "35mm/h • 2.5m" },
+    { name: "Clear Sky Baseline", rain: 0, tide: 2.4, silt: 20, label: "Clear 0mm", icon: "☀️", desc: "0mm/h • 2.4m" },
+    { name: "Normal Monsoon", rain: 35, tide: 2.5, silt: 25, label: "Normal 35mm", icon: "🌤️", desc: "35mm/h • 2.5m" },
     { name: "Heavy Downpour (150mm)", rain: 150, tide: 4.2, silt: 50, label: "Heavy 150mm", icon: "🌧️", desc: "150mm/h • 4.2m" },
     { name: "26/7 Cloudburst Surge", rain: 260, tide: 4.8, silt: 80, label: "26/7 Surge", icon: "⚡", desc: "260mm/h • 4.8m" },
   ];

@@ -216,12 +216,16 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   const textTagsLayer = useMemo(() => {
     if (!components.length || !showMarkers) return null;
 
-    // Show labels for all Hotspots & Stations (Kurla, Mumbra, Dahisar, etc.), any Warning/Critical nodes, or selected node
+    // Smart uncluttered label filter:
+    // 1. Selected node always shows
+    // 2. Active flood / warning nodes (depth >= 20cm or CRITICAL/WARNING) always pop up to alert
+    // 3. In dry baseline (no rain), only show major anchor landmarks (Kurla, Mumbra, Milan, Dahisar)
+    const ANCHOR_HUBS = new Set(["HOT_HND_01", "HOT_MLN_01", "HOT_AND_01", "HOT_KRL_01", "HOT_TMC_MBR_01", "HOT_DAH_01"]);
+
     const filtered = components.filter((d) => {
       if (d.component_id === selectedComponentId) return true;
-      if (d.component_type === "HOTSPOT") return true; // Always show location names for all stations & subways!
-      if (d.status === "CRITICAL" || d.status === "WARNING" || (d.water_depth_cm || 0) > 15) return true;
-      if (d.component_type === "PUMP" && ((d.water_depth_cm || 0) > 0 || d.component_id === selectedComponentId)) return true;
+      if (d.status === "CRITICAL" || d.status === "WARNING" || (d.water_depth_cm || 0) >= 20) return true;
+      if (ANCHOR_HUBS.has(d.component_id)) return true;
       return false;
     });
 
