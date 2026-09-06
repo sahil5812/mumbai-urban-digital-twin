@@ -78,10 +78,10 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
 
   return (
     <>
-      <nav className="w-full bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80 px-4 select-none z-20 sticky top-16 text-slate-300 shadow-md">
-        <div className="max-w-7xl mx-auto flex items-center justify-between overflow-x-auto no-scrollbar py-0.5">
-          {/* Main Tabs Strip - Closely Styled to Reference Image */}
-          <div className="flex items-center space-x-1 sm:space-x-3 shrink-0 font-sans text-[11px] sm:text-xs font-semibold tracking-wider uppercase">
+      <nav className="w-full bg-slate-900/35 backdrop-blur-2xl border-b border-white/10 px-4 select-none z-20 sticky top-16 text-slate-300 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
+        <div className="max-w-7xl mx-auto flex items-center justify-between overflow-x-auto no-scrollbar py-1">
+          {/* Main Tabs Strip - Frosted Acrylic Glass */}
+          <div className="flex items-center space-x-1 sm:space-x-2 shrink-0 font-sans text-[11px] sm:text-xs font-semibold tracking-wider uppercase">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -89,25 +89,25 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
                   key={tab.id}
                   type="button"
                   onClick={() => handleTabClick(tab.id)}
-                  className={`relative py-2.5 px-2.5 sm:px-3.5 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  className={`relative py-2 px-2.5 sm:px-3.5 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer rounded-xl ${
                     isActive
-                      ? "text-cyan-400 font-bold"
-                      : "text-slate-400 hover:text-slate-100"
+                      ? "text-cyan-300 font-bold bg-white/[0.09] shadow-[inset_0_1px_0_rgba(255,255,255,0.22)] border border-white/15"
+                      : "text-slate-400 hover:text-slate-100 hover:bg-white/[0.05]"
                   }`}
                 >
-                  <span>{tab.label}</span>
+                  <span className="glass-text-title">{tab.label}</span>
                   {tab.badge && (
-                    <span className={`text-[9px] px-1 py-0.2 rounded font-mono font-bold ${
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded-md font-mono font-bold backdrop-blur-md ${
                       tab.badge === "LIVE" 
-                        ? "bg-red-500/20 text-red-400 border border-red-500/30 animate-pulse" 
-                        : "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+                        ? "bg-red-500/20 text-red-300 border border-red-400/40 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.4)]" 
+                        : "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-[0_0_8px_rgba(6,182,212,0.3)]"
                     }`}>
                       {tab.badge}
                     </span>
                   )}
-                  {/* Active Underline Indicator matching reference aesthetic */}
+                  {/* Active Underline Indicator with Glow */}
                   {isActive && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+                    <div className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-400 shadow-[0_0_10px_rgba(6,182,212,0.9)] rounded-full" />
                   )}
                 </button>
               );
@@ -115,12 +115,12 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
           </div>
 
           {/* Right Action: Mode Switcher & Status Indicator */}
-          <div className="flex items-center gap-3 border-l border-slate-800 pl-3 shrink-0">
+          <div className="flex items-center gap-3 border-l border-white/10 pl-3 shrink-0">
             {onToggleViewModeType && (
               <button
                 type="button"
                 onClick={onToggleViewModeType}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-cyan-300 hover:text-cyan-200 border border-slate-750 text-[11px] font-semibold transition-all shadow-sm"
+                className="glass-button flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-cyan-300 hover:text-cyan-100 text-[11px] font-semibold"
               >
                 {viewModeType === "PORTAL" ? (
                   <>
@@ -138,7 +138,7 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
               </button>
             )}
 
-            <div className="hidden xl:flex items-center gap-2 text-[11px] font-mono text-slate-400">
+            <div className="hidden xl:flex items-center gap-2 text-[11px] font-mono text-slate-300 bg-white/[0.04] backdrop-blur-xl px-2.5 py-1 rounded-xl border border-white/10">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
               <span>MUMBAI-THANE METRO RADAR</span>
             </div>
@@ -146,22 +146,22 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
         </div>
       </nav>
 
-      {/* Interactive Modal for Extended Tabs */}
+      {/* Interactive Frosted Acrylic Modal for Extended Tabs */}
       {activeModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 w-full max-w-lg shadow-2xl text-slate-200 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-modal rounded-3xl p-6 w-full max-w-lg text-slate-200 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2 text-cyan-400 font-bold">
-                <CloudRain className="w-5 h-5 text-cyan-400" />
-                <h3 className="text-sm uppercase tracking-wider text-slate-100 font-mono">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2 text-cyan-300 font-bold">
+                <CloudRain className="w-5 h-5 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+                <h3 className="text-sm uppercase tracking-wider text-slate-100 font-mono glass-text-title">
                   {activeModal} • WEATHER & HYDROLOGY INTELLIGENCE
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setActiveModal(null)}
-                className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200"
+                className="glass-button p-1.5 rounded-xl text-slate-400 hover:text-slate-100"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -170,10 +170,10 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
             {/* Modal Body Based on Tab */}
             {activeModal === "10-DAY" && (
               <div className="flex flex-col gap-3 text-xs">
-                <p className="text-slate-400">10-Day Synoptic Weather & Arabian Sea Spring Tide Outlook:</p>
+                <p className="text-slate-300">10-Day Synoptic Weather & Arabian Sea Spring Tide Outlook:</p>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 font-mono">
                   {["Day 1 (Today)", "Day 2", "Day 3", "Day 4", "Day 5"].map((d, i) => (
-                    <div key={d} className="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-center flex flex-col gap-1">
+                    <div key={d} className="glass-panel-subtle p-2.5 rounded-2xl text-center flex flex-col gap-1">
                       <span className="text-[10px] text-slate-400">{d}</span>
                       <span className="text-lg">{i === 0 ? "🌧️" : i % 2 === 0 ? "⛈️" : "🌤️"}</span>
                       <span className="text-cyan-300 font-bold">{i === 0 ? "45 mm" : `${20 + i * 15} mm`}</span>
@@ -186,19 +186,19 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
 
             {activeModal === "MINUTECAST" && (
               <div className="flex flex-col gap-3 text-xs">
-                <p className="text-slate-400">MinuteCast™ Hyperlocal 120-Minute Street Inundation Lead Forecast:</p>
+                <p className="text-slate-300">MinuteCast™ Hyperlocal 120-Minute Street Inundation Lead Forecast:</p>
                 <div className="space-y-2 font-mono">
-                  <div className="flex justify-between items-center bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                  <div className="flex justify-between items-center glass-panel-subtle p-3 rounded-2xl">
                     <span className="text-slate-300">Next 0 - 15 mins:</span>
-                    <span className="text-emerald-400 font-bold">Trace rain (0.2 mm) • Subways Free</span>
+                    <span className="text-emerald-300 font-bold drop-shadow-sm">Trace rain (0.2 mm) • Subways Free</span>
                   </div>
-                  <div className="flex justify-between items-center bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                  <div className="flex justify-between items-center glass-panel-subtle p-3 rounded-2xl">
                     <span className="text-slate-300">Next 15 - 45 mins:</span>
-                    <span className="text-amber-400 font-bold">Cell surge (+12 mm/h) • Milan Advisory</span>
+                    <span className="text-amber-300 font-bold drop-shadow-sm">Cell surge (+12 mm/h) • Milan Advisory</span>
                   </div>
-                  <div className="flex justify-between items-center bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                  <div className="flex justify-between items-center glass-panel-subtle p-3 rounded-2xl">
                     <span className="text-slate-300">Next 45 - 90 mins:</span>
-                    <span className="text-red-400 font-bold">Cloudburst Peak (+45 mm/h) • Subways Diverted</span>
+                    <span className="text-red-300 font-bold drop-shadow-sm">Cloudburst Peak (+45 mm/h) • Subways Diverted</span>
                   </div>
                 </div>
               </div>
@@ -206,8 +206,8 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
 
             {activeModal === "MONTHLY" && (
               <div className="flex flex-col gap-3 text-xs">
-                <p className="text-slate-400">Verified Historical Monsoon Archive (2021–2024 AWS Data):</p>
-                <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-2 font-mono text-xs">
+                <p className="text-slate-300">Verified Historical Monsoon Archive (2021–2024 AWS Data):</p>
+                <div className="glass-panel-subtle p-4 rounded-2xl space-y-2.5 font-mono text-xs">
                   <div className="flex justify-between">
                     <span className="text-slate-400">Total Mumbai Records:</span>
                     <span className="text-cyan-300 font-bold">69,720 AWS Hours</span>
@@ -222,7 +222,7 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">ML Model Verified R²:</span>
-                    <span className="text-amber-400 font-bold">0.9855 (MAE 1.43 cm)</span>
+                    <span className="text-amber-300 font-bold">0.9855 (MAE 1.43 cm)</span>
                   </div>
                 </div>
               </div>
@@ -231,7 +231,7 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
             <button
               type="button"
               onClick={() => setActiveModal(null)}
-              className="w-full py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold"
+              className="glass-button w-full py-2.5 text-slate-200 rounded-xl text-xs font-semibold"
             >
               Close
             </button>

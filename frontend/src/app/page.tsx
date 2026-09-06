@@ -253,7 +253,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsScenarioControlsOpen(false); }}
-                  className="absolute top-3 right-3 p-1 rounded-md bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/60"
+                  className="absolute top-3 right-3 p-1.5 rounded-xl glass-button text-slate-300 hover:text-white"
                   title="Minimize Sandbox"
                 >
                   <Minimize2 className="w-3.5 h-3.5" />
@@ -263,7 +263,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsScenarioControlsOpen(true); }}
-                className="flex items-center gap-2 bg-slate-950/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-800 text-xs font-semibold text-amber-300 shadow-2xl hover:border-amber-500/50 transition-all"
+                className="glass-button flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-amber-300 shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:border-amber-400/50 hover:text-amber-200 transition-all hover:scale-105"
               >
                 <Sliders className="w-4 h-4 text-amber-400" />
                 <span>Scenario Sandbox</span>
@@ -282,16 +282,16 @@ export default function Home() {
           )}
 
           {/* Floating Bottom Command Bar: Action Buttons */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-slate-950/90 backdrop-blur-md p-2 rounded-2xl border border-slate-800 shadow-2xl">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 glass-panel p-2 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.2)] border border-white/15">
             {/* Cascading Graph Modal Trigger */}
             <button
               type="button"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsGraphModalOpen(true); }}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-900/60 to-indigo-900/60 hover:from-purple-800/80 hover:to-indigo-800/80 border border-purple-500/40 text-xs font-bold text-purple-200 shadow-lg transition-all hover:scale-105"
+              className="glass-button flex items-center gap-2.5 px-4 py-2 rounded-xl text-xs font-bold text-purple-200 shadow-[0_0_16px_rgba(168,85,247,0.25),inset_0_1px_0_rgba(255,255,255,0.18)] border border-purple-500/40 hover:scale-105 transition-all"
             >
               <GitBranch className="w-4 h-4 text-purple-400" />
               <span>Cascading Failure Graph</span>
-              <span className="px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-mono text-[10px]">
+              <span className="px-2 py-0.5 rounded-full bg-purple-500/25 text-purple-200 font-mono text-[10px] font-bold border border-purple-400/30">
                 {graphData?.total_impacted_nodes || 4}
               </span>
             </button>
@@ -301,19 +301,19 @@ export default function Home() {
 
       {/* Cascading Failure Graph Modal Overlay */}
       {isGraphModalOpen && graphData && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-6 animate-fadeIn">
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 w-full max-w-5xl shadow-2xl text-slate-200 flex flex-col gap-4 max-h-[90vh]">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xl z-50 flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
+          <div className="glass-modal rounded-3xl p-6 w-full max-w-5xl shadow-[0_25px_60px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.2)] text-slate-100 flex flex-col gap-4 max-h-[90vh] border border-white/15">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2 text-purple-400 font-bold">
-                <GitBranch className="w-5 h-5" />
-                <h3 className="text-sm uppercase tracking-wider text-slate-100">
+                <GitBranch className="w-5 h-5 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
+                <h3 className="text-sm uppercase tracking-wider text-white glass-text-glow">
                   Infrastructure Graph Cascading Failure Explorer
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsGraphModalOpen(false); }}
-                className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200"
+                className="glass-button p-1.5 rounded-xl text-slate-300 hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -340,19 +340,19 @@ export default function Home() {
 
       {/* SIH Priority Queue Modal Overlay */}
       {isPriorityModalOpen && simResult && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-6 animate-fadeIn">
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 w-full max-w-5xl shadow-2xl text-slate-200 flex flex-col gap-4 max-h-[90vh]">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xl z-50 flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
+          <div className="glass-modal rounded-3xl p-6 w-full max-w-5xl shadow-[0_25px_60px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.2)] text-slate-100 flex flex-col gap-4 max-h-[90vh] border border-white/15">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2 text-amber-400 font-bold">
-                <Trophy className="w-5 h-5" />
-                <h3 className="text-sm uppercase tracking-wider text-slate-100">
+                <Trophy className="w-5 h-5 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
+                <h3 className="text-sm uppercase tracking-wider text-white glass-text-glow">
                   SIH Multi-Sector Priority Repair & Dispatch Matrix
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsPriorityModalOpen(false); }}
-                className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200"
+                className="glass-button p-1.5 rounded-xl text-slate-300 hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>

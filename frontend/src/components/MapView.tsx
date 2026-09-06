@@ -403,61 +403,61 @@ export const MapView: React.FC<MapViewProps> = ({
       )}
 
       {/* Top Floating Layer Switcher Pills */}
-      <div className="absolute top-4 right-16 bg-slate-950/85 backdrop-blur-md border border-slate-800 p-1.5 rounded-xl z-20 flex items-center gap-2 shadow-2xl text-xs">
+      <div className="absolute top-4 right-16 glass-panel p-1.5 rounded-2xl z-20 flex items-center gap-2 shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] text-xs border border-white/15">
         <button
           onClick={() => setShowFloodPools(!showFloodPools)}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium border transition-all ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold border transition-all ${
             showFloodPools
-              ? "bg-blue-600/30 border-blue-500 text-blue-300 shadow-sm"
-              : "bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200"
+              ? "bg-blue-600/35 border-blue-400/60 text-blue-200 shadow-[0_0_12px_rgba(59,130,246,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]"
+              : "glass-button text-slate-300 hover:text-white"
           }`}
         >
-          <Droplets className="w-3.5 h-3.5 text-blue-400" />
+          <Droplets className="w-3.5 h-3.5 text-blue-400 drop-shadow-sm" />
           <span>🌊 Water Pools</span>
         </button>
 
         <button
           onClick={() => setShowDrains(!showDrains)}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium border transition-all ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold border transition-all ${
             showDrains
-              ? "bg-cyan-600/30 border-cyan-500 text-cyan-300 shadow-sm"
-              : "bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200"
+              ? "bg-cyan-600/35 border-cyan-400/60 text-cyan-200 shadow-[0_0_12px_rgba(6,182,212,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]"
+              : "glass-button text-slate-300 hover:text-white"
           }`}
         >
-          <Waves className="w-3.5 h-3.5 text-cyan-400" />
+          <Waves className="w-3.5 h-3.5 text-cyan-400 drop-shadow-sm" />
           <span>🚰 Drains</span>
         </button>
 
         <button
           onClick={() => setShowRoads(!showRoads)}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium border transition-all ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold border transition-all ${
             showRoads
-              ? "bg-emerald-600/30 border-emerald-500 text-emerald-300 shadow-sm"
-              : "bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200"
+              ? "bg-emerald-600/35 border-emerald-400/60 text-emerald-200 shadow-[0_0_12px_rgba(16,185,129,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]"
+              : "glass-button text-slate-300 hover:text-white"
           }`}
         >
-          <Layers className="w-3.5 h-3.5 text-emerald-400" />
+          <Layers className="w-3.5 h-3.5 text-emerald-400 drop-shadow-sm" />
           <span>🛣️ Roads</span>
         </button>
       </div>
 
       {/* Map Legend Overlay */}
-      <div className="absolute bottom-4 left-4 bg-slate-950/85 backdrop-blur-md border border-slate-800 p-2.5 rounded-lg z-20 text-[11px] flex flex-col gap-1.5 shadow-xl text-slate-300">
-        <span className="font-bold text-slate-200 uppercase tracking-wider text-[10px]">Infrastructure Telemetry:</span>
+      <div className="absolute bottom-4 left-4 glass-panel p-3 rounded-2xl z-20 text-[11px] flex flex-col gap-2 shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.18)] text-slate-200 border border-white/15">
+        <span className="font-bold text-white uppercase tracking-wider text-[10px] glass-text-glow">Infrastructure Telemetry:</span>
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500" />
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
           <span>Operational (&gt;70% Health)</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-sm shadow-amber-500" />
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
           <span>Warning (Slow Traffic)</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-sm shadow-red-500" />
+          <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
           <span>Critical (Submerged)</span>
         </div>
-        <div className="flex items-center gap-2 border-t border-slate-800 pt-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-sm shadow-cyan-400" />
+        <div className="flex items-center gap-2 border-t border-white/10 pt-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
           <span>🌊 Visual Inundation Pools</span>
         </div>
       </div>

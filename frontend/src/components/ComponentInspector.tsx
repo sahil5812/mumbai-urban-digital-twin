@@ -88,25 +88,25 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
   const surrounding = getSurroundingImpacts(component);
 
   return (
-    <div className="bg-slate-950/95 backdrop-blur-md border border-slate-800 rounded-xl p-4 shadow-2xl flex flex-col gap-3.5 text-slate-200 w-84 max-h-[85vh] overflow-y-auto">
+    <div className="glass-panel rounded-3xl p-4.5 shadow-[0_24px_50px_rgba(0,0,0,0.65),inset_0_1px_1px_rgba(255,255,255,0.2)] flex flex-col gap-3.5 text-slate-100 w-84 max-h-[85vh] overflow-y-auto scrollbar-thin">
       {/* Header */}
-      <div className="flex items-start justify-between border-b border-slate-800 pb-2.5">
+      <div className="flex items-start justify-between border-b border-white/10 pb-2.5">
         <div>
           <div className="flex items-center gap-1.5">
-            <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold ${
-              component.component_type === "HOTSPOT" ? "bg-red-500/20 text-red-400 border border-red-500/30" :
-              component.component_type === "ROAD" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
-              "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+            <span className={`text-[10px] px-2 py-0.5 rounded-lg font-mono font-bold tracking-wider backdrop-blur-md ${
+              component.component_type === "HOTSPOT" ? "bg-red-500/20 text-red-300 border border-red-500/35 shadow-[0_0_12px_rgba(239,68,68,0.2)]" :
+              component.component_type === "ROAD" ? "bg-blue-500/20 text-blue-300 border border-blue-500/35 shadow-[0_0_12px_rgba(59,130,246,0.2)]" :
+              "bg-cyan-500/20 text-cyan-300 border border-cyan-500/35 shadow-[0_0_12px_rgba(6,182,212,0.2)]"
             }`}>
               {component.component_type}
             </span>
             <span className="text-[10px] text-slate-400 font-mono">Ward {component.ward}</span>
           </div>
-          <h3 className="text-sm font-bold text-slate-100 mt-1 leading-tight">{component.name}</h3>
+          <h3 className="text-sm font-bold text-white mt-1 leading-tight glass-text-glow">{component.name}</h3>
         </div>
         <button
           onClick={onClose}
-          className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-all"
+          className="glass-button p-1.5 rounded-xl text-slate-300 hover:text-white transition-all"
         >
           <X className="w-4 h-4" />
         </button>
@@ -114,38 +114,38 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
 
       {/* Dual Gauges: Health Score & Failure Risk */}
       <div className="grid grid-cols-2 gap-2">
-        <div className="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 flex flex-col items-center text-center">
-          <span className="text-[10px] text-slate-400 font-medium">Health Score</span>
-          <span className={`text-xl font-mono font-extrabold my-1 ${
+        <div className="glass-panel-subtle p-3 rounded-2xl flex flex-col items-center text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
+          <span className="text-[10px] text-slate-400 font-medium tracking-wide">Health Score</span>
+          <span className={`text-2xl font-mono font-extrabold my-1 drop-shadow-md ${
             component.health_score >= 70 ? "text-emerald-400" :
-            component.health_score >= 40 ? "text-amber-400" : "text-red-400"
+            component.health_score >= 40 ? "text-amber-400" : "text-rose-400"
           }`}>
             {component.health_score}%
           </span>
-          <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden backdrop-blur-md">
             <div
               className={`h-full ${
-                component.health_score >= 70 ? "bg-emerald-500" :
-                component.health_score >= 40 ? "bg-amber-500" : "bg-red-500"
+                component.health_score >= 70 ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" :
+                component.health_score >= 40 ? "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" : "bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]"
               }`}
               style={{ width: `${component.health_score}%` }}
             />
           </div>
         </div>
 
-        <div className="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 flex flex-col items-center text-center">
-          <span className="text-[10px] text-slate-400 font-medium">Failure Risk</span>
-          <span className={`text-xl font-mono font-extrabold my-1 ${
-            component.failure_risk_score >= 60 ? "text-red-400" :
+        <div className="glass-panel-subtle p-3 rounded-2xl flex flex-col items-center text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
+          <span className="text-[10px] text-slate-400 font-medium tracking-wide">Failure Risk</span>
+          <span className={`text-2xl font-mono font-extrabold my-1 drop-shadow-md ${
+            component.failure_risk_score >= 60 ? "text-rose-400" :
             component.failure_risk_score >= 30 ? "text-amber-400" : "text-emerald-400"
           }`}>
             {component.failure_risk_score}%
           </span>
-          <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden backdrop-blur-md">
             <div
               className={`h-full ${
-                component.failure_risk_score >= 60 ? "bg-red-500" :
-                component.failure_risk_score >= 30 ? "bg-amber-500" : "bg-emerald-500"
+                component.failure_risk_score >= 60 ? "bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" :
+                component.failure_risk_score >= 30 ? "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" : "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"
               }`}
               style={{ width: `${component.failure_risk_score}%` }}
             />
@@ -154,13 +154,13 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
       </div>
 
       {/* Telemetry Key Attributes */}
-      <div className="flex flex-col gap-1.5 bg-slate-900/50 p-2.5 rounded-lg border border-slate-800/80 text-xs">
+      <div className="flex flex-col gap-2 glass-panel-subtle p-3 rounded-2xl text-xs shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1.5 text-slate-400">
             <Droplets className="w-3.5 h-3.5 text-cyan-400" />
             <span>Water Depth:</span>
           </span>
-          <span className={`font-mono font-bold ${component.water_depth_cm > 15 ? "text-red-400" : "text-slate-200"}`}>
+          <span className={`font-mono font-bold ${component.water_depth_cm > 15 ? "text-rose-400" : "text-slate-200"}`}>
             {component.water_depth_cm} cm
           </span>
         </div>
@@ -191,35 +191,37 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
 
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1.5 text-slate-400">
-            <MapPin className="w-3.5 h-3.5 text-slate-500" />
+            <MapPin className="w-3.5 h-3.5 text-slate-400" />
             <span>Ground Elevation:</span>
           </span>
-          <span className="font-mono text-slate-300">
+          <span className="font-mono text-slate-200">
             +{component.elevation_m} m THD
           </span>
         </div>
       </div>
 
       {/* 🔴 SURROUNDING INFRASTRUCTURE IMPACT (CASCADING SPILLOVER) */}
-      <div className="bg-gradient-to-br from-red-950/30 via-slate-900 to-amber-950/20 border border-red-800/40 p-3 rounded-xl flex flex-col gap-2 shadow-inner">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
-          <div className="flex items-center gap-1.5 text-red-400 text-[11px] font-bold uppercase tracking-wider">
-            <GitBranch className="w-3.5 h-3.5 text-red-400 animate-pulse" />
+      <div className="bg-rose-950/25 border border-rose-500/25 backdrop-blur-xl p-3.5 rounded-2xl flex flex-col gap-2.5 shadow-[0_8px_24px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.12)]">
+        <div className="flex items-center justify-between border-b border-rose-500/20 pb-2">
+          <div className="flex items-center gap-1.5 text-rose-400 text-[11px] font-bold uppercase tracking-wider">
+            <GitBranch className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
             <span>Surrounding Impact & Spillover</span>
           </div>
-          <span className="text-[10px] text-amber-300 font-mono">{surrounding.commutersAffected}</span>
+          <span className="text-[10px] text-amber-300 font-mono font-bold bg-amber-500/20 px-2 py-0.5 rounded-md border border-amber-500/30">
+            {surrounding.commutersAffected}
+          </span>
         </div>
 
         {/* Impacted Nearby Roads List */}
         <div className="flex flex-col gap-1.5 mt-0.5">
-          <span className="text-[10px] text-slate-400 font-semibold uppercase">Nearby Roads & Arteries Impacted:</span>
+          <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Nearby Roads & Arteries Impacted:</span>
           {surrounding.surroundingRoads.map((r, idx) => (
-            <div key={idx} className="bg-slate-950/60 p-1.5 rounded-lg border border-slate-800/70 flex items-center justify-between text-[11px]">
+            <div key={idx} className="bg-white/[0.04] p-2 rounded-xl border border-white/10 flex items-center justify-between text-[11px] backdrop-blur-md">
               <div className="flex flex-col">
                 <span className="font-semibold text-slate-200">{r.name}</span>
                 <span className="text-[10px] text-slate-400">{r.impact}</span>
               </div>
-              <span className="font-mono font-bold text-red-400 bg-red-950/60 px-1.5 py-0.5 rounded border border-red-800/40 text-[10px]">
+              <span className="font-mono font-bold text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded-lg border border-rose-500/30 text-[10px]">
                 {r.delay}
               </span>
             </div>
@@ -227,25 +229,25 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
         </div>
 
         {/* Public Disruption & Hospitals */}
-        <div className="bg-slate-950/50 p-2 rounded-lg border border-slate-800/60 flex items-start gap-1.5 text-[10px] text-slate-300">
+        <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/10 flex items-start gap-2 text-[10px] text-slate-200 backdrop-blur-md">
           <Hospital className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
-          <span><strong>Emergency & Public Disruption:</strong> {surrounding.publicDisruption}</span>
+          <span><strong className="text-white">Emergency & Public Disruption:</strong> {surrounding.publicDisruption}</span>
         </div>
 
         {/* Drainage Network Surcharge */}
-        <div className="bg-slate-950/50 p-2 rounded-lg border border-slate-800/60 flex items-start gap-1.5 text-[10px] text-cyan-300">
+        <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/10 flex items-start gap-2 text-[10px] text-cyan-200 backdrop-blur-md">
           <Droplets className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-          <span><strong>Drainage Network Status:</strong> {surrounding.drainageImpact}</span>
+          <span><strong className="text-cyan-300">Drainage Network Status:</strong> {surrounding.drainageImpact}</span>
         </div>
       </div>
 
       {/* AI Work-Order Recommendation */}
-      <div className="bg-gradient-to-r from-blue-950/40 to-indigo-950/40 border border-blue-800/40 p-2.5 rounded-lg flex flex-col gap-1">
-        <div className="flex items-center gap-1.5 text-blue-400 text-[11px] font-bold uppercase tracking-wider">
+      <div className="bg-gradient-to-r from-blue-950/40 to-indigo-950/40 border border-blue-500/25 backdrop-blur-xl p-3 rounded-2xl flex flex-col gap-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
+        <div className="flex items-center gap-1.5 text-cyan-300 text-[11px] font-bold uppercase tracking-wider">
           <Wrench className="w-3.5 h-3.5" />
           <span>Automated BMC Work Order:</span>
         </div>
-        <p className="text-xs text-slate-300 leading-relaxed">
+        <p className="text-xs text-slate-200 leading-relaxed">
           {component.recommended_action}
         </p>
       </div>
