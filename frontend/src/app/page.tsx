@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Navbar } from "../components/Navbar";
+import { SubNavbar, SubNavTab } from "../components/SubNavbar";
 import { EarlyWarningBanner } from "../components/EarlyWarningBanner";
 import { ScenarioControls } from "../components/ScenarioControls";
 import { DeckGLMapView } from "../components/DeckGLMapView";
@@ -21,6 +22,9 @@ export default function Home() {
   const [isCitizenModalOpen, setIsCitizenModalOpen] = useState(false);
   const [isScenarioControlsOpen, setIsScenarioControlsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Sub-Navbar Active Tab State
+  const [activeSubNavTab, setActiveSubNavTab] = useState<SubNavTab>("TODAY");
 
   // 0-3h Timeline Selection State
   const [selectedTimelineIndex, setSelectedTimelineIndex] = useState<number>(0);
@@ -160,6 +164,23 @@ export default function Home() {
         liveTelemetry={liveTelemetry}
       />
 
+      {/* Weather / Nowcasting Sub-Navbar matching Reference Design */}
+      <SubNavbar
+        activeTab={activeSubNavTab}
+        onTabChange={(tab) => {
+          setActiveSubNavTab(tab);
+          if (tab === "HOURLY") {
+            setIsScenarioControlsOpen(true);
+          } else if (tab === "TODAY") {
+            setSelectedTimelineIndex(0);
+          }
+        }}
+        onOpenPriorityModal={() => setIsPriorityModalOpen(true)}
+        onOpenGraphModal={() => setIsGraphModalOpen(true)}
+        onToggleScenarioControls={() => setIsScenarioControlsOpen((prev) => !prev)}
+        isLiveMode={isLiveMode}
+      />
+
       {/* 30-Minute Predictive Radar Early Warning Banner */}
       <EarlyWarningBanner
         telemetry={liveTelemetry}
@@ -170,7 +191,7 @@ export default function Home() {
       />
 
       {/* Full-Screen Immersive Map Viewport */}
-      <div className="flex-1 relative w-full h-[calc(100vh-4rem)] overflow-hidden">
+      <div className="flex-1 relative w-full overflow-hidden">
         {/* Full-Screen Background Deck.gl 3D Digital Twin Map */}
         <DeckGLMapView
           components={displayedComponents}
