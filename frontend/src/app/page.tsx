@@ -185,20 +185,28 @@ export default function Home() {
         onToggleScenarioControls={() => setIsScenarioControlsOpen((prev) => !prev)}
         isLiveMode={isLiveMode}
         viewModeType={portalViewMode}
-        onToggleViewModeType={() => setPortalViewMode((prev) => (prev === "PORTAL" ? "MAP" : "PORTAL"))}
-      />
-
-      {/* 30-Minute Predictive Radar Early Warning Banner */}
-      <EarlyWarningBanner
-        telemetry={liveTelemetry}
-        components={displayedComponents}
-        currentRainfallMmHr={simParams.rainfall_mm_hr}
-        onSimulateRainfall={(rain) => handleApplyPreset("Incoming Storm (+30m Nowcast)", rain, 4.1, 45)}
-        onSelectComponent={(c) => {
-          setPortalViewMode("MAP");
-          setSelectedComponent(c);
+        onToggleViewModeType={() => {
+          setPortalViewMode((prev) => {
+            const nextMode = prev === "PORTAL" ? "MAP" : "PORTAL";
+            setActiveSubNavTab(nextMode === "MAP" ? "RADAR" : "TODAY");
+            return nextMode;
+          });
         }}
       />
+
+      {/* 30-Minute Predictive Radar Early Warning Banner - ONLY on RADAR Panel */}
+      {activeSubNavTab === "RADAR" && (
+        <EarlyWarningBanner
+          telemetry={liveTelemetry}
+          components={displayedComponents}
+          currentRainfallMmHr={simParams.rainfall_mm_hr}
+          onSimulateRainfall={(rain) => handleApplyPreset("Incoming Storm (+30m Nowcast)", rain, 4.1, 45)}
+          onSelectComponent={(c) => {
+            setPortalViewMode("MAP");
+            setSelectedComponent(c);
+          }}
+        />
+      )}
 
       {/* Main Viewport: Either Full Weather Portal Dashboard OR 3D Digital Twin Map */}
       {portalViewMode === "PORTAL" ? (
