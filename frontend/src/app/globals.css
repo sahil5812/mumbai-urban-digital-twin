@@ -1,25 +1,44 @@
 @import "leaflet/dist/leaflet.css";
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #020617;
+  --background: #0a0a0f;
   --foreground: #f8fafc;
+  --fg: #f0cfa0;
+  --fg-dim: rgba(240, 207, 160, 0.55);
+  --fg-hud: rgba(240, 207, 160, 0.7);
+  --fg-dot: rgba(240, 207, 160, 0.3);
+  --fg-dotact: rgba(240, 207, 160, 0.9);
+  --bg: #0a0a0f;
+  --accent: #a0b4ff;
+  --scrim: 0.18;
 }
 
 body {
-  background-color: var(--background);
-  background-image: 
-    linear-gradient(to bottom, rgba(2, 6, 23, 0.65), rgba(2, 6, 23, 0.88)), 
-    url('/storm-clouds-bg.png');
-  background-size: cover;
-  background-position: center top;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  background-color: var(--bg);
   color: var(--foreground);
   overflow-x: hidden;
+}
+
+/* Space Grotesk & Space Mono Typography */
+.font-space-grotesk {
+  font-family: 'Space Grotesk', sans-serif;
+}
+.font-space-mono {
+  font-family: 'Space Mono', monospace;
+}
+
+/* Cinematic Full Ocean View Mode */
+body.cinematic-mode main,
+body.cinematic-mode header,
+body.cinematic-mode nav {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.4s ease;
 }
 
 /* Leaflet Container & Dark Mode styling */

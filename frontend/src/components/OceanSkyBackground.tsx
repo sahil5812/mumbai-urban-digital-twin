@@ -646,20 +646,34 @@ const applySceneColor = (s: number) => {
   const [r, g, b] = getSceneColor(s);
   const root = document.documentElement;
   root.style.setProperty("--fg", `rgb(${r},${g},${b})`);
-  root.style.setProperty("--fg-hud", `rgba(${r},${g},${b},0.85)`);
+  root.style.setProperty("--fg-hud", `rgba(${r},${g},${b},0.75)`);
   root.style.setProperty("--fg-dot", `rgba(${r},${g},${b},0.3)`);
   root.style.setProperty("--fg-dotact", `rgba(${r},${g},${b},0.95)`);
+
+  const nightT = Math.max(0, Math.min(1, (s - 0.583) / 0.25));
+  const scrimVal = (0.18 + nightT * 0.56).toFixed(3);
+  root.style.setProperty("--scrim", scrimVal);
 };
 
 export const OceanSkyBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [currentSceneIdx, setCurrentSceneIdx] = useState<number>(0);
   const [progressPct, setProgressPct] = useState<number>(0);
-  const [showHud, setShowHud] = useState<boolean>(true);
+  const [isCinematic, setIsCinematic] = useState<boolean>(false);
 
   // Smooth interpolation target
   const targetSmoothRef = useRef<number>(0);
   const currentSmoothRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      if (isCinematic) {
+        document.body.classList.add("cinematic-mode");
+      } else {
+        document.body.classList.remove("cinematic-mode");
+      }
+    }
+  }, [isCinematic]);
 
   const setScene = useCallback((idx: number) => {
     const targetRatio = idx / (SCENE_NAMES.length - 1);
@@ -806,7 +820,7 @@ export const OceanSkyBackground: React.FC = () => {
     // Use capture: true so scroll events from internal div.overflow-y-auto containers are caught!
     window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
 
-    // 2. Wheel Listener: Scrolling the mouse wheel or touchpad anywhere shifts atmosphere smoothly
+    // 2. Wheel Listener: Scrolling mouse wheel or touchpad shifts atmosphere smoothly without abrupt wrap-around
     const handleWheel = (e: WheelEvent) => {
       if (e.ctrlKey || e.metaKey) return;
 
@@ -834,12 +848,11 @@ export const OceanSkyBackground: React.FC = () => {
       }
 
       if (scrollContainer) {
-        // Let the container scroll naturally; the handleScroll capture listener
-        // will update targetSmoothRef.current smoothly from 0.0 to 1.0 (and 1.0 down to 0.0 in reverse).
+        // Let the container scroll naturally; handleScroll captures and updates targetSmoothRef smoothly
         return;
       }
 
-      // If NOT inside an active scroll container (e.g. 3D Map mode or outside),
+      // If NOT inside an active scroll container (e.g. 3D Map mode, background, nav),
       // smoothly advance or reverse without ANY hard jumps between DAWN and PRE-DAWN:
       const delta = e.deltaY;
       const sensitivity = 0.0006;
@@ -898,54 +911,83 @@ export const OceanSkyBackground: React.FC = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 -z-50 w-full h-full overflow-hidden select-none pointer-events-none">
+    <>
       {/* Fullscreen High-Performance Procedural WebGL Canvas */}
       <canvas
         ref={canvasRef}
         id="webgl_canvas"
-        className="fixed inset-0 w-full h-full object-cover block"
+        className="fixed inset-0 w-full h-full object-cover block -z-30 select-none pointer-events-none"
       />
 
-      {/* Atmospheric Glass Scrim to preserve tactical readability of Digital Twin elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-950/50 to-slate-950/75 pointer-events-none" />
+      {/* ── Authentic Transparent Bottom Scrim Overlay ─────────── */}
+      <div
+        style={{
+          background: `linear-gradient(to top, rgba(0, 0, 8, var(--scrim, 0.18)) 0%, rgba(0, 0, 8, calc(var(--scrim, 0.18) * 0.4)) 40%, transparent 70%)`,
+        }}
+        className="fixed inset-0 pointer-events-none -z-20 transition-opacity duration-500"
+      />
 
-      {/* Minimal Top-Right Atmosphere HUD */}
-      {showHud && (
-        <div className="absolute top-20 right-6 z-10 pointer-events-auto flex items-center gap-3 glass-panel px-3.5 py-1.5 rounded-2xl border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.4)] text-xs backdrop-blur-xl">
-          <div className="flex flex-col items-end">
-            <div className="flex items-center gap-1.5">
-              <span className="font-mono text-[9px] text-slate-400">
-                SCENE 0{currentSceneIdx + 1}
-              </span>
-              <span className="font-mono text-[11px] tracking-widest text-[var(--fg-hud,#67e8f9)] font-bold uppercase glass-text-glow">
-                {SCENE_NAMES[currentSceneIdx]}
-              </span>
-            </div>
-            <span className="font-mono text-[9px] text-slate-400">
-              {String(progressPct).padStart(3, "0")}%
+      {/* ── Authentic Corner HUD ─────────────────────────────── */}
+      <div
+        id="hud"
+        className="fixed inset-0 z-20 pointer-events-none p-6 sm:p-8 flex flex-col justify-between"
+      >
+        {/* Top Bar: Scene Name (Left) & Percent + Progress Bar + View Toggle (Right) */}
+        <div id="hud-top" className="flex items-start justify-between w-full">
+          <div>
+            <span
+              id="scene_name"
+              className="font-space-mono text-[11px] sm:text-[13px] tracking-[0.25em] uppercase text-[var(--fg-hud)] drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)] font-bold transition-colors duration-1000 select-none block"
+            >
+              {SCENE_NAMES[currentSceneIdx]}
             </span>
           </div>
 
-          {/* Interactive Scrub Bar */}
-          <div
-            onClick={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-              targetSmoothRef.current = ratio;
-            }}
-            className="w-16 h-1.5 bg-black/40 rounded-full overflow-hidden border border-white/10 cursor-pointer"
-            title="Click or drag to scrub atmosphere"
-          >
+          <div className="flex flex-col items-end gap-1.5 pointer-events-auto select-none">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setIsCinematic((prev) => !prev)}
+                className="px-2.5 py-1 rounded-full text-[10px] font-space-mono font-bold tracking-wider uppercase border border-white/20 bg-black/40 hover:bg-black/60 text-[var(--fg-hud)] shadow-sm backdrop-blur-md transition-all cursor-pointer hover:scale-105"
+                title={isCinematic ? "Show Digital Twin Dashboard" : "Hide Dashboard for Pure Ocean View"}
+              >
+                {isCinematic ? "✦ TWIN DASHBOARD" : "✦ FULL OCEAN VIEW"}
+              </button>
+              <span
+                id="hud_pct"
+                className="font-space-mono text-[11px] sm:text-[13px] tracking-[0.12em] text-[var(--fg-hud)] opacity-70 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)] transition-colors duration-1000"
+              >
+                {String(progressPct).padStart(3, "0")}%
+              </span>
+            </div>
+
             <div
-              style={{ width: `${progressPct}%` }}
-              className="h-full bg-gradient-to-r from-amber-400 via-cyan-400 to-indigo-400 rounded-full transition-all"
-            />
+              id="prog_bar"
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                targetSmoothRef.current = ratio;
+              }}
+              className="w-[120px] h-[2px] bg-white/15 relative overflow-hidden rounded-full cursor-pointer pointer-events-auto"
+              title="Click or drag to scrub atmosphere"
+            >
+              <div
+                id="prog_fill"
+                style={{ width: `${progressPct}%` }}
+                className="absolute left-0 top-0 bottom-0 bg-[var(--fg-hud)] opacity-80 transition-all duration-75"
+              />
+            </div>
           </div>
         </div>
-      )}
 
-      {/* Interactive Right-Edge Scene Navigation Dots */}
-      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-30 pointer-events-auto flex flex-col items-center gap-3 glass-panel p-2 rounded-2xl border border-white/15 shadow-[0_16px_36px_rgba(0,0,0,0.5)] backdrop-blur-2xl">
+        <div id="hud-bottom" />
+      </div>
+
+      {/* ── Authentic Scene Navigation Dots (Right Edge) ───────── */}
+      <div
+        id="scene_dots"
+        className="fixed right-6 sm:right-7 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-2.5 pointer-events-auto"
+      >
         {SCENE_NAMES.map((name, idx) => {
           const isActive = idx === currentSceneIdx;
           return (
@@ -957,22 +999,34 @@ export const OceanSkyBackground: React.FC = () => {
               title={`${name}: ${SCENE_DESCS[idx]}`}
             >
               <div
-                className={`rounded-full transition-all duration-300 ${
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
                   isActive
-                    ? "w-2.5 h-2.5 bg-[var(--fg-dotact,#67e8f9)] ring-4 ring-cyan-400/40 shadow-[0_0_10px_rgba(6,182,212,1)] scale-125"
-                    : "w-1.5 h-1.5 bg-white/40 group-hover:bg-white group-hover:scale-125"
+                    ? "bg-[var(--fg-dotact)] scale-150 shadow-[0_0_8px_var(--fg-dotact)]"
+                    : "bg-[var(--fg-dot)] hover:scale-125 hover:bg-[var(--fg-dotact)]"
                 }`}
               />
-
-              {/* Tooltip on Hover */}
-              <span className="absolute right-7 px-2.5 py-1 rounded-xl glass-panel text-[10px] font-mono font-bold text-white uppercase tracking-wider whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg border border-white/15">
+              <span className="absolute right-6 px-2 py-0.5 rounded text-[10px] font-space-mono font-bold uppercase tracking-wider text-[var(--fg)] bg-black/70 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-white/10 shadow-lg">
                 {name}
               </span>
             </button>
           );
         })}
       </div>
-    </div>
+
+      {/* ── Authentic Bottom-Left Half-Screen Hero Typography ──── */}
+      <div className="fixed left-6 sm:left-10 md:left-14 bottom-10 sm:bottom-14 z-10 pointer-events-none max-w-xl">
+        <div className="w-9 h-[1px] bg-[var(--fg)] opacity-40 mb-3 sm:mb-4 transition-colors duration-1000" />
+        <div className="font-space-mono text-[10px] sm:text-xs tracking-[0.3em] uppercase text-[var(--fg)] opacity-50 mb-1.5 transition-colors duration-1000">
+          SCENE 0{currentSceneIdx + 1} / 06
+        </div>
+        <h1 className="font-space-grotesk font-bold text-5xl sm:text-7xl md:text-8xl tracking-tight leading-[0.95] text-[var(--fg)] drop-shadow-[0_2px_40px_rgba(0,0,0,0.7)] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors duration-1000 select-none">
+          {SCENE_NAMES[currentSceneIdx]}
+        </h1>
+        <p className="font-space-grotesk font-light text-xs sm:text-sm md:text-base text-[var(--fg)] opacity-90 max-w-md mt-2.5 sm:mt-3 leading-relaxed drop-shadow-[0_1px_16px_rgba(0,0,0,0.85)] transition-colors duration-1000 select-none">
+          {SCENE_DESCS[currentSceneIdx]}
+        </p>
+      </div>
+    </>
   );
 };
 
