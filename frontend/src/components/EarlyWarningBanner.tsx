@@ -75,27 +75,42 @@ export const EarlyWarningBanner: React.FC<EarlyWarningBannerProps> = ({
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
         {/* Left: Vertical Stack of Alert Headline + Dynamic Locations */}
         <div className="flex flex-col gap-1.5 w-full md:w-auto">
-          {/* Row 1: Radar Alert Badge + Real-Time Countdown */}
+          {/* Row 1: Radar Alert Badge + Real-Time Countdown / Active Status */}
           <div className="flex flex-wrap items-center gap-2">
             <div className={`flex items-center gap-1.5 px-3 py-1 rounded-xl border font-bold uppercase tracking-wider text-[11px] backdrop-blur-xl ${
-              isSevere
+              currentRainfallMmHr > 0
+                ? isSevere
+                  ? "bg-red-500/30 border-red-400/60 text-red-200 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.5)]"
+                  : "bg-cyan-500/25 border-cyan-400/50 text-cyan-200 shadow-[0_0_12px_rgba(6,182,212,0.4)]"
+                : isSevere
                 ? "bg-red-500/20 border-red-400/50 text-red-200 animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.4)]"
                 : "bg-amber-500/20 border-amber-400/40 text-amber-200 shadow-[0_0_10px_rgba(245,158,11,0.3)]"
             }`}>
               <Zap className="w-3.5 h-3.5 text-amber-300 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
-              <span className="glass-text-title">RADAR NOWCAST INCOMING</span>
+              <span className="glass-text-title">
+                {currentRainfallMmHr > 0 
+                  ? `LIVE RADAR PRECIPITATION: ${currentRainfallMmHr} mm/h` 
+                  : "RADAR NOWCAST INCOMING"}
+              </span>
             </div>
 
-            {/* LIVE COUNTDOWN TICKER */}
-            {secondsRemaining > 0 && (
+            {/* LIVE COUNTDOWN TICKER OR ACTIVE PULSE INDICATOR */}
+            {currentRainfallMmHr > 0 ? (
+              <div className="glass-button flex items-center gap-1.5 px-3 py-1 rounded-xl border-cyan-400/50 text-cyan-300 font-mono font-bold text-xs shadow-[0_0_12px_rgba(6,182,212,0.3)]">
+                <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+                <span>ACTIVE SHOCKWAVES: <strong className="text-white font-extrabold">{dynamicTargetHotspots.length} SUBWAYS</strong></span>
+              </div>
+            ) : secondsRemaining > 0 ? (
               <div className="glass-button flex items-center gap-1.5 px-3 py-1 rounded-xl border-amber-400/50 text-amber-300 font-mono font-bold text-xs shadow-[0_0_12px_rgba(245,158,11,0.2)]">
                 <Timer className="w-3.5 h-3.5 text-amber-400 animate-spin" />
                 <span>T-MINUS: <strong className="text-white font-extrabold">{formatCountdown()}</strong></span>
               </div>
-            )}
+            ) : null}
 
             <span className="text-slate-300 text-[11px] hidden lg:inline font-medium">
-              | Pre-Emptive Action: Dewatering pumps pre-charged on standby
+              {currentRainfallMmHr > 0 
+                ? "| Moving radar shockwaves active on map (Cyan: Normal, Amber: Warning, Red: Danger)"
+                : "| Pre-Emptive Action: Dewatering pumps pre-charged on standby"}
             </span>
           </div>
 
