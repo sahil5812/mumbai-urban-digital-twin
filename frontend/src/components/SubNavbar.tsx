@@ -50,13 +50,13 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
 }) => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
-  // Tabs without Air Quality (per user request)
+  // Tabs matching reference design
   const TABS: { id: SubNavTab; label: string; badge?: string }[] = [
     { id: "TODAY", label: "TODAY" },
     { id: "HOURLY", label: "HOURLY", badge: "0-3h" },
     { id: "10-DAY", label: "10-DAY" },
     { id: "RADAR", label: "RADAR", badge: "LIVE" },
-    { id: "MINUTECAST", label: "MINUTECAST™" },
+    { id: "MINUTECAST", label: "MINUTECAST®", badge: "120m" },
     { id: "MONTHLY", label: "MONTHLY" },
     { id: "HEALTH & ACTIVITIES", label: "HEALTH & ACTIVITIES" },
   ];
@@ -68,7 +68,7 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
       onOpenPriorityModal();
     } else if (tabId === "RADAR" && onToggleScenarioControls) {
       onToggleScenarioControls();
-    } else if (tabId === "MONTHLY" || tabId === "MINUTECAST") {
+    } else if (tabId === "MONTHLY") {
       // If in MAP view mode, we can show modal or navigate
       setActiveModal(tabId);
     } else {

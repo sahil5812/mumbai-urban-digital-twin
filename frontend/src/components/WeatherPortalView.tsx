@@ -29,6 +29,7 @@ import {
   Compass
 } from "lucide-react";
 import { LiveTelemetry } from "../lib/api";
+import { MinuteCastView } from "./MinuteCastView";
 
 interface WeatherPortalViewProps {
   currentRainfallMmHr: number;
@@ -49,6 +50,19 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
   onOpenMap,
   onOpenPriorityModal,
 }) => {
+  // If activeTab is MINUTECAST, render the full AccuWeather-style MinuteCast interface
+  if (activeTab === "MINUTECAST") {
+    return (
+      <MinuteCastView
+        currentRainfallMmHr={currentRainfallMmHr}
+        currentTideLevelM={currentTideLevelM}
+        liveTelemetry={liveTelemetry}
+        onSimulateScenario={onSimulateScenario}
+        onOpenMap={onOpenMap}
+      />
+    );
+  }
+
   const [radarLayer, setRadarLayer] = useState<"radar" | "clouds" | "inundation">("radar");
   
   // Track expanded hour item (default: 8 AM is expanded, matching reference screenshot)

@@ -176,7 +176,7 @@ export default function Home() {
           if (tab === "RADAR") {
             setPortalViewMode("MAP");
             setIsScenarioControlsOpen(true);
-          } else if (tab === "HOURLY" || tab === "10-DAY" || tab === "TODAY") {
+          } else if (tab === "HOURLY" || tab === "10-DAY" || tab === "TODAY" || tab === "MINUTECAST") {
             setPortalViewMode("PORTAL");
           }
         }}
