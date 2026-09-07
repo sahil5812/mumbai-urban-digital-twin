@@ -1012,20 +1012,7 @@ export const OceanSkyBackground: React.FC = () => {
           );
         })}
       </div>
-
-      {/* ── Authentic Bottom-Left Half-Screen Hero Typography ──── */}
-      <div className="fixed left-6 sm:left-10 md:left-14 bottom-10 sm:bottom-14 z-10 pointer-events-none max-w-xl">
-        <div className="w-9 h-[1px] bg-[var(--fg)] opacity-40 mb-3 sm:mb-4 transition-colors duration-1000" />
-        <div className="font-space-mono text-[10px] sm:text-xs tracking-[0.3em] uppercase text-[var(--fg)] opacity-50 mb-1.5 transition-colors duration-1000">
-          SCENE 0{currentSceneIdx + 1} / 06
-        </div>
-        <h1 className="font-space-grotesk font-bold text-5xl sm:text-7xl md:text-8xl tracking-tight leading-[0.95] text-[var(--fg)] drop-shadow-[0_2px_40px_rgba(0,0,0,0.7)] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors duration-1000 select-none">
-          {SCENE_NAMES[currentSceneIdx]}
-        </h1>
-        <p className="font-space-grotesk font-light text-xs sm:text-sm md:text-base text-[var(--fg)] opacity-90 max-w-md mt-2.5 sm:mt-3 leading-relaxed drop-shadow-[0_1px_16px_rgba(0,0,0,0.85)] transition-colors duration-1000 select-none">
-          {SCENE_DESCS[currentSceneIdx]}
-        </p>
-      </div>
+      {/* Bottom typography overlay removed per user request to prevent card overlap */}
     </>
   );
 };
