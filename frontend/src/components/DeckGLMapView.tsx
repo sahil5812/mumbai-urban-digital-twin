@@ -166,27 +166,44 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     };
   }, [mapTheme]);
 
-  // Helper: Severity calculation (Normal <15mm/h, Moderate 15-40mm/h, Heavy >40mm/h or Critical flood)
+  // Scientific Severity calculation based on actual node water depth & state
   const getSeverity = (d: ComponentTelemetry) => {
     const depth = d.water_depth_cm || 0;
-    const isCrit = d.status === "CRITICAL" || depth >= 45 || rainfall_mm_hr >= 50;
-    const isWarn = d.status === "WARNING" || depth >= 15 || (rainfall_mm_hr >= 15 && rainfall_mm_hr < 50);
-
-    if (isCrit) return "HEAVY_CRITICAL";
-    if (isWarn) return "MODERATE_WARNING";
+    // CRITICAL DANGER: severe flooding (depth >= 48cm or status CRITICAL)
+    if (d.status === "CRITICAL" || depth >= 48) return "HEAVY_CRITICAL";
+    // WARNING: moderate waterlogging (depth >= 28cm or status WARNING)
+    if (d.status === "WARNING" || depth >= 28) return "MODERATE_WARNING";
+    // NORMAL ACTIVE RAIN: light-to-moderate rain accumulation
+    if (depth > 0 && rainfall_mm_hr > 0) return "NORMAL_ACTIVE";
     return "NORMAL_SAFE";
   };
 
+  // Determine if a component is actively accumulating rain and should have a live moving radar mark
+  // Strictly excludes static infrastructure (Pumps, Roads, Drains) and dry/unaffected spots!
+  const isActiveRainHotspot = (d: ComponentTelemetry) => {
+    if (rainfall_mm_hr <= 0) return false;
+    
+    // Only chronic lowline waterlogging subways/depressions experience live moving radar marks
+    // Pumps, roads, and drains are static infrastructure assets!
+    if (d.component_type !== "HOTSPOT") return false;
+
+    const depth = d.water_depth_cm || 0;
+
+    // Normal Monsoon (< 50 mm/h):
+    // Only the chronic saucer subways that actually submerge (Milan, Andheri, Khar, Malad, Dahisar) with depth >= 28cm
+    if (rainfall_mm_hr < 50) {
+      return depth >= 28.0;
+    }
+
+    // Heavy Downpour / 26-7 Cloudburst (>= 50 mm/h):
+    // Severe spots taking critical inundation (depth >= 40cm or CRITICAL/WARNING)
+    return depth >= 40.0 || d.status === "CRITICAL" || d.status === "WARNING";
+  };
+
   // Filter components that should display animated moving radar markers
-  // ONLY locations where rain is actively accumulating water live (>0 mm/h and depth > 0)
   const activeRainHotspots = useMemo(() => {
     if (!components.length || rainfall_mm_hr <= 0) return [];
-    
-    // Strictly filter ONLY for spots where rain is actively causing waterlogging!
-    return components.filter((d) => {
-      const depth = d.water_depth_cm || 0;
-      return depth > 0;
-    });
+    return components.filter(isActiveRainHotspot);
   }, [components, rainfall_mm_hr]);
 
   // 1. Primary Live Moving Animated Radar Ripple Layer (Expanding Concentric Wave Ring)
@@ -198,8 +215,12 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       data: activeRainHotspots,
       getPosition: (d: ComponentTelemetry) => [d.longitude || 72.85, d.latitude || 19.06],
       getRadius: (d: ComponentTelemetry) => {
-        const base = Math.max(160, ((d.water_depth_cm || 0) * 12) + (rainfall_mm_hr * 4));
-        return base * (1 + pulsePhase * 1.8);
+        const sev = getSeverity(d);
+        const isDangerous = sev === "HEAVY_CRITICAL";
+        // Dangerous spots have larger, high-velocity shockwaves
+        const base = isDangerous ? 260 + (d.water_depth_cm || 0) * 4 : 160 + (d.water_depth_cm || 0) * 2;
+        const multiplier = isDangerous ? 2.4 : 1.6;
+        return base * (1 + pulsePhase * multiplier);
       },
       getLineColor: (d: ComponentTelemetry) => {
         const sev = getSeverity(d);
@@ -207,7 +228,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         if (d.component_id === selectedComponentId) return [0, 242, 254, alpha];
         if (sev === "HEAVY_CRITICAL") return [239, 68, 68, alpha]; // Dangerous Crimson Red
         if (sev === "MODERATE_WARNING") return [245, 158, 11, alpha]; // Warning Amber
-        return [6, 182, 212, alpha]; // Normal Rain Cyan
+        return [6, 182, 212, alpha]; // Normal Rain Gentle Cyan
       },
       getFillColor: (d: ComponentTelemetry) => {
         const sev = getSeverity(d);
@@ -239,16 +260,19 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       data: activeRainHotspots,
       getPosition: (d: ComponentTelemetry) => [d.longitude || 72.85, d.latitude || 19.06],
       getRadius: (d: ComponentTelemetry) => {
-        const base = Math.max(160, ((d.water_depth_cm || 0) * 12) + (rainfall_mm_hr * 4));
-        return base * (1 + p2 * 1.8);
+        const sev = getSeverity(d);
+        const isDangerous = sev === "HEAVY_CRITICAL";
+        const base = isDangerous ? 260 + (d.water_depth_cm || 0) * 4 : 160 + (d.water_depth_cm || 0) * 2;
+        const multiplier = isDangerous ? 2.4 : 1.6;
+        return base * (1 + p2 * multiplier);
       },
       getLineColor: (d: ComponentTelemetry) => {
         const sev = getSeverity(d);
         const alpha = Math.floor((1 - p2) * 190);
         if (d.component_id === selectedComponentId) return [0, 242, 254, alpha];
-        if (sev === "HEAVY_CRITICAL") return [239, 68, 68, alpha];
+        if (sev === "HEAVY_CRITICAL") return [249, 115, 22, alpha]; // Fiery Orange trailing shockwave for Dangerous
         if (sev === "MODERATE_WARNING") return [245, 158, 11, alpha];
-        return [6, 182, 212, alpha];
+        return [56, 189, 248, alpha]; // Sky Blue trailing wave for Normal
       },
       getFillColor: (d: ComponentTelemetry) => {
         const sev = getSeverity(d);
@@ -270,7 +294,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     });
   }, [activeRainHotspots, showRadarScan, pulsePhase, rainfall_mm_hr, selectedComponentId]);
 
-  // 3. Central Solid Core Pin Markers (With subtle rhythmic size breathing)
+  // 3. Central Solid Core Pin Markers (With subtle rhythmic size breathing ONLY on active flood spots)
   const stationMarkersLayer = useMemo(() => {
     if (!components.length || !showMarkers) return null;
 
@@ -279,35 +303,48 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       data: components,
       getPosition: (d: ComponentTelemetry) => [d.longitude || 72.85, d.latitude || 19.06],
       getRadius: (d: ComponentTelemetry) => {
-        const base = d.component_id === selectedComponentId ? 240 : 170;
-        // Subtle heartbeat ONLY on spots where rain is actively accumulating!
-        const isRainingHere = (d.water_depth_cm || 0) > 0 && rainfall_mm_hr > 0;
-        const breath = isRainingHere ? Math.sin(pulsePhase * Math.PI * 2) * 20 : 0;
+        const base = d.component_id === selectedComponentId ? 250 : 170;
+        
+        // Heartbeat / breathing ONLY on active rain hotspots!
+        const isMovingHotspot = isActiveRainHotspot(d);
+        if (!isMovingHotspot) return base; // completely static for all other 35+ components!
+
+        const sev = getSeverity(d);
+        // Urgent heartbeat for heavy dangerous rain, gentle breath for normal rain
+        const amplitude = sev === "HEAVY_CRITICAL" ? 24 : 12;
+        const breath = Math.sin(pulsePhase * Math.PI * 2) * amplitude;
         return base + breath;
       },
       getFillColor: (d: ComponentTelemetry) => {
         if (d.component_id === selectedComponentId) return [0, 242, 254, 255]; // Selected Neon Cyan
-        const depth = d.water_depth_cm || 0;
-        const isRainingHere = depth > 0 && rainfall_mm_hr > 0;
-
-        if (isRainingHere) {
+        
+        const isMovingHotspot = isActiveRainHotspot(d);
+        if (isMovingHotspot) {
           const sev = getSeverity(d);
           if (sev === "HEAVY_CRITICAL") return [239, 68, 68, 255]; // Dangerous Crimson Red
           if (sev === "MODERATE_WARNING") return [245, 158, 11, 255]; // Warning Amber
-          return [6, 182, 212, 240]; // Normal Rain Active Cyan
+          return [6, 182, 212, 245]; // Normal Rain Active Cyan
         }
 
-        // Dry / Safe spots stay standard static colors
+        // Dry / Safe spots and static infrastructure retain clean static colors
         if (d.component_type === "PUMP") return [6, 182, 212, 245]; // SPS Cyan
         if (d.component_type === "DRAIN") return [14, 165, 233, 245]; // Drain Blue
-        return [16, 185, 129, 250]; // Safe Emerald
+        if (d.component_type === "ROAD") return [99, 102, 241, 245]; // Road Indigo
+        return [16, 185, 129, 250]; // Safe Emerald Green
       },
-      getLineColor: [255, 255, 255, 255],
+      getLineColor: (d: ComponentTelemetry) => {
+        if (d.component_id === selectedComponentId) return [255, 255, 255, 255];
+        const isMovingHotspot = isActiveRainHotspot(d);
+        if (isMovingHotspot && getSeverity(d) === "HEAVY_CRITICAL") {
+          return [254, 202, 202, 255]; // High-contrast border for danger
+        }
+        return [255, 255, 255, 220];
+      },
       lineWidthMinPixels: 2.5,
       stroked: true,
       filled: true,
       radiusMinPixels: 8,
-      radiusMaxPixels: 20,
+      radiusMaxPixels: 22,
       pickable: true,
       autoHighlight: true,
       highlightColor: [255, 255, 255, 180],
@@ -315,6 +352,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       updateTriggers: {
         getRadius: [pulsePhase, rainfall_mm_hr, selectedComponentId],
         getFillColor: [rainfall_mm_hr, selectedComponentId],
+        getLineColor: [rainfall_mm_hr, selectedComponentId],
       }
     });
   }, [components, selectedComponentId, showMarkers, pulsePhase, rainfall_mm_hr]);
@@ -323,13 +361,14 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   const textTagsLayer = useMemo(() => {
     if (!components.length || !showMarkers) return null;
 
-    const ANCHOR_HUBS = new Set(["HOT_HND_01", "HOT_MLN_01", "HOT_AND_01", "HOT_KRL_01", "HOT_TMC_MBR_01", "HOT_DAH_01"]);
+    const ANCHOR_HUBS = new Set(["HOT_HND_01", "HOT_MLN_01", "HOT_AND_01", "HOT_KRL_01", "HOT_TMC_MBR_01"]);
 
     const filtered = components.filter((d) => {
       if (d.component_id === selectedComponentId) return true;
-      if (rainfall_mm_hr > 0 && (d.water_depth_cm || 0) > 0) return true; // Only show active rain tags on spots taking water!
-      if (d.status === "CRITICAL" || d.status === "WARNING" || (d.water_depth_cm || 0) >= 15) return true;
-      if (ANCHOR_HUBS.has(d.component_id)) return true;
+      // Show text label ONLY on active moving hotspots where rain is logging water!
+      if (isActiveRainHotspot(d)) return true;
+      // In dry/calm mode, only show key anchor landmarks
+      if (rainfall_mm_hr === 0 && ANCHOR_HUBS.has(d.component_id)) return true;
       return false;
     });
 
@@ -341,15 +380,12 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       getText: (d: ComponentTelemetry) => {
         const nameClean = (d.name || "Hotspot").split("/")[0].split("(")[0].trim();
         const depth = Math.round(d.water_depth_cm || 0);
-        const sev = getSeverity(d);
         
-        if (sev === "HEAVY_CRITICAL") {
-          return `🚨 ${nameClean} (${depth}cm - DANGER)`;
-        }
-        if (sev === "MODERATE_WARNING") {
-          return `⚠️ ${nameClean} (${depth}cm - WARNING)`;
-        }
-        if (rainfall_mm_hr > 0 && depth > 0) {
+        if (isActiveRainHotspot(d)) {
+          const sev = getSeverity(d);
+          if (sev === "HEAVY_CRITICAL") {
+            return `🚨 DANGER: ${nameClean} (${depth}cm)`;
+          }
           return `🌧️ ${nameClean} (${depth}cm)`;
         }
         return nameClean;
@@ -361,12 +397,12 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       background: true,
       getBackgroundColor: (d: ComponentTelemetry) => {
         if (d.component_id === selectedComponentId) return [2, 132, 199, 245];
-        const sev = getSeverity(d);
-        if (sev === "HEAVY_CRITICAL") return [185, 28, 28, 240];
-        if (sev === "MODERATE_WARNING") return [217, 119, 6, 240];
-        if (rainfall_mm_hr > 0) return [8, 145, 178, 235];
-        if (d.component_type === "PUMP") return [8, 145, 178, 230];
-        return [15, 23, 42, 225];
+        if (isActiveRainHotspot(d)) {
+          const sev = getSeverity(d);
+          if (sev === "HEAVY_CRITICAL") return [185, 28, 28, 245]; // Dangerous Red
+          return [8, 145, 178, 235]; // Normal Rain Active Cyan
+        }
+        return [15, 23, 42, 220]; // Sleek Dark Slate
       },
       backgroundPadding: [6, 3, 6, 3],
       pickable: true,
@@ -505,7 +541,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowRadarScan(!showRadarScan); }}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
             showRadarScan
-              ? "bg-cyan-600/35 border-cyan-400/60 text-cyan-200 shadow-[0_0_12px_rgba(6,182,212,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold animate-pulse"
+              ? "bg-cyan-600/35 border-cyan-400/60 text-cyan-200 shadow-[0_0_12px_rgba(6,182,212,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
           title="Toggle Live Animated Doppler Radar Wave Markers"
@@ -569,6 +605,41 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           {isOrbiting ? <Pause className="w-3.5 h-3.5 text-cyan-400" /> : <Play className="w-3.5 h-3.5 text-cyan-400" />}
           <span>360° Drone Orbit</span>
         </button>
+      </div>
+
+      {/* Floating Tactical Doppler Radar Status Pill */}
+      <div className="absolute bottom-6 left-6 z-20 flex items-center gap-3 glass-panel px-4 py-2.5 rounded-2xl border border-white/15 shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] text-xs backdrop-blur-xl">
+        <div className={`w-3 h-3 rounded-full flex items-center justify-center ${
+          rainfall_mm_hr === 0
+            ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"
+            : rainfall_mm_hr >= 50
+            ? "bg-red-500 animate-ping shadow-[0_0_10px_rgba(239,68,68,0.9)]"
+            : "bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,0.8)]"
+        }`} />
+
+        <div className="flex flex-col">
+          <div className="flex items-center gap-1.5 font-bold tracking-wide">
+            {rainfall_mm_hr === 0 ? (
+              <span className="text-emerald-400 font-mono text-[11px]">IMD DOPPLER RADAR: STANDBY</span>
+            ) : rainfall_mm_hr >= 50 ? (
+              <span className="text-red-400 flex items-center gap-1 font-mono text-[11px]">
+                <AlertTriangle className="w-3 h-3 text-red-400" />
+                RADAR: CRITICAL FLOOD INUNDATION ({rainfall_mm_hr} mm/h)
+              </span>
+            ) : (
+              <span className="text-cyan-300 font-mono text-[11px]">
+                RADAR: NORMAL PRECIPITATION ({rainfall_mm_hr} mm/h)
+              </span>
+            )}
+          </div>
+          <span className="text-[10px] text-slate-300">
+            {rainfall_mm_hr === 0
+              ? "Clear conditions • Pumping stations & arterial corridors static & standby"
+              : rainfall_mm_hr >= 50
+              ? `🚨 ${activeRainHotspots.length} critical flood subways marked with dangerous shockwaves`
+              : `🌧️ ${activeRainHotspots.length} chronic subways actively taking rain with normal moving markers`}
+          </span>
+        </div>
       </div>
     </div>
   );
