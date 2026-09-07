@@ -178,17 +178,16 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   };
 
   // Filter components that should display animated moving radar markers
+  // ONLY locations where rain is actively accumulating water live (>0 mm/h and depth > 0)
   const activeRainHotspots = useMemo(() => {
-    if (!components.length) return [];
+    if (!components.length || rainfall_mm_hr <= 0) return [];
     
-    // If rain is actively falling (>0 mm/h), all subway hotspots and drainage hubs activate with moving radar marks!
-    if (rainfall_mm_hr > 0) {
-      return components;
-    }
-    
-    // In dry baseline, only show nodes with water accumulation or selected node
-    return components.filter(d => (d.water_depth_cm || 0) > 8 || d.component_id === selectedComponentId || d.status === "CRITICAL" || d.status === "WARNING");
-  }, [components, rainfall_mm_hr, selectedComponentId]);
+    // Strictly filter ONLY for spots where rain is actively causing waterlogging!
+    return components.filter((d) => {
+      const depth = d.water_depth_cm || 0;
+      return depth > 0;
+    });
+  }, [components, rainfall_mm_hr]);
 
   // 1. Primary Live Moving Animated Radar Ripple Layer (Expanding Concentric Wave Ring)
   const radarPulseWaveLayer = useMemo(() => {
@@ -281,19 +280,26 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       getPosition: (d: ComponentTelemetry) => [d.longitude || 72.85, d.latitude || 19.06],
       getRadius: (d: ComponentTelemetry) => {
         const base = d.component_id === selectedComponentId ? 240 : 170;
-        // Subtle rhythmic heartbeat on active nodes
-        const isTarget = (d.water_depth_cm || 0) > 10 || rainfall_mm_hr > 0;
-        const breath = isTarget ? Math.sin(pulsePhase * Math.PI * 2) * 25 : 0;
+        // Subtle heartbeat ONLY on spots where rain is actively accumulating!
+        const isRainingHere = (d.water_depth_cm || 0) > 0 && rainfall_mm_hr > 0;
+        const breath = isRainingHere ? Math.sin(pulsePhase * Math.PI * 2) * 20 : 0;
         return base + breath;
       },
       getFillColor: (d: ComponentTelemetry) => {
         if (d.component_id === selectedComponentId) return [0, 242, 254, 255]; // Selected Neon Cyan
-        const sev = getSeverity(d);
-        if (sev === "HEAVY_CRITICAL") return [239, 68, 68, 255]; // Dangerous Crimson Red
-        if (sev === "MODERATE_WARNING") return [245, 158, 11, 255]; // Warning Amber
+        const depth = d.water_depth_cm || 0;
+        const isRainingHere = depth > 0 && rainfall_mm_hr > 0;
+
+        if (isRainingHere) {
+          const sev = getSeverity(d);
+          if (sev === "HEAVY_CRITICAL") return [239, 68, 68, 255]; // Dangerous Crimson Red
+          if (sev === "MODERATE_WARNING") return [245, 158, 11, 255]; // Warning Amber
+          return [6, 182, 212, 240]; // Normal Rain Active Cyan
+        }
+
+        // Dry / Safe spots stay standard static colors
         if (d.component_type === "PUMP") return [6, 182, 212, 245]; // SPS Cyan
         if (d.component_type === "DRAIN") return [14, 165, 233, 245]; // Drain Blue
-        if (rainfall_mm_hr > 0) return [6, 182, 212, 240]; // Normal Rain Active
         return [16, 185, 129, 250]; // Safe Emerald
       },
       getLineColor: [255, 255, 255, 255],
@@ -321,7 +327,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
 
     const filtered = components.filter((d) => {
       if (d.component_id === selectedComponentId) return true;
-      if (rainfall_mm_hr > 0) return true; // During rain, all subway labels pop up with live radar telemetry!
+      if (rainfall_mm_hr > 0 && (d.water_depth_cm || 0) > 0) return true; // Only show active rain tags on spots taking water!
       if (d.status === "CRITICAL" || d.status === "WARNING" || (d.water_depth_cm || 0) >= 15) return true;
       if (ANCHOR_HUBS.has(d.component_id)) return true;
       return false;
