@@ -818,35 +818,33 @@ export const OceanSkyBackground: React.FC = () => {
         }
       }
 
-      // Check if user is actively scrolling inside an inner container that has room to scroll
+      // Check if user is scrolling inside an inner scrollable container (e.g. WeatherPortalView)
       let el = target;
-      let canScroll = false;
+      let scrollContainer: HTMLElement | null = null;
       while (el && el !== document.body && el !== document.documentElement) {
         const style = window.getComputedStyle(el);
         if (
           (style.overflowY === "auto" || style.overflowY === "scroll") &&
           el.scrollHeight > el.clientHeight + 10
         ) {
-          const atTop = el.scrollTop <= 0 && e.deltaY < 0;
-          const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2 && e.deltaY > 0;
-          if (!atTop && !atBottom) {
-            canScroll = true;
-          }
+          scrollContainer = el;
           break;
         }
         el = el.parentElement;
       }
 
-      // If NOT currently scrolling an active scroll container, adjust targetSmooth directly
-      if (!canScroll) {
-        const delta = e.deltaY;
-        const sensitivity = 0.0006;
-        let next = targetSmoothRef.current + delta * sensitivity;
-        // Smooth loop: at the very end, scrolling wraps back to dawn
-        if (next > 1.0) next = 0.0;
-        if (next < 0.0) next = 1.0;
-        targetSmoothRef.current = next;
+      if (scrollContainer) {
+        // Let the container scroll naturally; the handleScroll capture listener
+        // will update targetSmoothRef.current smoothly from 0.0 to 1.0 (and 1.0 down to 0.0 in reverse).
+        return;
       }
+
+      // If NOT inside an active scroll container (e.g. 3D Map mode or outside),
+      // smoothly advance or reverse without ANY hard jumps between DAWN and PRE-DAWN:
+      const delta = e.deltaY;
+      const sensitivity = 0.0006;
+      const next = targetSmoothRef.current + delta * sensitivity;
+      targetSmoothRef.current = Math.max(0.0, Math.min(1.0, next));
     };
 
     window.addEventListener("wheel", handleWheel, { passive: true });
