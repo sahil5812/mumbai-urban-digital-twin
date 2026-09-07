@@ -619,10 +619,41 @@ const SCENE_DESCS = [
   "The last stars hold. A red-orange ember glows at the edge of the world."
 ];
 
+// Scene text color palette from original implementation
+const SCENE_COLORS = [
+  [255, 185, 80],  // DAWN     - warm gold
+  [210, 235, 255], // MIDDAY   - cool sky white
+  [255, 175, 80],  // DUSK     - amber-orange
+  [180, 188, 205], // STORM    - cold grey-white
+  [110, 138, 225], // NIGHT    - blue-indigo moonlight
+  [150, 140, 185], // PRE-DAWN - dusty lavender
+];
+
+const lerpColor = (a: number[], b: number[], t: number): [number, number, number] => [
+  Math.round(a[0] + (b[0] - a[0]) * t),
+  Math.round(a[1] + (b[1] - a[1]) * t),
+  Math.round(a[2] + (b[2] - a[2]) * t),
+];
+
+const getSceneColor = (s: number): [number, number, number] => {
+  const raw = s * (SCENE_COLORS.length - 1);
+  const i = Math.min(Math.floor(raw), SCENE_COLORS.length - 2);
+  return lerpColor(SCENE_COLORS[i], SCENE_COLORS[i + 1], raw - i);
+};
+
+const applySceneColor = (s: number) => {
+  if (typeof document === "undefined") return;
+  const [r, g, b] = getSceneColor(s);
+  const root = document.documentElement;
+  root.style.setProperty("--fg", `rgb(${r},${g},${b})`);
+  root.style.setProperty("--fg-hud", `rgba(${r},${g},${b},0.85)`);
+  root.style.setProperty("--fg-dot", `rgba(${r},${g},${b},0.3)`);
+  root.style.setProperty("--fg-dotact", `rgba(${r},${g},${b},0.95)`);
+};
+
 export const OceanSkyBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [currentSceneIdx, setCurrentSceneIdx] = useState<number>(0);
-  const [targetSceneIdx, setTargetSceneIdx] = useState<number>(0);
   const [progressPct, setProgressPct] = useState<number>(0);
   const [showHud, setShowHud] = useState<boolean>(true);
 
@@ -631,8 +662,21 @@ export const OceanSkyBackground: React.FC = () => {
   const currentSmoothRef = useRef<number>(0);
 
   const setScene = useCallback((idx: number) => {
-    setTargetSceneIdx(idx);
-    targetSmoothRef.current = idx / (SCENE_NAMES.length - 1);
+    const targetRatio = idx / (SCENE_NAMES.length - 1);
+    targetSmoothRef.current = targetRatio;
+
+    // Smoothly scroll active page container to match
+    const containers = document.querySelectorAll<HTMLElement>(".overflow-y-auto, .overflow-auto");
+    for (let i = 0; i < containers.length; i++) {
+      const c = containers[i];
+      if (c.scrollHeight > c.clientHeight + 10 && c.clientHeight > 150) {
+        c.scrollTo({
+          top: targetRatio * (c.scrollHeight - c.clientHeight),
+          behavior: "smooth",
+        });
+        break;
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -728,6 +772,85 @@ export const OceanSkyBackground: React.FC = () => {
     handleResize();
     window.addEventListener("resize", handleResize, { passive: true });
 
+    // ── Unified Scroll & Wheel Observers ──────────────────────────────────────
+    // 1. Capture scroll on window, document, and ANY scrollable sub-container (e.g. WeatherPortalView)
+    const handleScroll = (e?: Event) => {
+      let scrollRatio = -1;
+      const target = e?.target as HTMLElement | Document | Window | null;
+
+      if (target && target instanceof HTMLElement && target.scrollHeight > target.clientHeight + 10) {
+        scrollRatio = target.scrollTop / (target.scrollHeight - target.clientHeight);
+      } else {
+        // Fallback: check any visible scroll container
+        const containers = document.querySelectorAll<HTMLElement>(".overflow-y-auto, .overflow-auto");
+        for (let i = 0; i < containers.length; i++) {
+          const c = containers[i];
+          if (c.scrollHeight > c.clientHeight + 10 && c.clientHeight > 150) {
+            scrollRatio = c.scrollTop / (c.scrollHeight - c.clientHeight);
+            break;
+          }
+        }
+        if (scrollRatio < 0) {
+          const winMax = document.documentElement.scrollHeight - window.innerHeight;
+          if (winMax > 10) {
+            scrollRatio = (window.scrollY || document.documentElement.scrollTop) / winMax;
+          }
+        }
+      }
+
+      if (scrollRatio >= 0) {
+        targetSmoothRef.current = Math.max(0, Math.min(1, scrollRatio));
+      }
+    };
+
+    // Use capture: true so scroll events from internal div.overflow-y-auto containers are caught!
+    window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
+
+    // 2. Wheel Listener: Scrolling the mouse wheel or touchpad anywhere shifts atmosphere smoothly
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) return;
+
+      const target = e.target as HTMLElement | null;
+      // If hovering directly over deck.gl 3D map canvas, let DeckGL handle zooming unless user holds Shift or Alt
+      if (target && target.tagName.toLowerCase() === "canvas" && target.id !== "webgl_canvas") {
+        if (!e.shiftKey && !e.altKey) {
+          return;
+        }
+      }
+
+      // Check if user is actively scrolling inside an inner container that has room to scroll
+      let el = target;
+      let canScroll = false;
+      while (el && el !== document.body && el !== document.documentElement) {
+        const style = window.getComputedStyle(el);
+        if (
+          (style.overflowY === "auto" || style.overflowY === "scroll") &&
+          el.scrollHeight > el.clientHeight + 10
+        ) {
+          const atTop = el.scrollTop <= 0 && e.deltaY < 0;
+          const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2 && e.deltaY > 0;
+          if (!atTop && !atBottom) {
+            canScroll = true;
+          }
+          break;
+        }
+        el = el.parentElement;
+      }
+
+      // If NOT currently scrolling an active scroll container, adjust targetSmooth directly
+      if (!canScroll) {
+        const delta = e.deltaY;
+        const sensitivity = 0.0006;
+        let next = targetSmoothRef.current + delta * sensitivity;
+        // Smooth loop: at the very end, scrolling wraps back to dawn
+        if (next > 1.0) next = 0.0;
+        if (next < 0.0) next = 1.0;
+        targetSmoothRef.current = next;
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: true });
+
     let animId: number;
     const t0 = performance.now();
     let lastTime = t0;
@@ -737,8 +860,8 @@ export const OceanSkyBackground: React.FC = () => {
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      // Smoothly approach target scene
-      const speed = 4.0;
+      // Smoothly approach target scene (SMOOTH_SPEED = 8.0)
+      const speed = 8.0;
       currentSmoothRef.current +=
         (targetSmoothRef.current - currentSmoothRef.current) *
         (1 - Math.exp(-dt * speed));
@@ -752,6 +875,7 @@ export const OceanSkyBackground: React.FC = () => {
       const p = Math.round(s * 100);
       setProgressPct(p);
       setCurrentSceneIdx(Math.min(n - 1, Math.round(raw)));
+      applySceneColor(s);
 
       gl.uniform1f(uTLoc, (now - t0) / 1000);
       gl.uniform1f(uSLoc, s);
@@ -766,6 +890,8 @@ export const OceanSkyBackground: React.FC = () => {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll, { capture: true } as any);
+      window.removeEventListener("wheel", handleWheel);
       gl.deleteProgram(prog);
       gl.deleteShader(vert);
       gl.deleteShader(frag);
@@ -789,18 +915,32 @@ export const OceanSkyBackground: React.FC = () => {
       {showHud && (
         <div className="absolute top-20 right-6 z-10 pointer-events-auto flex items-center gap-3 glass-panel px-3.5 py-1.5 rounded-2xl border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.4)] text-xs backdrop-blur-xl">
           <div className="flex flex-col items-end">
-            <span className="font-mono text-[10px] tracking-widest text-cyan-300 font-bold uppercase glass-text-glow">
-              {SCENE_NAMES[currentSceneIdx]}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-mono text-[9px] text-slate-400">
+                SCENE 0{currentSceneIdx + 1}
+              </span>
+              <span className="font-mono text-[11px] tracking-widest text-[var(--fg-hud,#67e8f9)] font-bold uppercase glass-text-glow">
+                {SCENE_NAMES[currentSceneIdx]}
+              </span>
+            </div>
             <span className="font-mono text-[9px] text-slate-400">
               {String(progressPct).padStart(3, "0")}%
             </span>
           </div>
 
-          <div className="w-16 h-1.5 bg-black/40 rounded-full overflow-hidden border border-white/10">
+          {/* Interactive Scrub Bar */}
+          <div
+            onClick={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+              targetSmoothRef.current = ratio;
+            }}
+            className="w-16 h-1.5 bg-black/40 rounded-full overflow-hidden border border-white/10 cursor-pointer"
+            title="Click or drag to scrub atmosphere"
+          >
             <div
               style={{ width: `${progressPct}%` }}
-              className="h-full bg-gradient-to-r from-cyan-400 to-sky-300 rounded-full transition-all"
+              className="h-full bg-gradient-to-r from-amber-400 via-cyan-400 to-indigo-400 rounded-full transition-all"
             />
           </div>
         </div>
@@ -821,7 +961,7 @@ export const OceanSkyBackground: React.FC = () => {
               <div
                 className={`rounded-full transition-all duration-300 ${
                   isActive
-                    ? "w-2.5 h-2.5 bg-cyan-300 ring-4 ring-cyan-400/40 shadow-[0_0_10px_rgba(6,182,212,1)] scale-125"
+                    ? "w-2.5 h-2.5 bg-[var(--fg-dotact,#67e8f9)] ring-4 ring-cyan-400/40 shadow-[0_0_10px_rgba(6,182,212,1)] scale-125"
                     : "w-1.5 h-1.5 bg-white/40 group-hover:bg-white group-hover:scale-125"
                 }`}
               />
