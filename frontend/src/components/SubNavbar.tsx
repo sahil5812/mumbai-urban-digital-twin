@@ -23,9 +23,7 @@ export type SubNavTab =
   | "HOURLY" 
   | "10-DAY" 
   | "RADAR" 
-  | "MINUTECAST" 
-  | "MONTHLY" 
-  | "HEALTH & ACTIVITIES";
+  | "MINUTECAST";
 
 interface SubNavbarProps {
   activeTab: SubNavTab;
@@ -50,30 +48,22 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
 }) => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
-  // Tabs matching reference design
+  // Tabs matching reference design (MONTHLY & HEALTH & ACTIVITIES removed per user request)
   const TABS: { id: SubNavTab; label: string; badge?: string }[] = [
     { id: "TODAY", label: "TODAY" },
     { id: "HOURLY", label: "HOURLY", badge: "0-3h" },
     { id: "10-DAY", label: "10-DAY" },
     { id: "RADAR", label: "RADAR", badge: "LIVE" },
     { id: "MINUTECAST", label: "MINUTECAST®", badge: "120m" },
-    { id: "MONTHLY", label: "MONTHLY" },
-    { id: "HEALTH & ACTIVITIES", label: "HEALTH & ACTIVITIES" },
   ];
 
   const handleTabClick = (tabId: SubNavTab) => {
     onTabChange(tabId);
 
-    if (tabId === "HEALTH & ACTIVITIES" && onOpenPriorityModal) {
-      onOpenPriorityModal();
-    } else if (tabId === "RADAR" && onToggleScenarioControls) {
+    if (tabId === "RADAR" && onToggleScenarioControls) {
       onToggleScenarioControls();
-    } else if (tabId === "MONTHLY") {
-      // If in MAP view mode, we can show modal or navigate
-      setActiveModal(tabId);
-    } else {
-      setActiveModal(null);
     }
+    setActiveModal(null);
   };
 
   return (
