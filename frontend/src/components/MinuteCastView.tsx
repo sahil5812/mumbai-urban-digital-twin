@@ -812,33 +812,24 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                               )}
                             </div>
 
-                            {/* Col 3: Hyperlocal Location Name (Requested Feature!) */}
+                            {/* Col 3: Hyperlocal Location Name - ONLY shown when rain is active! */}
                             <div className="flex-1 flex items-center justify-start sm:justify-center px-1 overflow-hidden">
-                              <div
-                                onClick={onOpenMap}
-                                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-mono transition-all cursor-pointer group ${
-                                  m.hasRain
-                                    ? "bg-cyan-950/60 border border-cyan-400/40 text-cyan-200 shadow-[0_0_8px_rgba(6,182,212,0.2)] font-semibold hover:border-cyan-300 hover:text-white"
-                                    : "bg-white/[0.03] border border-white/10 text-slate-400"
-                                }`}
-                                title={`Simulate & View ${m.locationName} on 3D Digital Twin Map`}
-                              >
-                                <MapPin
-                                  className={`w-3 h-3 shrink-0 ${
-                                    m.hasRain
-                                      ? "text-cyan-400 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)] group-hover:scale-110 transition-transform"
-                                      : "text-slate-500"
-                                  }`}
-                                />
-                                <span className="truncate max-w-[140px] sm:max-w-[240px]">
-                                  {m.locationName}
-                                </span>
-                                {m.hasRain && (
+                              {m.hasRain ? (
+                                <button
+                                  type="button"
+                                  onClick={onOpenMap}
+                                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-mono transition-all cursor-pointer group bg-cyan-950/60 border border-cyan-400/40 text-cyan-200 shadow-[0_0_8px_rgba(6,182,212,0.2)] font-semibold hover:border-cyan-300 hover:text-white"
+                                  title={`Simulate & View ${m.locationName} on 3D Digital Twin Map`}
+                                >
+                                  <MapPin className="w-3 h-3 shrink-0 text-cyan-400 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)] group-hover:scale-110 transition-transform" />
+                                  <span className="truncate max-w-[140px] sm:max-w-[240px]">
+                                    {m.locationName}
+                                  </span>
                                   <span className="hidden md:inline-block text-[9px] font-bold px-1.5 py-0.2 rounded bg-cyan-500/30 text-cyan-300 border border-cyan-400/30">
                                     {m.ward}
                                   </span>
-                                )}
-                              </div>
+                                </button>
+                              ) : null}
                             </div>
 
                             {/* Col 4: Rain Rate */}
