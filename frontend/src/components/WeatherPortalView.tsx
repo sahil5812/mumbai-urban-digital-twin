@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   CloudRain,
   Sun,
@@ -13,7 +13,8 @@ import {
   ArrowUpRight,
   AlertTriangle,
   ChevronRight,
-  ChevronLeft,
+  ChevronDown,
+  ChevronUp,
   Activity,
   MapPin,
   Sliders,
@@ -21,7 +22,11 @@ import {
   CloudSun,
   Layers,
   Sparkles,
-  Gauge
+  Gauge,
+  Clock,
+  Eye,
+  Thermometer,
+  Compass
 } from "lucide-react";
 import { LiveTelemetry } from "../lib/api";
 
@@ -29,6 +34,7 @@ interface WeatherPortalViewProps {
   currentRainfallMmHr: number;
   currentTideLevelM: number;
   liveTelemetry: LiveTelemetry | null;
+  activeTab?: string;
   onSimulateScenario: (scenarioName: string, rain: number, tide: number, silt: number) => void;
   onOpenMap: () => void;
   onOpenPriorityModal: () => void;
@@ -38,34 +44,433 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
   currentRainfallMmHr,
   currentTideLevelM,
   liveTelemetry,
+  activeTab = "TODAY",
   onSimulateScenario,
   onOpenMap,
   onOpenPriorityModal,
 }) => {
   const [radarLayer, setRadarLayer] = useState<"radar" | "clouds" | "inundation">("radar");
-  const [selectedHourIndex, setSelectedHourIndex] = useState<number>(0);
+  
+  // Track expanded hour item (default: 8 AM is expanded, matching reference screenshot)
+  const [expandedHourId, setExpandedHourId] = useState<string | null>("8 AM");
+
+  const hourlySectionRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (activeTab === "HOURLY" && hourlySectionRef.current) {
+      hourlySectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [activeTab]);
 
   // Real-time telemetry values or dynamic fallback
   const tempC = liveTelemetry?.temperature_c || 28;
-  const humidityPct = liveTelemetry?.humidity_pct || 78;
+  const humidityPct = liveTelemetry?.humidity_pct || 77;
   const windKmh = liveTelemetry?.wind_speed_kmh || 18;
   const tideM = liveTelemetry?.tide_level_m || currentTideLevelM || 3.59;
   const rainMmHr = liveTelemetry?.rainfall_mm_hr || currentRainfallMmHr || 0;
 
-  // 12-Hour Forecast Array
-  const HOURLY_DATA = [
-    { hour: "9 PM", temp: 28, rainMm: 0.0, prob: "20%", tide: 3.2, risk: "SAFE", icon: "🌤️" },
-    { hour: "10 PM", temp: 28, rainMm: 12.5, prob: "65%", tide: 3.5, risk: "LOW", icon: "🌧️" },
-    { hour: "11 PM", temp: 27, rainMm: 28.0, prob: "75%", tide: 3.7, risk: "MODERATE", icon: "🌧️" },
-    { hour: "12 AM", temp: 27, rainMm: 45.0, prob: "85%", tide: 3.9, risk: "MODERATE", icon: "⛈️" },
-    { hour: "1 AM", temp: 26, rainMm: 70.0, prob: "92%", tide: 4.1, risk: "CRITICAL", icon: "⛈️" },
-    { hour: "2 AM", temp: 26, rainMm: 95.0, prob: "98%", tide: 4.3, risk: "CRITICAL", icon: "⛈️" },
-    { hour: "3 AM", temp: 26, rainMm: 60.0, prob: "88%", tide: 4.0, risk: "CRITICAL", icon: "🌧️" },
-    { hour: "4 AM", temp: 27, rainMm: 35.0, prob: "70%", tide: 3.6, risk: "MODERATE", icon: "🌧️" },
-    { hour: "5 AM", temp: 27, rainMm: 15.0, prob: "50%", tide: 3.1, risk: "LOW", icon: "🌦️" },
-    { hour: "6 AM", temp: 28, rainMm: 5.0, prob: "30%", tide: 2.8, risk: "SAFE", icon: "🌤️" },
-    { hour: "7 AM", temp: 29, rainMm: 0.0, prob: "15%", tide: 2.4, risk: "SAFE", icon: "☀️" },
-    { hour: "8 AM", temp: 30, rainMm: 0.0, prob: "10%", tide: 2.2, risk: "SAFE", icon: "☀️" },
+  // AccuWeather-inspired 24-Hour Detailed Forecast Data
+  const HOURLY_DETAILS = [
+    {
+      id: "8 AM",
+      hour: "8 AM",
+      temp: 28,
+      realFeel: 34,
+      realFeelShade: 32,
+      condition: "Intermittent clouds",
+      icon: "🌤️",
+      rainProb: "20%",
+      rainMm: 0,
+      wind: "SW 9 km/h",
+      windGusts: "19 km/h",
+      humidity: 77,
+      indoorHumidity: "77% (Extremely Humid)",
+      dewPoint: 24,
+      uvIndex: "1.2 (Low)",
+      brightnessIndex: "7 (Bright)",
+      cloudCover: "61%",
+      visibility: "11 km",
+      cloudCeiling: "500 m",
+      tideLevel: 3.2,
+      floodRisk: "SAFE" as const,
+      pumpsArmed: "2 SPS Operational",
+      vulnerability: "Normal flow in Dadar & Kurla"
+    },
+    {
+      id: "9 AM",
+      hour: "9 AM",
+      temp: 29,
+      realFeel: 37,
+      realFeelShade: 33,
+      condition: "Intermittent clouds",
+      icon: "🌤️",
+      rainProb: "20%",
+      rainMm: 0,
+      wind: "SW 9 km/h",
+      windGusts: "20 km/h",
+      humidity: 76,
+      indoorHumidity: "76% (Extremely Humid)",
+      dewPoint: 24,
+      uvIndex: "3.5 (Moderate)",
+      brightnessIndex: "8 (Bright)",
+      cloudCover: "58%",
+      visibility: "11 km",
+      cloudCeiling: "520 m",
+      tideLevel: 3.4,
+      floodRisk: "SAFE" as const,
+      pumpsArmed: "2 SPS Operational",
+      vulnerability: "Normal baseline"
+    },
+    {
+      id: "10 AM",
+      hour: "10 AM",
+      temp: 30,
+      realFeel: 37,
+      realFeelShade: 34,
+      condition: "Intermittent clouds",
+      icon: "🌤️",
+      rainProb: "25%",
+      rainMm: 2,
+      wind: "SW 9 km/h",
+      windGusts: "22 km/h",
+      humidity: 74,
+      indoorHumidity: "74% (Humid)",
+      dewPoint: 25,
+      uvIndex: "5.8 (High)",
+      brightnessIndex: "9 (Intense)",
+      cloudCover: "60%",
+      visibility: "10 km",
+      cloudCeiling: "500 m",
+      tideLevel: 3.6,
+      floodRisk: "LOW" as const,
+      pumpsArmed: "3 SPS Standby",
+      vulnerability: "Milan Subway dry"
+    },
+    {
+      id: "11 AM",
+      hour: "11 AM",
+      temp: 31,
+      realFeel: 39,
+      realFeelShade: 34,
+      condition: "Intermittent clouds",
+      icon: "🌤️",
+      rainProb: "25%",
+      rainMm: 5,
+      wind: "W 11 km/h",
+      windGusts: "24 km/h",
+      humidity: 73,
+      indoorHumidity: "73% (Humid)",
+      dewPoint: 25,
+      uvIndex: "7.2 (Very High)",
+      brightnessIndex: "10 (Extreme)",
+      cloudCover: "65%",
+      visibility: "10 km",
+      cloudCeiling: "480 m",
+      tideLevel: 3.8,
+      floodRisk: "LOW" as const,
+      pumpsArmed: "4 SPS Standby",
+      vulnerability: "Minor spray at Marine Drive promenade"
+    },
+    {
+      id: "12 PM",
+      hour: "12 PM",
+      temp: 31,
+      realFeel: 39,
+      realFeelShade: 35,
+      condition: "Mostly cloudy",
+      icon: "⛅",
+      rainProb: "30%",
+      rainMm: 8,
+      wind: "W 13 km/h",
+      windGusts: "26 km/h",
+      humidity: 75,
+      indoorHumidity: "75% (Extremely Humid)",
+      dewPoint: 25,
+      uvIndex: "6.5 (High)",
+      brightnessIndex: "8 (Bright)",
+      cloudCover: "72%",
+      visibility: "10 km",
+      cloudCeiling: "450 m",
+      tideLevel: 4.0,
+      floodRisk: "MODERATE" as const,
+      pumpsArmed: "Britannia SPS Active",
+      vulnerability: "Hindmata sluice gates closed"
+    },
+    {
+      id: "1 PM",
+      hour: "1 PM",
+      temp: 32,
+      realFeel: 40,
+      realFeelShade: 35,
+      condition: "Intermittent clouds",
+      icon: "🌤️",
+      rainProb: "35%",
+      rainMm: 12,
+      wind: "W 13 km/h",
+      windGusts: "28 km/h",
+      humidity: 76,
+      indoorHumidity: "76% (Extremely Humid)",
+      dewPoint: 26,
+      uvIndex: "6.0 (High)",
+      brightnessIndex: "8 (Bright)",
+      cloudCover: "70%",
+      visibility: "9 km",
+      cloudCeiling: "450 m",
+      tideLevel: 4.1,
+      floodRisk: "MODERATE" as const,
+      pumpsArmed: "6 SPS Active",
+      vulnerability: "Spring tide high level surge"
+    },
+    {
+      id: "2 PM",
+      hour: "2 PM",
+      temp: 31,
+      realFeel: 39,
+      realFeelShade: 34,
+      condition: "Partly sunny",
+      icon: "⛅",
+      rainProb: "35%",
+      rainMm: 15,
+      wind: "W 15 km/h",
+      windGusts: "30 km/h",
+      humidity: 78,
+      indoorHumidity: "78% (Extremely Humid)",
+      dewPoint: 26,
+      uvIndex: "4.5 (Moderate)",
+      brightnessIndex: "7 (Bright)",
+      cloudCover: "75%",
+      visibility: "9 km",
+      cloudCeiling: "420 m",
+      tideLevel: 4.2,
+      floodRisk: "MODERATE" as const,
+      pumpsArmed: "6 SPS Active",
+      vulnerability: "Sion Priyadarshini water accumulation"
+    },
+    {
+      id: "3 PM",
+      hour: "3 PM",
+      temp: 31,
+      realFeel: 37,
+      realFeelShade: 34,
+      condition: "Partly sunny",
+      icon: "⛅",
+      rainProb: "38%",
+      rainMm: 22,
+      wind: "W 17 km/h",
+      windGusts: "32 km/h",
+      humidity: 79,
+      indoorHumidity: "79% (Extremely Humid)",
+      dewPoint: 26,
+      uvIndex: "3.2 (Moderate)",
+      brightnessIndex: "6 (Fair)",
+      cloudCover: "80%",
+      visibility: "8 km",
+      cloudCeiling: "400 m",
+      tideLevel: 4.0,
+      floodRisk: "MODERATE" as const,
+      pumpsArmed: "7 SPS Active",
+      vulnerability: "Kurla LBS Marg slow traffic"
+    },
+    {
+      id: "4 PM",
+      hour: "4 PM",
+      temp: 31,
+      realFeel: 35,
+      realFeelShade: 33,
+      condition: "Mostly cloudy w/ t-storms",
+      icon: "⛈️",
+      rainProb: "53%",
+      rainMm: 55,
+      wind: "W 17 km/h",
+      windGusts: "36 km/h",
+      humidity: 82,
+      indoorHumidity: "82% (Extremely Humid)",
+      dewPoint: 26,
+      uvIndex: "2.0 (Low)",
+      brightnessIndex: "5 (Cloudy)",
+      cloudCover: "88%",
+      visibility: "6 km",
+      cloudCeiling: "350 m",
+      tideLevel: 3.8,
+      floodRisk: "CRITICAL" as const,
+      pumpsArmed: "All 9 SPS Armed",
+      vulnerability: "Milan Subway 35cm inundation alert"
+    },
+    {
+      id: "5 PM",
+      hour: "5 PM",
+      temp: 30,
+      realFeel: 35,
+      realFeelShade: 32,
+      condition: "Partly sunny w/ t-storms",
+      icon: "⛈️",
+      rainProb: "58%",
+      rainMm: 75,
+      wind: "W 15 km/h",
+      windGusts: "35 km/h",
+      humidity: 84,
+      indoorHumidity: "84% (Extremely Humid)",
+      dewPoint: 26,
+      uvIndex: "1.0 (Low)",
+      brightnessIndex: "4 (Overcast)",
+      cloudCover: "92%",
+      visibility: "5 km",
+      cloudCeiling: "300 m",
+      tideLevel: 3.5,
+      floodRisk: "CRITICAL" as const,
+      pumpsArmed: "All 9 SPS Armed",
+      vulnerability: "Andheri & Milan Subway traffic diverted"
+    },
+    {
+      id: "6 PM",
+      hour: "6 PM",
+      temp: 30,
+      realFeel: 35,
+      realFeelShade: 32,
+      condition: "Mostly sunny",
+      icon: "🌤️",
+      rainProb: "49%",
+      rainMm: 40,
+      wind: "W 15 km/h",
+      windGusts: "30 km/h",
+      humidity: 83,
+      indoorHumidity: "83% (Extremely Humid)",
+      dewPoint: 25,
+      uvIndex: "0.5 (Low)",
+      brightnessIndex: "4 (Dusk)",
+      cloudCover: "85%",
+      visibility: "7 km",
+      cloudCeiling: "380 m",
+      tideLevel: 3.1,
+      floodRisk: "MODERATE" as const,
+      pumpsArmed: "8 SPS Active",
+      vulnerability: "Mithi River receding below danger mark"
+    },
+    {
+      id: "7 PM",
+      hour: "7 PM",
+      temp: 30,
+      realFeel: 33,
+      realFeelShade: 30,
+      condition: "Mostly clear",
+      icon: "🌙",
+      rainProb: "43%",
+      rainMm: 25,
+      wind: "W 15 km/h",
+      windGusts: "28 km/h",
+      humidity: 82,
+      indoorHumidity: "82% (Extremely Humid)",
+      dewPoint: 25,
+      uvIndex: "0.0 (None)",
+      brightnessIndex: "0 (Night)",
+      cloudCover: "70%",
+      visibility: "8 km",
+      cloudCeiling: "420 m",
+      tideLevel: 2.8,
+      floodRisk: "MODERATE" as const,
+      pumpsArmed: "6 SPS Active",
+      vulnerability: "Thane Reti Bunder discharge clear"
+    },
+    {
+      id: "8 PM",
+      hour: "8 PM",
+      temp: 29,
+      realFeel: 33,
+      realFeelShade: 29,
+      condition: "Intermittent clouds",
+      icon: "🌙",
+      rainProb: "47%",
+      rainMm: 15,
+      wind: "W 13 km/h",
+      windGusts: "26 km/h",
+      humidity: 83,
+      indoorHumidity: "83% (Extremely Humid)",
+      dewPoint: 25,
+      uvIndex: "0.0 (None)",
+      brightnessIndex: "0 (Night)",
+      cloudCover: "65%",
+      visibility: "8 km",
+      cloudCeiling: "450 m",
+      tideLevel: 2.5,
+      floodRisk: "LOW" as const,
+      pumpsArmed: "4 SPS Active",
+      vulnerability: "Kurla road waters drained"
+    },
+    {
+      id: "9 PM",
+      hour: "9 PM",
+      temp: 28,
+      realFeel: 31,
+      realFeelShade: 28,
+      condition: "Mostly cloudy w/ t-storms",
+      icon: "⛈️",
+      rainProb: "59%",
+      rainMm: 45,
+      wind: "W 11 km/h",
+      windGusts: "26 km/h",
+      humidity: 85,
+      indoorHumidity: "85% (Extremely Humid)",
+      dewPoint: 25,
+      uvIndex: "0.0 (None)",
+      brightnessIndex: "0 (Night)",
+      cloudCover: "80%",
+      visibility: "7 km",
+      cloudCeiling: "400 m",
+      tideLevel: 2.7,
+      floodRisk: "MODERATE" as const,
+      pumpsArmed: "6 SPS Active",
+      vulnerability: "Night surge preparedness alert"
+    },
+    {
+      id: "10 PM",
+      hour: "10 PM",
+      temp: 28,
+      realFeel: 31,
+      realFeelShade: 28,
+      condition: "Partly cloudy w/ t-storms",
+      icon: "⛈️",
+      rainProb: "56%",
+      rainMm: 35,
+      wind: "WSW 11 km/h",
+      windGusts: "24 km/h",
+      humidity: 86,
+      indoorHumidity: "86% (Extremely Humid)",
+      dewPoint: 25,
+      uvIndex: "0.0 (None)",
+      brightnessIndex: "0 (Night)",
+      cloudCover: "78%",
+      visibility: "8 km",
+      cloudCeiling: "420 m",
+      tideLevel: 3.0,
+      floodRisk: "LOW" as const,
+      pumpsArmed: "4 SPS Active",
+      vulnerability: "All drainage outfalls monitored"
+    },
+    {
+      id: "11 PM",
+      hour: "11 PM",
+      temp: 29,
+      realFeel: 33,
+      realFeelShade: 29,
+      condition: "Partly cloudy",
+      icon: "🌙",
+      rainProb: "47%",
+      rainMm: 10,
+      wind: "WSW 11 km/h",
+      windGusts: "22 km/h",
+      humidity: 84,
+      indoorHumidity: "84% (Extremely Humid)",
+      dewPoint: 25,
+      uvIndex: "0.0 (None)",
+      brightnessIndex: "0 (Night)",
+      cloudCover: "60%",
+      visibility: "9 km",
+      cloudCeiling: "480 m",
+      tideLevel: 3.3,
+      floodRisk: "SAFE" as const,
+      pumpsArmed: "2 SPS Active",
+      vulnerability: "Quiet midnight conditions"
+    }
   ];
 
   // 10-Day Synoptic Monsoon Forecast
@@ -160,40 +565,16 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
       summary: "A touch of morning drizzle; humid afternoon",
       hiLo: "32° / 26°",
       rainProb: "40%",
-      rainMm: 8,
+      rainMm: 12,
       tidePeak: 2.8,
       severity: "SAFE",
       badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-400/40",
-      icon: "🌤️"
-    },
-    {
-      day: "MON",
-      date: "9/14",
-      summary: "Mostly cloudy, light rain bands from Arabian Sea",
-      hiLo: "32° / 27°",
-      rainProb: "35%",
-      rainMm: 5,
-      tidePeak: 2.6,
-      severity: "SAFE",
-      badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-400/40",
-      icon: "⛅"
-    },
-    {
-      day: "TUE",
-      date: "9/15",
-      summary: "A bit of morning rain, mostly sunny intervals",
-      hiLo: "32° / 27°",
-      rainProb: "30%",
-      rainMm: 2,
-      tidePeak: 2.5,
-      severity: "SAFE",
-      badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-400/40",
-      icon: "🌤️"
+      icon: "🌦️"
     }
   ];
 
   return (
-    <div className="w-full h-full overflow-y-auto bg-transparent text-slate-100 p-4 sm:p-6 font-sans">
+    <div className="w-full h-full overflow-y-auto bg-transparent text-slate-100 p-4 sm:p-6 font-sans select-none">
       <div className="max-w-4xl mx-auto space-y-4 pb-16">
         
         {/* CARD 1: TONIGHT'S WEATHER & ALERTS (Frosted Acrylic) */}
@@ -335,7 +716,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
           <button
             type="button"
             onClick={onOpenPriorityModal}
-            className="glass-button shrink-0 px-3.5 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border-amber-400/40 rounded-2xl text-xs font-semibold font-mono flex items-center gap-1.5"
+            className="glass-button shrink-0 px-3.5 py-2 text-amber-200 rounded-2xl text-xs font-semibold font-mono flex items-center gap-1.5"
           >
             <span>Priority Queue</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -349,74 +730,50 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
               <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
                 MUMBAI & THANE METRO DOPPLER RADAR
               </span>
-              <span className="px-2 py-0.5 rounded-lg text-[9px] font-mono font-bold bg-red-500/20 text-red-300 border border-red-400/40 animate-pulse backdrop-blur-md">
-                LIVE SWEEP
+              <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950/40 px-2 py-0.5 rounded-md border border-cyan-400/40">
+                100 KM RANGE
               </span>
             </div>
+            <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>RADAR ONLINE</span>
+            </div>
+          </div>
+
+          <div className="relative w-full h-56 sm:h-64 rounded-2xl overflow-hidden bg-slate-950/60 border border-white/10 flex items-center justify-center backdrop-blur-xl">
+            <div className="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] opacity-25" />
+            <div className="w-44 h-44 rounded-full border border-cyan-500/20 animate-ping absolute" />
+            <div className="w-32 h-32 rounded-full border border-cyan-400/30 absolute" />
+            <div className="w-16 h-16 rounded-full border border-cyan-300/40 absolute" />
+            <div className="w-full h-px bg-cyan-500/20 absolute" />
+            <div className="h-full w-px bg-cyan-500/20 absolute" />
+
+            <div className="absolute inset-0 p-4 pointer-events-none">
+              <div className="absolute top-1/4 left-1/3 flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/80 border border-white/20 text-[10px] font-mono text-cyan-200 shadow-lg backdrop-blur-xl">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                <span>Heavy Cloud Cell (Kurla-Sion)</span>
+              </div>
+              <div className="absolute bottom-1/3 right-1/4 flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/80 border border-white/20 text-[10px] font-mono text-emerald-200 shadow-lg backdrop-blur-xl">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span>Reti Bunder SPS Active (28 cumecs)</span>
+              </div>
+            </div>
+
             <button
               type="button"
               onClick={onOpenMap}
-              className="glass-button-primary flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl text-cyan-200 text-xs font-semibold"
+              className="relative z-10 glass-button-primary px-5 py-2.5 rounded-2xl text-white font-bold text-xs flex items-center gap-2 transition-all hover:scale-105 shadow-xl cursor-pointer"
             >
-              <MapPin className="w-3.5 h-3.5 text-cyan-300" />
               <span>Open in Full 3D Twin Map</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <ArrowUpRight className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Interactive Radar Graphic Canvas Container */}
-          <div className="relative w-full h-56 sm:h-64 rounded-2xl overflow-hidden bg-slate-950/60 border border-white/10 flex items-center justify-center backdrop-blur-xl">
-            {/* Base Geographic Background Simulation */}
-            <div 
-              className="absolute inset-0 opacity-40 bg-cover bg-center"
-              style={{
-                backgroundImage: `radial-gradient(circle at 45% 55%, rgba(6,182,212,0.2) 0%, rgba(15,23,42,0.9) 70%), linear-gradient(135deg, #020617 0%, #0f172a 100%)`
-              }}
-            />
-
-            {/* Concentric Radar Grid Rings */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-24 h-24 rounded-full border border-cyan-400/20" />
-              <div className="w-48 h-48 rounded-full border border-cyan-400/15" />
-              <div className="w-72 h-72 rounded-full border border-cyan-400/10" />
-              <div className="absolute w-full h-[1px] bg-cyan-400/15" />
-              <div className="absolute h-full w-[1px] bg-cyan-400/15" />
-            </div>
-
-            {/* Radar Sweeping Beam */}
-            <div 
-              className="absolute w-40 h-40 rounded-full border-r border-cyan-400/40 pointer-events-none"
-              style={{
-                background: "conic-gradient(from 0deg at 50% 50%, rgba(6,182,212,0.35) 0deg, transparent 60deg)",
-                animation: "spin 5s linear infinite"
-              }}
-            />
-
-            {/* Radar Simulated Echo Cells */}
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 flex flex-col items-center">
-              <div className="relative">
-                <span className="w-16 h-16 rounded-full bg-emerald-500/20 filter blur-md absolute -top-4 -left-4" />
-                <span className="w-8 h-8 rounded-full bg-amber-500/30 filter blur-sm absolute -top-1 -left-1" />
-                <div className="relative px-2.5 py-1 rounded-xl bg-slate-900/80 border border-white/20 text-[10px] font-mono text-cyan-200 flex items-center gap-1.5 shadow-lg backdrop-blur-xl">
-                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-                  MUMBAI CELL (35 dBZ)
-                </div>
-              </div>
-            </div>
-
-            {/* Thane Mumbra Echo Cell */}
-            <div className="absolute top-1/4 right-1/4 flex flex-col items-center">
-              <div className="relative">
-                <span className="w-12 h-12 rounded-full bg-cyan-500/20 filter blur-md absolute -top-3 -left-3" />
-                <div className="relative px-2.5 py-1 rounded-xl bg-slate-900/80 border border-white/20 text-[10px] font-mono text-emerald-200 flex items-center gap-1.5 shadow-lg backdrop-blur-xl">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  THANE MUMBRA (22 dBZ)
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Layer Switchers */}
-            <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2">
+          <div className="flex items-center justify-between mt-4">
+            <span className="text-xs text-slate-400 font-mono">
+              Active Layer: <strong className="text-cyan-300">{radarLayer.toUpperCase()}</strong>
+            </span>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setRadarLayer("radar")}
@@ -426,8 +783,8 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
                     : "glass-button text-slate-300"
                 }`}
               >
-                <CloudRain className="w-3.5 h-3.5" />
-                <span>Precipitation Radar</span>
+                <Activity className="w-3.5 h-3.5" />
+                <span>Precipitation</span>
               </button>
 
               <button
@@ -459,66 +816,212 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
           </div>
         </div>
 
-        {/* CARD 5: HOURLY WEATHER & NOWCAST SCRUBBER (Frosted Acrylic) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
-              HOURLY WEATHER & FLOOD RISK
-            </span>
-            <span className="text-[11px] font-mono text-slate-400">
-              Click any hour to simulate conditions
-            </span>
+        {/* CARD 5: HOURLY WEATHER & HYDROLOGY EXPANDABLE LIST (Inspired by AccuWeather Screenshots) */}
+        <div ref={hourlySectionRef} className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
+          {/* Section Header */}
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3 mb-4">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+              <h2 className="text-xs font-bold uppercase tracking-wider text-white glass-text-title">
+                HOURLY FORECAST & HYDROLOGY SIMULATION
+              </h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono text-slate-300 bg-white/[0.06] px-2.5 py-1 rounded-xl border border-white/10">
+                16-Hour Detailed Outlook • Click any hour to expand
+              </span>
+            </div>
           </div>
 
-          <div className="overflow-x-auto no-scrollbar pb-2">
-            <div className="flex items-center gap-3 min-w-max">
-              {HOURLY_DATA.map((item, idx) => {
-                const isSelected = selectedHourIndex === idx;
-                return (
-                  <button
-                    key={item.hour}
-                    type="button"
-                    onClick={() => {
-                      setSelectedHourIndex(idx);
-                      onSimulateScenario(`Hourly Forecast: ${item.hour}`, item.rainMm, item.tide, 30);
-                    }}
-                    className={`flex flex-col items-center p-3.5 rounded-2xl text-center transition-all min-w-[90px] cursor-pointer ${
-                      isSelected
-                        ? "glass-button-primary border-cyan-400/70 scale-105 shadow-[0_0_20px_rgba(6,182,212,0.35)]"
-                        : "glass-button hover:border-white/25"
-                    }`}
+          {/* Expandable Hourly List */}
+          <div className="flex flex-col gap-2.5">
+            {HOURLY_DETAILS.map((item) => {
+              const isExpanded = expandedHourId === item.id;
+
+              return (
+                <div
+                  key={item.id}
+                  className={`rounded-2xl transition-all border ${
+                    isExpanded
+                      ? "glass-panel-subtle border-white/30 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.6),0_8px_24px_rgba(0,0,0,0.3)]"
+                      : "bg-white/[0.03] hover:bg-white/[0.07] border-white/10 hover:border-white/20"
+                  }`}
+                >
+                  {/* Collapsed Header Row */}
+                  <div
+                    onClick={() => setExpandedHourId(isExpanded ? null : item.id)}
+                    className="p-3.5 sm:p-4 flex items-center justify-between cursor-pointer select-none"
                   >
-                    <span className="text-[11px] font-mono text-slate-300 font-bold mb-1">{item.hour}</span>
-                    <span className="text-xl mb-1">{item.icon}</span>
-                    <span className="text-sm font-mono font-bold text-white glass-text-title">{item.temp}°</span>
-                    
-                    <div className="mt-2 flex flex-col items-center gap-1">
-                      <span className="text-[10px] font-mono text-cyan-300 font-semibold">
-                        {item.rainMm} mm
+                    {/* Left: Hour, Weather Icon & Temperature */}
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <span className="w-14 sm:w-16 text-xs sm:text-sm font-bold text-white font-mono tracking-tight">
+                        {item.hour}
                       </span>
-                      <span className={`text-[9px] font-mono px-2 py-0.5 rounded-md font-bold backdrop-blur-md ${
-                        item.risk === "CRITICAL"
-                          ? "bg-red-500/25 text-red-300 border border-red-400/40"
-                          : item.risk === "MODERATE"
-                          ? "bg-amber-500/25 text-amber-300 border border-amber-400/40"
-                          : "bg-emerald-500/25 text-emerald-300 border border-emerald-400/40"
-                      }`}>
-                        {item.risk}
-                      </span>
+                      <span className="text-2xl shrink-0">{item.icon}</span>
+                      <div>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-xl sm:text-2xl font-bold font-mono text-white">
+                            {item.temp}°
+                          </span>
+                        </div>
+                        <span className="text-[11px] sm:text-xs text-slate-300 font-medium">
+                          {item.condition}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="mt-2 text-[9px] font-mono text-cyan-300 hover:text-white underline">
-                      Simulate
+                    {/* Right: RealFeel, Rain Probability & Expand Chevron */}
+                    <div className="flex items-center gap-3 sm:gap-5">
+                      <div className="text-right hidden sm:block">
+                        <div className="text-xs text-slate-200 font-medium font-mono">
+                          RealFeel® <strong className="text-white">{item.realFeel}°</strong>
+                        </div>
+                        <div className="text-[10px] text-slate-400">
+                          Shade: {item.realFeelShade}°
+                        </div>
+                      </div>
+
+                      {/* Rain Probability Pill */}
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/[0.06] border border-white/15 text-cyan-300 text-xs font-mono font-bold">
+                        <Droplets className="w-3 h-3 text-cyan-400" />
+                        <span>{item.rainProb}</span>
+                      </div>
+
+                      {/* Flood Risk Badge */}
+                      <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg border hidden md:inline-block ${
+                        item.floodRisk === "CRITICAL"
+                          ? "bg-rose-500/25 text-rose-300 border-rose-400/40 shadow-[0_0_8px_rgba(244,63,94,0.3)]"
+                          : item.floodRisk === "MODERATE"
+                          ? "bg-amber-500/25 text-amber-300 border-amber-400/40"
+                          : item.floodRisk === "LOW"
+                          ? "bg-cyan-500/20 text-cyan-300 border-cyan-400/30"
+                          : "bg-emerald-500/20 text-emerald-300 border-emerald-400/30"
+                      }`}>
+                        {item.floodRisk}
+                      </span>
+
+                      {/* Chevron Indicator */}
+                      <div className={`p-1 rounded-lg text-slate-400 hover:text-white transition-transform ${isExpanded ? "rotate-180" : ""}`}>
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
                     </div>
-                  </button>
-                );
-              })}
-            </div>
+                  </div>
+
+                  {/* Expanded 2-Column Meteorological & Digital Twin Telemetry Grid */}
+                  {isExpanded && (
+                    <div className="px-4 pb-4 pt-2 border-t border-white/10 animate-fadeIn flex flex-col gap-3.5">
+                      {/* 2-Column Grid */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs font-mono text-slate-200">
+                        {/* Row 1 */}
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">RealFeel Shade™</span>
+                          <span className="font-bold text-white">{item.realFeelShade}°C</span>
+                        </div>
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Wind & Direction</span>
+                          <span className="font-bold text-cyan-200">{item.wind}</span>
+                        </div>
+
+                        {/* Row 2 */}
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Heat Index</span>
+                          <span className="font-bold text-amber-300">{item.realFeel}°C</span>
+                        </div>
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Drainage Runoff Load</span>
+                          <span className="font-bold text-emerald-400">Nominal (34%)</span>
+                        </div>
+
+                        {/* Row 3 */}
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Max UV Index</span>
+                          <span className="font-bold text-white">{item.uvIndex}</span>
+                        </div>
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Brightness Index</span>
+                          <span className="font-bold text-amber-200">{item.brightnessIndex}</span>
+                        </div>
+
+                        {/* Row 4 */}
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Wind Gusts</span>
+                          <span className="font-bold text-indigo-300">{item.windGusts}</span>
+                        </div>
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Cloud Cover</span>
+                          <span className="font-bold text-white">{item.cloudCover}</span>
+                        </div>
+
+                        {/* Row 5 */}
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Relative Humidity</span>
+                          <span className="font-bold text-teal-300">{item.humidity}%</span>
+                        </div>
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Visibility Range</span>
+                          <span className="font-bold text-white">{item.visibility}</span>
+                        </div>
+
+                        {/* Row 6 */}
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Indoor Humidity</span>
+                          <span className="font-bold text-slate-200">{item.indoorHumidity}</span>
+                        </div>
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Cloud Ceiling</span>
+                          <span className="font-bold text-white">{item.cloudCeiling}</span>
+                        </div>
+
+                        {/* Row 7: Digital Twin Metrics */}
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Dew Point</span>
+                          <span className="font-bold text-white">{item.dewPoint}°C</span>
+                        </div>
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Arabian Sea Tide Peak</span>
+                          <span className="font-bold text-blue-300">{item.tideLevel} m</span>
+                        </div>
+
+                        {/* Row 8 */}
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Predicted Rain Rate</span>
+                          <span className="font-bold text-cyan-300">{item.rainMm} mm/h</span>
+                        </div>
+                        <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                          <span className="text-slate-400">Pumping SPS Status</span>
+                          <span className="font-bold text-emerald-300">{item.pumpsArmed}</span>
+                        </div>
+                      </div>
+
+                      {/* Action Bar: Disaster Assessment & Twin Simulator Trigger */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                        <div className="flex items-center gap-2 text-xs">
+                          <span className="text-slate-400">Twin Risk Assessment:</span>
+                          <span className="text-slate-200 font-semibold">{item.vulnerability}</span>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSimulateScenario(`Hourly Simulation: ${item.hour}`, item.rainMm, item.tideLevel, 30);
+                          }}
+                          className="glass-button-primary px-4 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-2 shadow-[0_4px_16px_rgba(6,182,212,0.3)] transition-all hover:scale-105 cursor-pointer"
+                        >
+                          <span>Simulate {item.hour} in 3D Twin</span>
+                          <ArrowUpRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* CARD 6: 10-DAY SYNOPTIC WEATHER & ARABIAN SEA TIDAL FORECAST (Frosted Acrylic) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6">
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
               10-DAY WEATHER & SPRING TIDE OUTLOOK
@@ -565,7 +1068,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
                     onClick={() => {
                       onSimulateScenario(`10-Day Outlook: ${day.day}`, day.rainMm, day.tidePeak, 35);
                     }}
-                    className="glass-button px-3 py-1.5 rounded-xl text-[11px] font-mono text-slate-200 hover:text-white"
+                    className="glass-button px-3 py-1.5 rounded-xl text-[11px] font-mono text-slate-200 hover:text-white cursor-pointer"
                   >
                     Test Day
                   </button>
@@ -576,7 +1079,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         </div>
 
         {/* CARD 7: SUN, MOON & ASTRONOMICAL SPRING TIDE (Frosted Acrylic) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6">
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
           <div className="border-b border-white/10 pb-3 mb-3">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
               SUN, MOON & COASTAL ASTRONOMICAL TIDES
@@ -608,13 +1111,13 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
                   <Moon className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-white font-bold text-sm">Waxing Crescent</span>
-                  <p className="text-[10px] text-slate-400">Spring Tide Phase Multiplier: 1.18x</p>
+                  <span className="text-white font-bold text-sm">Waxing Crescent (18%)</span>
+                  <p className="text-[10px] text-slate-400">Spring Coastal Tide Phase</p>
                 </div>
               </div>
               <div className="text-right space-y-0.5">
-                <div>Rise: <strong className="text-slate-100">1:11 AM</strong></div>
-                <div>Set: <strong className="text-slate-100">6:07 PM</strong></div>
+                <div>Next High Tide: <strong className="text-cyan-300">14:15 IST (+4.1m)</strong></div>
+                <div>Next Low Tide: <strong className="text-slate-300">20:30 IST (+1.2m)</strong></div>
               </div>
             </div>
           </div>

@@ -215,6 +215,7 @@ export default function Home() {
             currentRainfallMmHr={simParams.rainfall_mm_hr}
             currentTideLevelM={simParams.tide_level_m}
             liveTelemetry={liveTelemetry}
+            activeTab={activeSubNavTab}
             onSimulateScenario={(scenarioName, rain, tide, silt) => {
               handleApplyPreset(scenarioName, rain, tide, silt);
             }}
