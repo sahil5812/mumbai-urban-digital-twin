@@ -16,7 +16,10 @@ import {
   ArrowUpRight,
   Radio,
   Sliders,
-  Zap
+  Zap,
+  MapPin,
+  Filter,
+  CheckCircle2
 } from "lucide-react";
 import { LiveTelemetry } from "../lib/api";
 
@@ -38,6 +41,9 @@ interface MinuteEntry {
   rainMmHr: number;
   hasRain: boolean;
   isStartOfRain?: boolean;
+  locationName: string;
+  ward: string;
+  corridor: "WESTERN" | "CENTRAL" | "THANE_MUMBRA" | "HARBOUR" | "CITYWIDE";
 }
 
 interface IntervalGroup {
@@ -48,6 +54,25 @@ interface IntervalGroup {
   hasRain: boolean;
   minutes: MinuteEntry[];
 }
+
+const CHRONIC_HOTSPOTS = [
+  { name: "Milan Subway (Santacruz)", ward: "H/W", corridor: "WESTERN" as const },
+  { name: "Andheri Subway (SV Road)", ward: "K/W", corridor: "WESTERN" as const },
+  { name: "Khar Subway & Linking Road", ward: "H/W", corridor: "WESTERN" as const },
+  { name: "Hindmata Cinema Junction", ward: "F/S", corridor: "CENTRAL" as const },
+  { name: "Gandhi Market (King's Circle)", ward: "F/N", corridor: "CENTRAL" as const },
+  { name: "Sion Circle & SIES Lowline", ward: "F/N", corridor: "CENTRAL" as const },
+  { name: "Kurla Kamani & LBS Marg", ward: "L", corridor: "CENTRAL" as const },
+  { name: "Malad Subway & SV Road", ward: "P/N", corridor: "WESTERN" as const },
+  { name: "Dahisar Subway & WEH", ward: "R/N", corridor: "WESTERN" as const },
+  { name: "Chunabhatti Railway / Sion-Trombay", ward: "L", corridor: "CENTRAL" as const },
+  { name: "Mumbra Station Underpass & Bazar", ward: "TMC-1", corridor: "THANE_MUMBRA" as const },
+  { name: "Reti Bunder Lowline Basin", ward: "TMC-1", corridor: "THANE_MUMBRA" as const },
+  { name: "Kausa Junction & Almas Colony", ward: "TMC-1", corridor: "THANE_MUMBRA" as const },
+  { name: "Mankhurd Station Lowline Basin", ward: "M/E", corridor: "HARBOUR" as const },
+  { name: "Dadar TT Circle & Tilak Bridge", ward: "F/N", corridor: "CENTRAL" as const },
+  { name: "Worli Naka & Dr. AB Road", ward: "G/S", corridor: "CENTRAL" as const },
+];
 
 export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
   currentRainfallMmHr = 0,
@@ -62,6 +87,9 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
     if (currentRainfallMmHr > 0) return "NORMAL";
     return "INCOMING_18M"; // Default matches the user's reference screenshot where rain starts at 10:55 AM!
   });
+
+  // Selected Corridor Filter: 'ALL' | 'WESTERN' | 'CENTRAL' | 'THANE_MUMBRA'
+  const [selectedCorridor, setSelectedCorridor] = useState<"ALL" | "WESTERN" | "CENTRAL" | "THANE_MUMBRA">("ALL");
 
   // Keep in sync if parent passes live rainfall
   useEffect(() => {
@@ -115,7 +143,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
   // Matching the user's uploaded AccuWeather screenshots:
   // - 8:10 AM - 10:54 AM: No Precipitation (Sun & Partly Cloudy icons)
   // - 10:55 AM: Rain starts ("Light Rain") with vibrant green accent indicator!
-  // - 10:55 AM - 12:09 PM: Continuous Light Rain
+  // - 10:55 AM - 12:09 PM: Continuous Light Rain across specific Mumbai corridors
   const ALL_MINUTES: MinuteEntry[] = useMemo(() => {
     const list: MinuteEntry[] = [];
     let curHour = 8;
@@ -132,12 +160,18 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
       let icon = "☀️";
       let rainMmHr = 0;
       let isStartOfRain = false;
+      let locationName = "Mumbai Metropolitan (All Areas Clear)";
+      let ward = "Citywide";
+      let corridor: MinuteEntry["corridor"] = "CITYWIDE";
 
       if (activeScenario === "DRY") {
         hasRain = false;
         condition = "No Precipitation";
         icon = i % 5 === 0 ? "🌤️" : "☀️";
         rainMmHr = 0;
+        locationName = "Mumbai Metropolitan (Dry Baseline)";
+        ward = "All Wards";
+        corridor = "CITYWIDE";
       } else if (activeScenario === "INCOMING_18M") {
         // Matches user's screenshots: Rain starts at 10:55 AM (which is minute index 165)
         const rainStartIndex = 165; // 10:55 AM
@@ -148,12 +182,54 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
           else if (i % 4 === 0) icon = "🌤️";
           else icon = "☀️";
           rainMmHr = 0;
+          locationName = "Mumbai Metropolitan (Pre-Rain Standby)";
+          ward = "Citywide";
+          corridor = "CITYWIDE";
         } else {
           hasRain = true;
-          condition = i > 200 ? "Moderate Rain" : "Light Rain";
+          condition = i > 205 ? "Moderate Rain" : "Light Rain";
           icon = "🌧️";
-          rainMmHr = i > 200 ? 8.5 : 2.4;
+          rainMmHr = i > 205 ? 8.5 : 2.4;
           if (i === rainStartIndex) isStartOfRain = true;
+
+          // Realistic convective storm cell trajectory along Mumbai:
+          const rainOffset = i - rainStartIndex;
+          if (rainOffset < 10) {
+            // Minutes 0 to 9 of rain (10:55 to 11:04 AM): Western coastal subways
+            const spot = CHRONIC_HOTSPOTS[rainOffset % 3]; // Milan, Andheri, Khar
+            locationName = spot.name;
+            ward = spot.ward;
+            corridor = spot.corridor;
+          } else if (rainOffset < 25) {
+            // Minutes 10 to 24 of rain (11:05 to 11:19 AM): Central saucer basins
+            const centralSpots = [
+              CHRONIC_HOTSPOTS[3], // Hindmata
+              CHRONIC_HOTSPOTS[4], // Gandhi Market
+              CHRONIC_HOTSPOTS[5], // Sion Circle
+              CHRONIC_HOTSPOTS[6], // Kurla
+            ];
+            const spot = centralSpots[rainOffset % centralSpots.length];
+            locationName = spot.name;
+            ward = spot.ward;
+            corridor = spot.corridor;
+          } else if (rainOffset < 45) {
+            // Minutes 25 to 44 of rain (11:20 to 11:39 AM): Thane & Mumbra corridor
+            const tmcSpots = [
+              CHRONIC_HOTSPOTS[10], // Mumbra Underpass
+              CHRONIC_HOTSPOTS[11], // Reti Bunder
+              CHRONIC_HOTSPOTS[12], // Kausa
+            ];
+            const spot = tmcSpots[rainOffset % tmcSpots.length];
+            locationName = spot.name;
+            ward = spot.ward;
+            corridor = spot.corridor;
+          } else {
+            // Widespread over all chronic corridors
+            const spot = CHRONIC_HOTSPOTS[rainOffset % CHRONIC_HOTSPOTS.length];
+            locationName = spot.name;
+            ward = spot.ward;
+            corridor = spot.corridor;
+          }
         }
       } else if (activeScenario === "NORMAL") {
         // Active Monsoon from the start
@@ -162,6 +238,10 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
         icon = "🌧️";
         rainMmHr = i % 20 < 10 ? 4.5 : 12.0;
         if (i === 0) isStartOfRain = true;
+        const spot = CHRONIC_HOTSPOTS[i % CHRONIC_HOTSPOTS.length];
+        locationName = spot.name;
+        ward = spot.ward;
+        corridor = spot.corridor;
       } else if (activeScenario === "HEAVY") {
         // Heavy Downpour
         hasRain = true;
@@ -169,6 +249,10 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
         icon = "⛈️";
         rainMmHr = 42.0;
         if (i === 0) isStartOfRain = true;
+        const spot = CHRONIC_HOTSPOTS[i % CHRONIC_HOTSPOTS.length];
+        locationName = spot.name;
+        ward = spot.ward;
+        corridor = spot.corridor;
       }
 
       list.push({
@@ -181,6 +265,9 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
         rainMmHr,
         hasRain,
         isStartOfRain,
+        locationName,
+        ward,
+        corridor,
       });
 
       curMin++;
@@ -193,8 +280,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
     return list;
   }, [activeScenario]);
 
-  // Group minutes into 30-minute intervals (matching user's screenshots):
-  // 8:10-8:39, 8:40-9:09, 9:10-9:39, 9:40-10:09, 10:10-10:39, 10:40-11:09, 11:10-11:39, 11:40-12:09
+  // Group minutes into 30-minute intervals (matching user's screenshots)
   const INTERVAL_GROUPS: IntervalGroup[] = useMemo(() => {
     const groups: IntervalGroup[] = [];
     const intervalSize = 30;
@@ -226,12 +312,12 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
       return "No precipitation for at least 120 min";
     }
     if (activeScenario === "INCOMING_18M") {
-      return "Light rain starting at approx 10:55 AM (in 18 min)";
+      return "Light rain starting at approx 10:55 AM (Milan & Andheri Subways in 18 min)";
     }
     if (activeScenario === "NORMAL") {
-      return "Precipitation continuing for at least 120 min (Active Normal Monsoon)";
+      return "Precipitation continuing for at least 120 min (Active Normal Monsoon across Subways)";
     }
-    return "Heavy torrential downpour continuing across Mumbai";
+    return "Heavy torrential downpour continuing across Western & Central corridors";
   }, [activeScenario]);
 
   // 120-Minute chart slice for the top graph
@@ -380,7 +466,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                     key={m.minuteId}
                     onClick={() => setScrubberMinute(idx)}
                     className="flex-1 flex flex-col items-center justify-end h-full group cursor-pointer"
-                    title={`${m.time}: ${m.condition} (${m.rainMmHr} mm/h)`}
+                    title={`${m.time}: ${m.condition} at ${m.locationName} (${m.rainMmHr} mm/h)`}
                   >
                     <div
                       style={{ height: `${barHeight}%` }}
@@ -556,12 +642,14 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
           </div>
         </div>
 
-        {/* CARD 3: 30-MINUTE INTERVAL ACCORDIONS (Exact Match to Screenshots 1, 2, 3, 4) */}
+        {/* CARD 3: 30-MINUTE INTERVAL ACCORDIONS WITH HYPERLOCAL LOCATIONS */}
         <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] space-y-3">
+          
+          {/* Section Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3 mb-2">
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
-                MINUTE-BY-MINUTE PRECIPITATION FEED (30-MIN INTERVALS)
+                MINUTE-BY-MINUTE PRECIPITATION FEED (WITH PRECISE LOCATIONS)
               </span>
             </div>
 
@@ -594,13 +682,71 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
             </div>
           </div>
 
+          {/* Corridor Filter Quick Bar */}
+          <div className="flex flex-wrap items-center gap-2 pt-1 pb-2">
+            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1">
+              <Filter className="w-3 h-3 text-cyan-400" />
+              Corridor:
+            </span>
+            <button
+              type="button"
+              onClick={() => setSelectedCorridor("ALL")}
+              className={`px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all ${
+                selectedCorridor === "ALL"
+                  ? "bg-cyan-600/40 text-cyan-200 border border-cyan-400/50 shadow-sm"
+                  : "glass-button text-slate-400 hover:text-white"
+              }`}
+            >
+              All Mumbai Locations
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedCorridor("WESTERN")}
+              className={`px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all ${
+                selectedCorridor === "WESTERN"
+                  ? "bg-cyan-600/40 text-cyan-200 border border-cyan-400/50 shadow-sm"
+                  : "glass-button text-slate-400 hover:text-white"
+              }`}
+            >
+              📍 Western (Milan / Andheri / Khar)
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedCorridor("CENTRAL")}
+              className={`px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all ${
+                selectedCorridor === "CENTRAL"
+                  ? "bg-cyan-600/40 text-cyan-200 border border-cyan-400/50 shadow-sm"
+                  : "glass-button text-slate-400 hover:text-white"
+              }`}
+            >
+              📍 Central (Hindmata / Kurla / Sion)
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedCorridor("THANE_MUMBRA")}
+              className={`px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all ${
+                selectedCorridor === "THANE_MUMBRA"
+                  ? "bg-cyan-600/40 text-cyan-200 border border-cyan-400/50 shadow-sm"
+                  : "glass-button text-slate-400 hover:text-white"
+              }`}
+            >
+              📍 Thane & Mumbra (Station / Reti Bunder)
+            </button>
+          </div>
+
           {/* List of 30-Minute Interval Accordions */}
           <div className="space-y-2">
             {INTERVAL_GROUPS.map((group) => {
               const isExpanded = expandedIntervals.has(group.title);
-              const displayedMinutes = filterRainOnly ? group.minutes.filter((m) => m.hasRain) : group.minutes;
+              
+              // Filter minutes by Rain and selected Corridor
+              const displayedMinutes = group.minutes.filter((m) => {
+                if (filterRainOnly && !m.hasRain) return false;
+                if (selectedCorridor !== "ALL" && m.hasRain && m.corridor !== selectedCorridor) return false;
+                return true;
+              });
 
-              if (filterRainOnly && !displayedMinutes.length) return null;
+              if (!displayedMinutes.length && (filterRainOnly || selectedCorridor !== "ALL")) return null;
 
               return (
                 <div
@@ -618,8 +764,9 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                         {group.title}
                       </span>
                       {group.hasRain && (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/25 text-cyan-300 border border-cyan-400/40 animate-pulse">
-                          🌧️ Precipitation Active
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/25 text-cyan-300 border border-cyan-400/40 animate-pulse flex items-center gap-1">
+                          <CloudRain className="w-3 h-3 text-cyan-300" />
+                          Precipitation Active
                         </span>
                       )}
                     </div>
@@ -630,43 +777,72 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                     </div>
                   </button>
 
-                  {/* Accordion Content: Every Single Minute Row */}
+                  {/* Accordion Content: Every Single Minute Row with Location */}
                   {isExpanded && (
                     <div className="border-t border-white/10 divide-y divide-white/5 bg-black/15">
                       {displayedMinutes.map((m) => {
                         return (
                           <div
                             key={m.minuteId}
-                            className={`px-4 py-2 flex items-center justify-between text-xs transition-colors hover:bg-white/[0.04] ${
+                            className={`px-4 py-2 flex items-center justify-between gap-2 text-xs transition-colors hover:bg-white/[0.04] ${
                               m.hasRain
                                 ? "border-l-4 border-emerald-400 bg-emerald-500/[0.06] text-slate-100"
                                 : "text-slate-300"
                             }`}
                           >
-                            {/* Left: Time */}
-                            <div className="w-24 font-mono font-bold text-slate-200">
+                            {/* Col 1: Time */}
+                            <div className="w-20 sm:w-24 font-mono font-bold text-slate-200 text-xs shrink-0">
                               {m.time}
                             </div>
 
-                            {/* Center: Weather Icon & Condition */}
-                            <div className="flex-1 flex items-center gap-2">
+                            {/* Col 2: Condition & Icon */}
+                            <div className="flex items-center gap-2 min-w-[130px] sm:min-w-[170px] shrink-0">
                               <span className="text-base shrink-0">{m.icon}</span>
                               <span
-                                className={`font-medium ${
+                                className={`font-semibold text-xs ${
                                   m.hasRain ? "text-emerald-300 font-bold" : "text-slate-300"
                                 }`}
                               >
                                 {m.condition}
                               </span>
                               {m.isStartOfRain && (
-                                <span className="ml-2 px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-500/30 text-emerald-200 border border-emerald-400/60 animate-bounce">
-                                  ⚡ PRECIPITATION INITIATED
+                                <span className="hidden sm:inline-block ml-1 px-1.5 py-0.5 rounded-md text-[9px] font-extrabold bg-emerald-500/30 text-emerald-200 border border-emerald-400/60 animate-bounce whitespace-nowrap">
+                                  ⚡ INITIATED
                                 </span>
                               )}
                             </div>
 
-                            {/* Right: Rain Rate & Subway Status */}
-                            <div className="text-right font-mono text-[11px]">
+                            {/* Col 3: Hyperlocal Location Name (Requested Feature!) */}
+                            <div className="flex-1 flex items-center justify-start sm:justify-center px-1 overflow-hidden">
+                              <div
+                                onClick={onOpenMap}
+                                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-mono transition-all cursor-pointer group ${
+                                  m.hasRain
+                                    ? "bg-cyan-950/60 border border-cyan-400/40 text-cyan-200 shadow-[0_0_8px_rgba(6,182,212,0.2)] font-semibold hover:border-cyan-300 hover:text-white"
+                                    : "bg-white/[0.03] border border-white/10 text-slate-400"
+                                }`}
+                                title={`Simulate & View ${m.locationName} on 3D Digital Twin Map`}
+                              >
+                                <MapPin
+                                  className={`w-3 h-3 shrink-0 ${
+                                    m.hasRain
+                                      ? "text-cyan-400 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)] group-hover:scale-110 transition-transform"
+                                      : "text-slate-500"
+                                  }`}
+                                />
+                                <span className="truncate max-w-[140px] sm:max-w-[240px]">
+                                  {m.locationName}
+                                </span>
+                                {m.hasRain && (
+                                  <span className="hidden md:inline-block text-[9px] font-bold px-1.5 py-0.2 rounded bg-cyan-500/30 text-cyan-300 border border-cyan-400/30">
+                                    {m.ward}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Col 4: Rain Rate */}
+                            <div className="w-16 sm:w-20 text-right font-mono text-[11px] shrink-0">
                               {m.hasRain ? (
                                 <span className="text-cyan-300 font-bold">
                                   {m.rainMmHr.toFixed(1)} mm/h
