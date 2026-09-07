@@ -55,10 +55,13 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
   const [expandedHourId, setExpandedHourId] = useState<string | null>("8 AM");
 
   const hourlySectionRef = useRef<HTMLDivElement | null>(null);
+  const tenDaySectionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (activeTab === "HOURLY" && hourlySectionRef.current) {
       hourlySectionRef.current.scrollIntoView({ behavior: "smooth" });
+    } else if (activeTab === "10-DAY" && tenDaySectionRef.current) {
+      tenDaySectionRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [activeTab]);
 
@@ -69,7 +72,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
   const tideM = liveTelemetry?.tide_level_m || currentTideLevelM || 3.59;
   const rainMmHr = liveTelemetry?.rainfall_mm_hr || currentRainfallMmHr || 0;
 
-  // AccuWeather-inspired 24-Hour Detailed Forecast Data
+  // AccuWeather-inspired 24-Hour Detailed Forecast Data (8 AM to 11 PM)
   const HOURLY_DETAILS = [
     {
       id: "8 AM",
@@ -473,103 +476,322 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
     }
   ];
 
-  // 10-Day Synoptic Monsoon Forecast
+  // AccuWeather-inspired 10-Day / 15-Day Synoptic Monsoon Forecast (SEP 7 – SEP 21)
   const TEN_DAY_FORECAST = [
-    {
-      day: "TONIGHT",
-      date: "9/6",
-      summary: "Thunderstorm in spots late over Kurla & Mumbra",
-      hiLo: "27° Lo",
-      rainProb: "65%",
-      rainMm: 35,
-      tidePeak: 3.8,
-      severity: "MODERATE",
-      badgeColor: "text-amber-300 bg-amber-500/20 border-amber-400/40",
-      icon: "⛈️"
-    },
     {
       day: "MON",
       date: "9/7",
-      summary: "Stray afternoon storm; night shower in spots",
-      hiLo: "32° / 27°",
-      rainProb: "66%",
+      icon: "🌤️",
+      hiTemp: 32,
+      loTemp: 27,
+      rainProb: "55%",
       rainMm: 45,
+      summary: "Sun breaking through clouds at times with a stray thunderstorm this afternoon",
+      realFeel: 40,
+      realFeelShade: 35,
+      maxUv: "10.0 (Very High)",
+      wind: "W 13 km/h",
+      precipHours: "1.5",
+      rainHours: "1.5",
       tidePeak: 4.1,
+      spsStatus: "6 SPS Armed",
+      vulnerability: "Spring tide surge coincidence at Marine Drive & Dadar",
       severity: "AMBER ALERT",
-      badgeColor: "text-amber-300 bg-amber-500/25 border-amber-400/50",
-      icon: "🌤️"
+      badgeColor: "text-amber-300 bg-amber-500/20 border-amber-400/40"
     },
     {
       day: "TUE",
       date: "9/8",
-      summary: "Heavy shower and severe convective thunderstorm cell",
-      hiLo: "32° / 27°",
-      rainProb: "85%",
+      icon: "⛈️",
+      hiTemp: 32,
+      loTemp: 27,
+      rainProb: "68%",
       rainMm: 85,
-      tidePeak: 4.4,
+      summary: "Times of clouds and sun with a couple of showers and a thunderstorm in the afternoon",
+      realFeel: 39,
+      realFeelShade: 34,
+      maxUv: "10.0 (Very High)",
+      wind: "WNW 15 km/h",
+      precipHours: "1.5",
+      rainHours: "1.5",
+      tidePeak: 4.3,
+      spsStatus: "All 9 SPS Armed",
+      vulnerability: "Milan & Hindmata Subways under heavy inundation alert",
       severity: "RED ALERT",
-      badgeColor: "text-red-300 bg-red-500/25 border-red-400/50 shadow-[0_0_12px_rgba(239,68,68,0.35)]",
-      icon: "⛈️"
+      badgeColor: "text-red-300 bg-red-500/25 border-red-400/50 shadow-[0_0_12px_rgba(239,68,68,0.35)]"
     },
     {
       day: "WED",
       date: "9/9",
-      summary: "Heavy morning downpour; high coastal spring tide",
-      hiLo: "31° / 26°",
-      rainProb: "88%",
-      rainMm: 95,
-      tidePeak: 4.3,
-      severity: "RED ALERT",
-      badgeColor: "text-red-300 bg-red-500/25 border-red-400/50 shadow-[0_0_12px_rgba(239,68,68,0.35)]",
-      icon: "🌧️"
+      icon: "🌤️",
+      hiTemp: 32,
+      loTemp: 27,
+      rainProb: "55%",
+      rainMm: 40,
+      summary: "A stray thunderstorm in the morning; otherwise, times of clouds and sun",
+      realFeel: 40,
+      realFeelShade: 36,
+      maxUv: "10.0 (Very High)",
+      wind: "WNW 15 km/h",
+      precipHours: "1.5",
+      rainHours: "1.5",
+      tidePeak: 4.2,
+      spsStatus: "7 SPS Active",
+      vulnerability: "Kurla LBS Marg morning drainage slowdown",
+      severity: "AMBER ALERT",
+      badgeColor: "text-amber-300 bg-amber-500/20 border-amber-400/40"
     },
     {
       day: "THU",
       date: "9/10",
-      summary: "A.M. showers, then broken clouds in the evening",
-      hiLo: "32° / 27°",
-      rainProb: "70%",
-      rainMm: 40,
-      tidePeak: 3.9,
-      severity: "MODERATE",
-      badgeColor: "text-amber-300 bg-amber-500/20 border-amber-400/40",
-      icon: "🌦️"
+      icon: "🌦️",
+      hiTemp: 32,
+      loTemp: 27,
+      rainProb: "74%",
+      rainMm: 65,
+      summary: "Variable cloudiness; morning showers followed by a shower in spots in the afternoon",
+      realFeel: 40,
+      realFeelShade: 35,
+      maxUv: "9.0 (Very High)",
+      wind: "WNW 13 km/h",
+      precipHours: "2",
+      rainHours: "2",
+      tidePeak: 4.0,
+      spsStatus: "6 SPS Active",
+      vulnerability: "Andheri subway intermittent water logging",
+      severity: "AMBER ALERT",
+      badgeColor: "text-amber-300 bg-amber-500/20 border-amber-400/40"
     },
     {
       day: "FRI",
       date: "9/11",
-      summary: "Rather cloudy, passing light coastal rain spells",
-      hiLo: "32° / 26°",
-      rainProb: "55%",
-      rainMm: 20,
-      tidePeak: 3.4,
-      severity: "SAFE",
-      badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-400/40",
-      icon: "🌧️"
+      icon: "🌧️",
+      hiTemp: 32,
+      loTemp: 27,
+      rainProb: "56%",
+      rainMm: 30,
+      summary: "Mostly cloudy with a little rain",
+      realFeel: 39,
+      realFeelShade: 36,
+      maxUv: "6.0 (High)",
+      wind: "WNW 11 km/h",
+      precipHours: "1.5",
+      rainHours: "1.5",
+      tidePeak: 3.6,
+      spsStatus: "4 SPS Active",
+      vulnerability: "Normal stormwater discharge at Love Grove & Cleveland",
+      severity: "MODERATE",
+      badgeColor: "text-cyan-300 bg-cyan-500/20 border-cyan-400/30"
     },
     {
       day: "SAT",
       date: "9/12",
-      summary: "Mostly cloudy, little rain, pleasant sea breeze",
-      hiLo: "31° / 26°",
-      rainProb: "45%",
-      rainMm: 10,
-      tidePeak: 3.0,
-      severity: "SAFE",
-      badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-400/40",
-      icon: "⛅"
+      icon: "🌧️",
+      hiTemp: 32,
+      loTemp: 27,
+      rainProb: "59%",
+      rainMm: 35,
+      summary: "Mostly cloudy with a little rain",
+      realFeel: 39,
+      realFeelShade: 36,
+      maxUv: "7.0 (High)",
+      wind: "WNW 13 km/h",
+      precipHours: "2",
+      rainHours: "2",
+      tidePeak: 3.3,
+      spsStatus: "3 SPS Active",
+      vulnerability: "Mithi river level safe at 2.4m below flood mark",
+      severity: "MODERATE",
+      badgeColor: "text-cyan-300 bg-cyan-500/20 border-cyan-400/30"
     },
     {
       day: "SUN",
       date: "9/13",
-      summary: "A touch of morning drizzle; humid afternoon",
-      hiLo: "32° / 26°",
-      rainProb: "40%",
-      rainMm: 12,
-      tidePeak: 2.8,
+      icon: "🌧️",
+      hiTemp: 32,
+      loTemp: 26,
+      rainProb: "59%",
+      rainMm: 32,
+      summary: "Mostly cloudy; a little rain in the morning followed by a shower in spots in the afternoon",
+      realFeel: 39,
+      realFeelShade: 36,
+      maxUv: "9.0 (Very High)",
+      wind: "SW 9 km/h",
+      precipHours: "1.5",
+      rainHours: "1.5",
+      tidePeak: 3.1,
+      spsStatus: "2 SPS Standby",
+      vulnerability: "Sion Priyadarshini parkway clear",
       severity: "SAFE",
-      badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-400/40",
-      icon: "🌦️"
+      badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-400/30"
+    },
+    {
+      day: "MON",
+      date: "9/14",
+      icon: "🌧️",
+      hiTemp: 32,
+      loTemp: 27,
+      rainProb: "55%",
+      rainMm: 25,
+      summary: "Mostly cloudy with a little rain",
+      realFeel: 38,
+      realFeelShade: 35,
+      maxUv: "8.0 (Very High)",
+      wind: "SW 9 km/h",
+      precipHours: "2",
+      rainHours: "2",
+      tidePeak: 3.0,
+      spsStatus: "2 SPS Standby",
+      vulnerability: "Normal low-tide gravity discharge operational",
+      severity: "SAFE",
+      badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-400/30"
+    },
+    {
+      day: "TUE",
+      date: "9/15",
+      icon: "🌧️",
+      hiTemp: 32,
+      loTemp: 27,
+      rainProb: "57%",
+      rainMm: 30,
+      summary: "Mostly cloudy; a little morning rain followed by a shower in spots in the afternoon",
+      realFeel: 39,
+      realFeelShade: 36,
+      maxUv: "7.0 (High)",
+      wind: "WSW 6 km/h",
+      precipHours: "2.5",
+      rainHours: "2.5",
+      tidePeak: 3.2,
+      spsStatus: "3 SPS Standby",
+      vulnerability: "Eastern Express Highway clear",
+      severity: "SAFE",
+      badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-400/30"
+    },
+    {
+      day: "WED",
+      date: "9/16",
+      icon: "⛅",
+      hiTemp: 32,
+      loTemp: 27,
+      rainProb: "58%",
+      rainMm: 28,
+      summary: "Cloudy intervals with afternoon passing showers",
+      realFeel: 40,
+      realFeelShade: 36,
+      maxUv: "6.5 (High)",
+      wind: "WSW 8 km/h",
+      precipHours: "2.0",
+      rainHours: "2.0",
+      tidePeak: 3.4,
+      spsStatus: "3 SPS Active",
+      vulnerability: "Thane Reti Bunder outfall clear",
+      severity: "SAFE",
+      badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-400/30"
+    },
+    {
+      day: "THU",
+      date: "9/17",
+      icon: "🌦️",
+      hiTemp: 32,
+      loTemp: 26,
+      rainProb: "62%",
+      rainMm: 45,
+      summary: "Humid with morning downpour and broken clouds in afternoon",
+      realFeel: 39,
+      realFeelShade: 35,
+      maxUv: "5.0 (Moderate)",
+      wind: "SW 10 km/h",
+      precipHours: "2.5",
+      rainHours: "2.5",
+      tidePeak: 3.7,
+      spsStatus: "4 SPS Active",
+      vulnerability: "Dadar Hindmata holding tank armed",
+      severity: "MODERATE",
+      badgeColor: "text-cyan-300 bg-cyan-500/20 border-cyan-400/30"
+    },
+    {
+      day: "FRI",
+      date: "9/18",
+      icon: "🌧️",
+      hiTemp: 32,
+      loTemp: 27,
+      rainProb: "60%",
+      rainMm: 50,
+      summary: "Periods of rain",
+      realFeel: 41,
+      realFeelShade: 37,
+      maxUv: "4.0 (Moderate)",
+      wind: "WSW 6 km/h",
+      precipHours: "3.5",
+      rainHours: "3.5",
+      tidePeak: 3.9,
+      spsStatus: "6 SPS Active",
+      vulnerability: "Western suburbs localized water logging advisory",
+      severity: "AMBER ALERT",
+      badgeColor: "text-amber-300 bg-amber-500/20 border-amber-400/40"
+    },
+    {
+      day: "SAT",
+      date: "9/19",
+      icon: "⛈️",
+      hiTemp: 31,
+      loTemp: 26,
+      rainProb: "64%",
+      rainMm: 70,
+      summary: "Cloudy with a couple of showers and a thunderstorm",
+      realFeel: 35,
+      realFeelShade: 35,
+      maxUv: "2.0 (Low)",
+      wind: "SW 15 km/h",
+      precipHours: "2",
+      rainHours: "2",
+      tidePeak: 4.1,
+      spsStatus: "8 SPS Armed",
+      vulnerability: "Milan Subway high-water automated barricades alert",
+      severity: "RED ALERT",
+      badgeColor: "text-red-300 bg-red-500/25 border-red-400/50 shadow-[0_0_12px_rgba(239,68,68,0.35)]"
+    },
+    {
+      day: "SUN",
+      date: "9/20",
+      icon: "🌤️",
+      hiTemp: 32,
+      loTemp: 25,
+      rainProb: "58%",
+      rainMm: 40,
+      summary: "Sun and clouds with a thunderstorm in the afternoon",
+      realFeel: 37,
+      realFeelShade: 35,
+      maxUv: "6.0 (High)",
+      wind: "SW 15 km/h",
+      precipHours: "2",
+      rainHours: "2",
+      tidePeak: 3.8,
+      spsStatus: "5 SPS Active",
+      vulnerability: "Thane Mumbra creek tidal elevation surveillance",
+      severity: "AMBER ALERT",
+      badgeColor: "text-amber-300 bg-amber-500/20 border-amber-400/40"
+    },
+    {
+      day: "MON",
+      date: "9/21",
+      icon: "🌤️",
+      hiTemp: 31,
+      loTemp: 25,
+      rainProb: "55%",
+      rainMm: 35,
+      summary: "A morning thundershower; otherwise, partly sunny",
+      realFeel: 38,
+      realFeelShade: 34,
+      maxUv: "10.0 (Very High)",
+      wind: "S 13 km/h",
+      precipHours: "1.5",
+      rainHours: "1.5",
+      tidePeak: 3.5,
+      spsStatus: "3 SPS Active",
+      vulnerability: "Receding monsoon conditions; normal tidal range",
+      severity: "MODERATE",
+      badgeColor: "text-cyan-300 bg-cyan-500/20 border-cyan-400/30"
     }
   ];
 
@@ -816,7 +1038,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
           </div>
         </div>
 
-        {/* CARD 5: HOURLY WEATHER & HYDROLOGY EXPANDABLE LIST (Inspired by AccuWeather Screenshots) */}
+        {/* CARD 5: HOURLY WEATHER & HYDROLOGY EXPANDABLE LIST (AccuWeather Inspired) */}
         <div ref={hourlySectionRef} className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
           {/* Section Header */}
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3 mb-4">
@@ -1020,57 +1242,120 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
           </div>
         </div>
 
-        {/* CARD 6: 10-DAY SYNOPTIC WEATHER & ARABIAN SEA TIDAL FORECAST (Frosted Acrylic) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
-              10-DAY WEATHER & SPRING TIDE OUTLOOK
-            </span>
-            <span className="text-[11px] font-mono text-cyan-300 bg-white/[0.04] px-2.5 py-0.5 rounded-lg border border-white/10">
+        {/* CARD 6: 10-DAY SYNOPTIC WEATHER & ARABIAN SEA TIDAL FORECAST (Inspired by AccuWeather Screenshots) */}
+        <div ref={tenDaySectionRef} className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
+          {/* Section Header */}
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3 mb-4">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+              <h2 className="text-xs font-bold uppercase tracking-wider text-white glass-text-title">
+                10-DAY FORECAST • SEPTEMBER 7 – SEPTEMBER 21
+              </h2>
+            </div>
+            <span className="text-[11px] font-mono text-cyan-300 bg-white/[0.06] px-2.5 py-1 rounded-xl border border-white/10">
               Arabian Sea Hydro-Meteorological Model
             </span>
           </div>
 
-          <div className="divide-y divide-white/10">
+          {/* Cards Stack for 10-Day Synoptic Monsoon Outlook */}
+          <div className="flex flex-col gap-3.5">
             {TEN_DAY_FORECAST.map((day) => (
-              <div 
+              <div
                 key={day.day + day.date}
-                className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-white/[0.04] px-3 rounded-2xl transition-all"
+                className="glass-panel-subtle rounded-2xl p-4 sm:p-5 border border-white/15 hover:border-white/25 transition-all shadow-[inset_0_1.2px_1.5px_rgba(255,255,255,0.4),0_8px_24px_rgba(0,0,0,0.25)] flex flex-col gap-3"
               >
-                {/* Left: Day and Icon */}
-                <div className="flex items-center gap-3 min-w-[140px]">
-                  <span className="text-2xl shrink-0">{day.icon}</span>
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-white font-mono">{day.day}</span>
+                {/* Header Row: Day/Date + Icon + Big Hi/Lo Temp + Rain Prob */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="flex flex-col">
+                      <span className="text-xs sm:text-sm font-bold text-white font-mono tracking-tight">{day.day}</span>
                       <span className="text-[10px] text-slate-400 font-mono">{day.date}</span>
                     </div>
-                    <span className="text-xs font-mono font-bold text-slate-300">{day.hiLo}</span>
+                    <span className="text-2xl sm:text-3xl shrink-0">{day.icon}</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl sm:text-3xl font-bold font-mono text-white tracking-tight">{day.hiTemp}°</span>
+                      <span className="text-sm sm:text-base font-mono text-slate-400 font-medium">/{day.loTemp}°</span>
+                    </div>
+                  </div>
+
+                  {/* Right side: Rain Probability & Severity Badge */}
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/[0.06] border border-white/15 text-cyan-300 text-xs font-mono font-bold">
+                      <Droplets className="w-3 h-3 text-cyan-400" />
+                      <span>{day.rainProb}</span>
+                    </div>
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg border hidden sm:inline-block ${day.badgeColor}`}>
+                      {day.severity}
+                    </span>
                   </div>
                 </div>
 
-                {/* Middle: Summary description */}
-                <div className="flex-1 text-xs text-slate-200">
-                  <p className="leading-relaxed">{day.summary}</p>
-                  <div className="flex items-center gap-3 mt-1.5 text-[11px] font-mono text-slate-400">
-                    <span>🌧️ Rain: <strong className="text-cyan-300">{day.rainMm} mm</strong> ({day.rainProb})</span>
-                    <span>🌊 Tide Peak: <strong className="text-blue-300">{day.tidePeak}m</strong></span>
+                {/* Summary Description Sentence */}
+                <p className="text-xs text-slate-200 leading-relaxed font-medium">
+                  {day.summary}
+                </p>
+
+                {/* 2-Column Key-Value Grid with Hairline Dividers (Matching AccuWeather Screenshot) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1.5 text-xs font-mono pt-1">
+                  {/* Row 1 */}
+                  <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
+                    <span className="text-slate-400">RealFeel®</span>
+                    <span className="font-bold text-white">{day.realFeel}°C</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
+                    <span className="text-slate-400">Wind</span>
+                    <span className="font-bold text-cyan-200">{day.wind}</span>
+                  </div>
+
+                  {/* Row 2 */}
+                  <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
+                    <span className="text-slate-400">RealFeel Shade™</span>
+                    <span className="font-bold text-slate-200">{day.realFeelShade}°C</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
+                    <span className="text-slate-400">Total Hours of Precipitation</span>
+                    <span className="font-bold text-white">{day.precipHours} hrs</span>
+                  </div>
+
+                  {/* Row 3 */}
+                  <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
+                    <span className="text-slate-400">Max UV Index</span>
+                    <span className="font-bold text-white">{day.maxUv}</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
+                    <span className="text-slate-400">Total Hours of Rain</span>
+                    <span className="font-bold text-white">{day.rainHours} hrs</span>
+                  </div>
+
+                  {/* Row 4: Hydrological & Coastal Digital Twin Metrics */}
+                  <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
+                    <span className="text-slate-400">Arabian Sea Tide Peak</span>
+                    <span className={`font-bold ${day.tidePeak >= 4.0 ? "text-amber-300" : "text-blue-300"}`}>
+                      {day.tidePeak.toFixed(1)} m {day.tidePeak >= 4.0 ? "(Spring Peak)" : "(Surge)"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
+                    <span className="text-slate-400">Dewatering SPS Readiness</span>
+                    <span className="font-bold text-emerald-300">{day.spsStatus}</span>
                   </div>
                 </div>
 
-                {/* Right: Severity Badge and Simulate Button */}
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-xl border backdrop-blur-md ${day.badgeColor}`}>
-                    {day.severity}
-                  </span>
+                {/* Bottom Action & Disaster Intelligence Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-white/10">
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className="text-slate-400">Vulnerability Watch:</span>
+                    <span className="text-slate-200 font-semibold">{day.vulnerability}</span>
+                  </div>
+
                   <button
                     type="button"
                     onClick={() => {
-                      onSimulateScenario(`10-Day Outlook: ${day.day}`, day.rainMm, day.tidePeak, 35);
+                      onSimulateScenario(`10-Day: ${day.day} ${day.date}`, day.rainMm, day.tidePeak, 30);
                     }}
-                    className="glass-button px-3 py-1.5 rounded-xl text-[11px] font-mono text-slate-200 hover:text-white cursor-pointer"
+                    className="glass-button-primary px-3.5 py-1.5 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow-[0_4px_16px_rgba(6,182,212,0.3)] transition-all hover:scale-105 cursor-pointer ml-auto"
                   >
-                    Test Day
+                    <span>Simulate {day.day} in 3D Twin</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>

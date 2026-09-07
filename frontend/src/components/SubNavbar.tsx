@@ -68,7 +68,7 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
       onOpenPriorityModal();
     } else if (tabId === "RADAR" && onToggleScenarioControls) {
       onToggleScenarioControls();
-    } else if (tabId === "10-DAY" || tabId === "MONTHLY" || tabId === "MINUTECAST") {
+    } else if (tabId === "MONTHLY" || tabId === "MINUTECAST") {
       // If in MAP view mode, we can show modal or navigate
       setActiveModal(tabId);
     } else {
