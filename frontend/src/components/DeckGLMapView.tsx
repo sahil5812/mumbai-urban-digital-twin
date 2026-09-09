@@ -6,8 +6,9 @@ import { ScatterplotLayer, ArcLayer, PathLayer, TextLayer } from "@deck.gl/layer
 import Map, { NavigationControl } from "react-map-gl/maplibre";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { ComponentTelemetry } from "../lib/types";
-import { Layers, Rotate3d, Route, Waves, Radio, Play, Pause, Compass, Sun, Moon, Satellite, Zap, AlertTriangle } from "lucide-react";
+import { ComponentTelemetry, SafeRouteResponse, DEMGridResponse } from "../lib/types";
+import { fetchSafeRoute, fetchDEMGrid, fetchRecentCitizenReports, CitizenReportRecord } from "../lib/api";
+import { Layers, Rotate3d, Route, Waves, Radio, Play, Pause, Compass, Sun, Moon, Satellite, Zap, AlertTriangle, Navigation, ShieldCheck, Clock, ArrowRight, X } from "lucide-react";
 
 const MUMBAI_ROADS = [
   { id: "WEH", name: "Western Express Highway", path: [[72.8450, 19.0550], [72.8520, 19.0900], [72.8580, 19.1300], [72.8650, 19.1800], [72.8600, 19.2400]], width: 35, color: [59, 130, 246, 250] },
@@ -39,6 +40,22 @@ const DISCHARGE_ARCS = [
   { name: "Kausa Junction -> Reti Bunder Outfall", source: [73.0298, 19.1764], target: [73.0165, 19.1995] },
 ];
 
+const NODE_COORDINATES: Record<string, [number, number]> = {
+  RD_MDR_01: [72.8235, 18.9420],
+  RD_BAR_01: [72.8432, 19.0125],
+  RD_BKC_01: [72.8680, 19.0660],
+  RD_WEH_01: [72.8520, 19.0900],
+  RD_EEH_01: [72.8800, 19.0600],
+  RD_SVR_01: [72.8395, 19.0832],
+  RD_LBS_01: [72.8880, 19.0700],
+  WL_HND_01: [72.8432, 19.0125],
+  WL_MLN_01: [72.8395, 19.0832],
+  WL_AND_01: [72.8441, 19.1194],
+  WL_KRL_01: [72.8800, 19.0700],
+  HOT_TMC_MBR_01: [73.0229, 19.1906],
+  RD_TMC_MBR_01: [73.0180, 19.1950],
+};
+
 interface DeckGLMapViewProps {
   components: ComponentTelemetry[];
   selectedComponentId: string | null;
@@ -61,6 +78,96 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   const [showDrains, setShowDrains] = useState<boolean>(true);
   const [showArcs, setShowArcs] = useState<boolean>(true);
   const [showRadarScan, setShowRadarScan] = useState<boolean>(true);
+
+  // Flood-Safe Route Navigation State
+  const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState<boolean>(false);
+  const [originId, setOriginId] = useState<string>("RD_MDR_01");
+  const [destinationId, setDestinationId] = useState<string>("WL_AND_01");
+  const [safeRouteResult, setSafeRouteResult] = useState<SafeRouteResponse | null>(null);
+  const [isCalculatingRoute, setIsCalculatingRoute] = useState<boolean>(false);
+  const [showSafeRoute, setShowSafeRoute] = useState<boolean>(true);
+
+  // Citizen Ground Reports State
+  const [citizenReports, setCitizenReports] = useState<CitizenReportRecord[]>([]);
+  const [showCitizenReports, setShowCitizenReports] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadReports = () => {
+      fetchRecentCitizenReports()
+        .then((reports) => {
+          if (isMounted && reports) setCitizenReports(reports);
+        })
+        .catch((err) => console.warn("Failed to fetch citizen reports:", err));
+    };
+    loadReports();
+    const interval = setInterval(loadReports, 30000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  const handleCalculateRoute = async () => {
+    setIsCalculatingRoute(true);
+    try {
+      const res = await fetchSafeRoute(originId, destinationId, rainfall_mm_hr);
+      setSafeRouteResult(res);
+      setShowSafeRoute(true);
+    } catch (e) {
+      console.error("Safe route calculation error:", e);
+    } finally {
+      setIsCalculatingRoute(false);
+    }
+  };
+
+  // 2D DEM Surface Runoff Grid State
+  const [showDEMGrid, setShowDEMGrid] = useState<boolean>(false);
+  const [demGridData, setDemGridData] = useState<DEMGridResponse | null>(null);
+
+  useEffect(() => {
+    if (!showDEMGrid) return;
+    let isMounted = true;
+    fetchDEMGrid(rainfall_mm_hr, tide_level_m)
+      .then((data) => {
+        if (isMounted) setDemGridData(data);
+      })
+      .catch(console.error);
+    return () => {
+      isMounted = false;
+    };
+  }, [showDEMGrid, rainfall_mm_hr, tide_level_m]);
+
+  const demCellsData = useMemo(() => {
+    if (!showDEMGrid || !demGridData) return [];
+    const cells: Array<{ position: [number, number]; elevation: number; flowAccum: number; waterDepth: number }> = [];
+    const latMin = 18.90;
+    const latMax = 19.28;
+    const lonMin = 72.80;
+    const lonMax = 73.06;
+    const { rows, cols, elevation_matrix_m, flow_accumulation_matrix, inundation_depth_matrix_cm } = demGridData;
+
+    const latStep = (latMax - latMin) / rows;
+    const lonStep = (lonMax - lonMin) / cols;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const lat = latMax - (r + 0.5) * latStep;
+        const lon = lonMin + (c + 0.5) * lonStep;
+        const elev = elevation_matrix_m[r]?.[c] ?? 3.0;
+        const flow = flow_accumulation_matrix[r]?.[c] ?? 1.0;
+        const depth = inundation_depth_matrix_cm[r]?.[c] ?? 0.0;
+
+        cells.push({
+          position: [lon, lat],
+          elevation: elev,
+          flowAccum: flow,
+          waterDepth: depth,
+        });
+      }
+    }
+    return cells;
+  }, [showDEMGrid, demGridData]);
 
   // Continuous animation phase for Live Moving Radar Markers (0 to 1 loop, 60fps)
   const [pulsePhase, setPulsePhase] = useState<number>(0);
@@ -464,10 +571,173 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     });
   }, [showArcs, viewMode]);
 
+  // 8. Flood-Safe Emergency Navigation Route
+  const safeRouteLayer = useMemo(() => {
+    if (!showSafeRoute || !safeRouteResult || !safeRouteResult.recommended_path?.length) return null;
+
+    const coordinates = safeRouteResult.recommended_path
+      .map((nodeId) => NODE_COORDINATES[nodeId])
+      .filter((coord): coord is [number, number] => Boolean(coord));
+
+    if (coordinates.length < 2) return null;
+
+    return new PathLayer({
+      id: "flood-safe-evacuation-route",
+      data: [{ path: coordinates, name: "Flood-Safe Evacuation Corridor" }],
+      getPath: (d: any) => d.path,
+      getColor: [16, 185, 129, 255], // Glowing Emerald Green
+      getWidth: 45,
+      widthMinPixels: 6,
+      widthMaxPixels: 14,
+      capRounded: true,
+      jointRounded: true,
+      pickable: true,
+      autoHighlight: true,
+      highlightColor: [52, 211, 153, 200],
+    });
+  }, [showSafeRoute, safeRouteResult]);
+
+  // 9. Safe Route Waypoints Layer
+  const safeRouteWaypointsLayer = useMemo(() => {
+    if (!showSafeRoute || !safeRouteResult || !safeRouteResult.recommended_path?.length) return null;
+
+    const points = safeRouteResult.recommended_path
+      .map((nodeId, idx) => {
+        const coord = NODE_COORDINATES[nodeId];
+        if (!coord) return null;
+        const name = safeRouteResult.path_waypoints?.[idx] || nodeId;
+        return { coord, name, isOrigin: idx === 0, isDest: idx === safeRouteResult.recommended_path.length - 1 };
+      })
+      .filter((p): p is { coord: [number, number]; name: string; isOrigin: boolean; isDest: boolean } => Boolean(p));
+
+    return new ScatterplotLayer({
+      id: "safe-route-waypoints",
+      data: points,
+      getPosition: (d: any) => d.coord,
+      getRadius: (d: any) => (d.isOrigin || d.isDest ? 320 : 200),
+      radiusMinPixels: 8,
+      radiusMaxPixels: 18,
+      getFillColor: (d: any) => (d.isOrigin ? [59, 130, 246, 255] : d.isDest ? [16, 185, 129, 255] : [52, 211, 153, 240]),
+      getLineColor: [255, 255, 255, 255],
+      lineWidthMinPixels: 2.5,
+      stroked: true,
+      filled: true,
+      pickable: true,
+    });
+  }, [showSafeRoute, safeRouteResult]);
+
+  // 10. Avoided Flood Hazards Pins (Red Warning Rings on Bypassed Subways)
+  const avoidedHazardsLayer = useMemo(() => {
+    if (!showSafeRoute || !safeRouteResult?.submerged_hazards_avoided?.length) return null;
+
+    return new ScatterplotLayer({
+      id: "avoided-submerged-hazards",
+      data: safeRouteResult.submerged_hazards_avoided,
+      getPosition: (d: any) => NODE_COORDINATES[d.node_id] || [72.84, 19.05],
+      getRadius: 380,
+      radiusMinPixels: 12,
+      radiusMaxPixels: 28,
+      getFillColor: [239, 68, 68, 60],
+      getLineColor: [239, 68, 68, 255],
+      lineWidthMinPixels: 2.5,
+      stroked: true,
+      filled: true,
+      pickable: true,
+    });
+  }, [showSafeRoute, safeRouteResult]);
+
+  // 11. 2D DEM Surface Runoff Flow Grid Layer
+  const demGridLayer = useMemo(() => {
+    if (!showDEMGrid || !demCellsData.length) return null;
+
+    return new ScatterplotLayer({
+      id: "dem-surface-flow-grid",
+      data: demCellsData,
+      getPosition: (d: any) => d.position,
+      getRadius: 680,
+      radiusMinPixels: 8,
+      radiusMaxPixels: 35,
+      getFillColor: (d: any) => {
+        if (d.waterDepth > 30) {
+          const alpha = Math.min(220, Math.floor(110 + (d.waterDepth / 120) * 110));
+          return [30, 64, 175, alpha]; // Deep Inundated Blue
+        }
+        if (d.waterDepth > 5) {
+          return [6, 182, 212, 160]; // Flowing Cyan
+        }
+        if (d.elevation > 25) return [74, 222, 128, 70]; // Ridge Emerald Green
+        if (d.elevation < 2.2) return [245, 158, 11, 80]; // Saucer Depression Amber
+        return [148, 163, 184, 40]; // Neutral Ground Gray
+      },
+      getLineColor: (d: any) => (d.waterDepth > 15 ? [6, 182, 212, 200] : [255, 255, 255, 50]),
+      lineWidthMinPixels: 1,
+      stroked: true,
+      filled: true,
+      pickable: true,
+      autoHighlight: true,
+      highlightColor: [255, 255, 255, 120],
+    });
+  }, [showDEMGrid, demCellsData]);
+
+  // 12. Citizen Ground Grievance Markers Layer (Potholes, Blocked Drains, Waterlogging Reports)
+  const citizenReportsHaloLayer = useMemo(() => {
+    if (!showCitizenReports || !citizenReports.length) return null;
+
+    return new ScatterplotLayer({
+      id: "citizen-reports-halos",
+      data: citizenReports,
+      getPosition: (d: CitizenReportRecord) => [d.longitude || 72.84, d.latitude || 19.05],
+      getRadius: 380 + Math.sin(pulsePhase * Math.PI * 2) * 80,
+      radiusMinPixels: 14,
+      radiusMaxPixels: 30,
+      getFillColor: [239, 68, 68, 45],
+      getLineColor: (d: CitizenReportRecord) =>
+        d.severity === "CRITICAL" ? [239, 68, 68, 200] : [245, 158, 11, 180],
+      lineWidthMinPixels: 1.5,
+      stroked: true,
+      filled: true,
+      pickable: false,
+      updateTriggers: {
+        getRadius: [pulsePhase],
+      },
+    });
+  }, [showCitizenReports, citizenReports, pulsePhase]);
+
+  const citizenReportsLayer = useMemo(() => {
+    if (!showCitizenReports || !citizenReports.length) return null;
+
+    return new ScatterplotLayer({
+      id: "citizen-reports-markers",
+      data: citizenReports,
+      getPosition: (d: CitizenReportRecord) => [d.longitude || 72.84, d.latitude || 19.05],
+      getRadius: 220,
+      radiusMinPixels: 7,
+      radiusMaxPixels: 18,
+      getFillColor: (d: CitizenReportRecord) => {
+        if (d.category === "POTHOLE") return [239, 68, 68, 240]; // Crimson Red
+        if (d.category === "WATERLOGGING") return [245, 158, 11, 240]; // Amber
+        return [168, 85, 247, 240]; // Purple (Drain Blockage)
+      },
+      getLineColor: [255, 255, 255, 255],
+      lineWidthMinPixels: 2,
+      stroked: true,
+      filled: true,
+      pickable: true,
+      autoHighlight: true,
+      highlightColor: [255, 255, 255, 220],
+    });
+  }, [showCitizenReports, citizenReports]);
+
   const layers = [
+    demGridLayer,
     roadsLayer, 
     drainsLayer, 
     arcsLayer, 
+    safeRouteLayer,
+    safeRouteWaypointsLayer,
+    avoidedHazardsLayer,
+    citizenReportsHaloLayer,
+    citizenReportsLayer,
     radarPulseWaveLayer, 
     radarSecondaryPulseLayer, 
     stationMarkersLayer, 
@@ -482,6 +752,32 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         controller={{ dragRotate: true, touchRotate: true, inertia: true }}
         layers={layers}
         onError={() => {}}
+        getTooltip={({ object }: any) => {
+          if (!object) return null;
+          if (object.reporter_name) {
+            return {
+              html: `<div style="padding: 8px 12px; background: rgba(15,23,42,0.92); backdrop-filter: blur(8px); border: 1px solid rgba(244,63,94,0.4); border-radius: 12px; color: #fff; font-family: monospace; font-size: 11px; max-width: 260px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                <div style="color: #fb7185; font-weight: bold; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                  📢 CITIZEN REPORT #${object.id || "NEW"}
+                </div>
+                <div style="font-weight: 600; color: #f8fafc; font-size: 12px;">${object.landmark}</div>
+                <div style="color: #94a3b8; font-size: 10px; margin-top: 2px;">Ward: ${object.ward || "General"} | Severity: <span style="color: ${object.severity === 'CRITICAL' ? '#f87171' : '#fbbf24'}">${object.severity}</span></div>
+                <div style="margin-top: 4px; color: #38bdf8; font-size: 10px;">Depth: ${object.estimated_water_depth_cm ?? 0} cm (${object.category})</div>
+                <div style="margin-top: 4px; color: #cbd5e1; font-style: italic; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px;">"${object.description}"</div>
+              </div>`,
+            };
+          }
+          if (object.component_name) {
+            return {
+              html: `<div style="padding: 8px 12px; background: rgba(15,23,42,0.92); backdrop-filter: blur(8px); border: 1px solid rgba(6,182,212,0.4); border-radius: 12px; color: #fff; font-family: monospace; font-size: 11px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                <div style="color: #38bdf8; font-weight: bold;">${object.component_name}</div>
+                <div style="color: #94a3b8; font-size: 10px;">Type: ${object.component_type} | ID: ${object.component_id}</div>
+                <div style="color: #cbd5e1; margin-top: 2px;">Water Depth: <b>${object.water_depth_cm ?? 0} cm</b></div>
+              </div>`,
+            };
+          }
+          return null;
+        }}
       >
         <Map
           mapLib={maplibregl as any}
@@ -590,6 +886,51 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           <span>Drains</span>
         </button>
 
+        {/* Flood-Safe Emergency Navigation Route Toggle */}
+        <button
+          type="button"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsRoutePlannerOpen(!isRoutePlannerOpen); }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+            isRoutePlannerOpen
+              ? "bg-emerald-600/35 border-emerald-400/60 text-emerald-200 shadow-[0_0_12px_rgba(16,185,129,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
+              : "glass-button text-slate-300 hover:text-white font-medium"
+          }`}
+          title="Toggle Flood-Safe Evacuation Route Navigator"
+        >
+          <Navigation className="w-3.5 h-3.5 text-emerald-400 drop-shadow-sm" />
+          <span>Safe Route</span>
+        </button>
+
+        {/* 2D DEM Surface Runoff Flow Grid Toggle */}
+        <button
+          type="button"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowDEMGrid(!showDEMGrid); }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+            showDEMGrid
+              ? "bg-indigo-600/35 border-indigo-400/60 text-indigo-200 shadow-[0_0_12px_rgba(99,102,241,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
+              : "glass-button text-slate-300 hover:text-white font-medium"
+          }`}
+          title="Toggle 2D DEM Topographic Surface Runoff Grid"
+        >
+          <Layers className="w-3.5 h-3.5 text-indigo-400 drop-shadow-sm" />
+          <span>DEM Grid</span>
+        </button>
+
+        {/* Citizen Reports Overlay Toggle */}
+        <button
+          type="button"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowCitizenReports(!showCitizenReports); }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+            showCitizenReports
+              ? "bg-rose-600/35 border-rose-400/60 text-rose-200 shadow-[0_0_12px_rgba(244,63,94,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
+              : "glass-button text-slate-300 hover:text-white font-medium"
+          }`}
+          title="Toggle Citizen Ground Grievance Pins"
+        >
+          <AlertTriangle className="w-3.5 h-3.5 text-rose-400 drop-shadow-sm" />
+          <span>Citizen ({citizenReports.length})</span>
+        </button>
+
         <div className="h-5 w-px bg-white/15 mx-0.5" />
 
         {/* 360° Drone Flyover Orbit Toggle */}
@@ -606,6 +947,106 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           <span>360° Drone Orbit</span>
         </button>
       </div>
+
+      {/* Flood-Safe Route Navigator Drawer (Top-Left) */}
+      {isRoutePlannerOpen && (
+        <div className="absolute top-4 left-4 z-30 w-80 max-w-[calc(100vw-2rem)] glass-panel p-4 rounded-2xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.25)] text-xs text-slate-100 backdrop-blur-xl animate-fadeIn flex flex-col gap-3">
+          <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+            <div className="flex items-center gap-2 font-bold text-emerald-400">
+              <ShieldCheck className="w-4 h-4 text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+              <span className="tracking-wide uppercase text-[11px]">Flood-Safe Navigator</span>
+            </div>
+            <button
+              onClick={() => setIsRoutePlannerOpen(false)}
+              className="glass-button p-1 rounded-lg text-slate-400 hover:text-white"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div>
+              <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Origin Point</label>
+              <select
+                value={originId}
+                onChange={(e) => setOriginId(e.target.value)}
+                className="w-full bg-slate-900/90 border border-white/15 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-400"
+              >
+                <option value="RD_MDR_01">Marine Drive (RD_MDR_01)</option>
+                <option value="RD_BAR_01">Dadar / Dr. B.A. Road (RD_BAR_01)</option>
+                <option value="RD_BKC_01">BKC Connector (RD_BKC_01)</option>
+                <option value="RD_WEH_01">Western Express Hwy Bandra (RD_WEH_01)</option>
+                <option value="RD_EEH_01">Eastern Express Hwy Sion (RD_EEH_01)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Destination Target</label>
+              <select
+                value={destinationId}
+                onChange={(e) => setDestinationId(e.target.value)}
+                className="w-full bg-slate-900/90 border border-white/15 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-400"
+              >
+                <option value="WL_AND_01">Andheri Subway Corridor (WL_AND_01)</option>
+                <option value="WL_MLN_01">Milan Subway Basin (WL_MLN_01)</option>
+                <option value="WL_HND_01">Hindmata Junction (WL_HND_01)</option>
+                <option value="WL_KRL_01">Kurla Kamani (WL_KRL_01)</option>
+                <option value="HOT_TMC_MBR_01">Mumbra Station Underpass (HOT_TMC_MBR_01)</option>
+              </select>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleCalculateRoute}
+              disabled={isCalculatingRoute}
+              className="mt-1 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all disabled:opacity-50"
+            >
+              {isCalculatingRoute ? (
+                <span>Computing Dijkstra Path...</span>
+              ) : (
+                <>
+                  <Navigation className="w-3.5 h-3.5" />
+                  <span>Compute Flood-Free Route</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {safeRouteResult && (
+            <div className="mt-1 flex flex-col gap-2 pt-2 border-t border-white/10">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 px-2 py-0.5 rounded-md border border-emerald-400/30">
+                  {safeRouteResult.is_flood_safe ? "FLOOD-SAFE CORRIDOR" : "DIVERTED"}
+                </span>
+                <div className="flex items-center gap-1 text-[11px] font-mono text-slate-200">
+                  <Clock className="w-3 h-3 text-cyan-400" />
+                  <span>{safeRouteResult.estimated_transit_time_mins} mins</span>
+                </div>
+              </div>
+
+              {safeRouteResult.submerged_hazards_avoided?.length > 0 && (
+                <div className="bg-red-500/15 border border-red-500/30 p-2 rounded-xl flex flex-col gap-1">
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-red-400">
+                    <AlertTriangle className="w-3 h-3 text-red-400" />
+                    <span>Avoided Submerged Hazards ({safeRouteResult.submerged_hazards_avoided.length})</span>
+                  </div>
+                  {safeRouteResult.submerged_hazards_avoided.map((h, i) => (
+                    <div key={i} className="text-[10px] text-red-200">
+                      • {h.name}: <span className="font-mono text-amber-300">{Math.round(h.water_depth_cm)}cm water</span> (Bypassed)
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {safeRouteResult.fallback_advisory && (
+                <p className="text-[10px] text-slate-300 italic">
+                  Advisory: {safeRouteResult.fallback_advisory}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Floating Tactical Doppler Radar Status Pill */}
       <div className="absolute bottom-6 left-6 z-20 flex items-center gap-3 glass-panel px-4 py-2.5 rounded-2xl border border-white/15 shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] text-xs backdrop-blur-xl">

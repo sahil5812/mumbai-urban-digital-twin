@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { SimulationRequest, TimelineForecastStep } from "../lib/types";
-import { Sliders, CloudRain, Waves, Trash2, Zap, Clock, ShieldAlert, Sparkles } from "lucide-react";
+import { Sliders, CloudRain, Waves, Trash2, Zap, Clock, ShieldAlert, Sparkles, Play, Pause, RotateCcw } from "lucide-react";
 
 interface ScenarioControlsProps {
   params: SimulationRequest;
@@ -23,6 +23,21 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
   selectedTimelineIndex = 0,
   onSelectTimelineStep,
 }) => {
+  const [isPlayingTimeline, setIsPlayingTimeline] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!isPlayingTimeline || !timelineForecast.length) return;
+
+    const timer = setInterval(() => {
+      if (onSelectTimelineStep) {
+        const nextIndex = (selectedTimelineIndex + 1) % timelineForecast.length;
+        onSelectTimelineStep(nextIndex);
+      }
+    }, 2000);
+
+    return () => clearInterval(timer);
+  }, [isPlayingTimeline, selectedTimelineIndex, timelineForecast.length, onSelectTimelineStep]);
+
   const presets = [
     { name: "Clear Sky Baseline", rain: 0, tide: 2.4, silt: 20, label: "Clear 0mm", icon: "☀️", desc: "0mm/h • 2.4m" },
     { name: "Normal Monsoon", rain: 35, tide: 2.5, silt: 25, label: "Normal 35mm", icon: "🌤️", desc: "35mm/h • 2.5m" },
@@ -56,9 +71,29 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
               <Clock className="w-3.5 h-3.5 text-cyan-400" />
               0-3 HOUR NOWCAST TIMELINE:
             </span>
-            <span className="font-mono text-white font-extrabold glass-text-glow">
-              {timelineForecast[selectedTimelineIndex]?.time_offset}
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsPlayingTimeline(!isPlayingTimeline);
+                }}
+                className={`px-2.5 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 border transition-all ${
+                  isPlayingTimeline
+                    ? "bg-amber-500/30 border-amber-400/60 text-amber-200 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.5)]"
+                    : "glass-button text-cyan-300 hover:text-white"
+                }`}
+                title={isPlayingTimeline ? "Pause automated timeline playback" : "Autoplay 0-3h storm progression"}
+              >
+                {isPlayingTimeline ? <Pause className="w-3 h-3 text-amber-400" /> : <Play className="w-3 h-3 text-cyan-400" />}
+                <span>{isPlayingTimeline ? "Pause" : "Play"}</span>
+              </button>
+
+              <span className="font-mono text-white font-extrabold glass-text-glow">
+                {timelineForecast[selectedTimelineIndex]?.time_offset}
+              </span>
+            </div>
           </div>
 
           {/* Time Tabs */}
@@ -70,6 +105,7 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  setIsPlayingTimeline(false);
                   onSelectTimelineStep && onSelectTimelineStep(idx);
                 }}
                 className={`py-1.5 rounded-xl text-[10px] font-mono font-bold transition-all border ${
@@ -84,8 +120,9 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
           </div>
 
           <div className="flex items-center justify-between text-[9px] font-mono text-slate-300 pt-0.5">
+            <span>Rain: <strong className="text-cyan-300 font-bold">{timelineForecast[selectedTimelineIndex]?.predicted_rainfall_mm_hr} mm/h</strong></span>
             <span>Peak Depth: <strong className="text-cyan-300 font-bold">{timelineForecast[selectedTimelineIndex]?.city_max_depth_cm}cm</strong></span>
-            <span>Critical Spots: <strong className="text-red-300 font-bold">{timelineForecast[selectedTimelineIndex]?.critical_hotspots_count}</strong></span>
+            <span>Critical: <strong className="text-red-300 font-bold">{timelineForecast[selectedTimelineIndex]?.critical_hotspots_count}</strong></span>
           </div>
         </div>
       )}

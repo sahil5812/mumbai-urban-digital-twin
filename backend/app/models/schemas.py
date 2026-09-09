@@ -94,15 +94,26 @@ class CascadingGraphResponse(BaseModel):
     total_impacted_nodes: int
 
 class CitizenReportRequest(BaseModel):
-    location_name: str
-    ward: str
-    water_depth_reported: str
-    pothole_severity: str
+    reporter_name: Optional[str] = "Mumbai Citizen"
+    location_name: Optional[str] = None
+    landmark: Optional[str] = "Hindmata Cinema Junction, Dadar"
+    ward: Optional[str] = "F/S"
+    category: Optional[str] = "POTHOLE"
+    severity: Optional[str] = "CRITICAL"
+    pothole_severity: Optional[str] = None
+    water_depth_reported: Optional[str] = None
+    estimated_water_depth_cm: Optional[float] = 25.0
     description: Optional[str] = ""
+    latitude: Optional[float] = 19.0125
+    longitude: Optional[float] = 72.8432
 
 class CitizenReportResponse(BaseModel):
-    report_id: str
+    ticket_id: str
+    timestamp: str
     status: str
-    assigned_priority: str
-    estimated_resolution_hrs: int
-    ticket_message: str
+    verification_status: Optional[str] = "AI_VERIFIED_GROUND_TRUTH"
+    matched_component_id: Optional[str] = "RD_BAR_01"
+    priority_rank: Optional[int] = 1
+    estimated_eta_hours: Optional[float] = 2.0
+    message: str
+

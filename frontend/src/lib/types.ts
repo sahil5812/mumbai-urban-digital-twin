@@ -150,3 +150,41 @@ export interface CitizenReportResponse {
   ticket_message?: string;
   message?: string;
 }
+
+export interface AvoidedHazard {
+  node_id: string;
+  name: string;
+  water_depth_cm: number;
+  reason: string;
+}
+
+export interface RouteSegment {
+  from_node: string;
+  to_node: string;
+  water_depth_cm: number;
+  segment_status: "FLOOD_FREE" | "SLOW" | "SUBMERGED";
+}
+
+export interface SafeRouteResponse {
+  origin: string;
+  destination: string;
+  is_flood_safe: boolean;
+  recommended_path: string[];
+  path_waypoints: string[];
+  estimated_transit_time_mins: number;
+  submerged_hazards_avoided: AvoidedHazard[];
+  route_segments: RouteSegment[];
+  fallback_advisory?: string;
+}
+
+export interface DEMGridResponse {
+  rows: number;
+  cols: number;
+  elevation_matrix_m: number[][];
+  flow_accumulation_matrix: number[][];
+  inundation_depth_matrix_cm: number[][];
+  max_grid_depth_cm: number;
+  grid_resolution_km: number;
+}
+
+

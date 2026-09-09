@@ -33,6 +33,23 @@ export const EarlyWarningBanner: React.FC<EarlyWarningBannerProps> = ({
 
   if (!telemetry) return null;
 
+  // If backend is offline, show a small amber indicator instead of fake weather data
+  if (telemetry.status === "OFFLINE") {
+    return (
+      <div className="w-full border-b bg-amber-950/30 border-amber-500/20 text-slate-100 px-4 py-2 select-none z-20 backdrop-blur-2xl">
+        <div className="max-w-7xl mx-auto flex items-center gap-2 text-xs">
+          <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl border bg-amber-500/15 border-amber-400/30 text-amber-300 font-bold uppercase tracking-wider text-[11px]">
+            <Zap className="w-3.5 h-3.5" />
+            <span>⚠ Backend Offline</span>
+          </span>
+          <span className="text-slate-400 font-mono text-[11px]">
+            Live weather data unavailable — displaying cached or default values. Reconnecting...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   // Check if rain is incoming from nowcasting OR if user is actively simulating rain
   const hasIncomingForecast = Boolean(
     telemetry.minutely_forecast?.some((slot) => (slot.rain_mm_hr || 0) > 0) ||

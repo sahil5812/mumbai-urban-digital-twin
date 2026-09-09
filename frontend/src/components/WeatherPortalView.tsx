@@ -26,7 +26,8 @@ import {
   Clock,
   Eye,
   Thermometer,
-  Compass
+  Compass,
+  BarChart3
 } from "lucide-react";
 import { LiveTelemetry } from "../lib/api";
 import { MinuteCastView } from "./MinuteCastView";
@@ -1053,7 +1054,12 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         </div>
 
         {/* CARD 5: HOURLY WEATHER & HYDROLOGY EXPANDABLE LIST (AccuWeather Inspired) */}
-        <div ref={hourlySectionRef} className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
+        <div
+          ref={hourlySectionRef}
+          className={`glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] transition-all duration-500 ${
+            activeTab === "HOURLY" ? "ring-2 ring-cyan-400/80 shadow-[0_0_30px_rgba(6,182,212,0.3)]" : ""
+          }`}
+        >
           {/* Section Header */}
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3 mb-4">
             <div className="flex items-center gap-2">
@@ -1066,6 +1072,99 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
               <span className="text-[11px] font-mono text-slate-300 bg-white/[0.06] px-2.5 py-1 rounded-xl border border-white/10">
                 16-Hour Detailed Outlook • Click any hour to expand
               </span>
+            </div>
+          </div>
+
+          {/* 16-Hour Bar Hyetograph & Intensity Visualizer */}
+          <div className="mb-6 p-4 rounded-2xl bg-white/[0.03] border border-white/10 shadow-inner">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-cyan-400" />
+                <span className="text-xs font-bold text-white tracking-wide uppercase">
+                  16-Hour Hyetograph (Precipitation & Risk Distribution)
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950/40 px-2.5 py-0.5 rounded-full border border-cyan-500/30">
+                Peak Rain: {Math.max(...HOURLY_DETAILS.map((h) => h.rainMm))} mm/hr
+              </span>
+            </div>
+
+            {/* Bars Grid */}
+            <div className="overflow-x-auto pb-2">
+              <div className="flex items-end justify-between gap-2 min-w-[620px] h-32 pt-6 px-1 border-b border-white/10">
+                {HOURLY_DETAILS.map((hourItem) => {
+                  const maxRainVal = Math.max(...HOURLY_DETAILS.map((h) => h.rainMm), 25);
+                  const heightPct = Math.max(6, Math.round((hourItem.rainMm / maxRainVal) * 100));
+                  const isSelected = expandedHourId === hourItem.id;
+
+                  const barColor =
+                    hourItem.rainMm >= 20
+                      ? "bg-gradient-to-t from-red-600 to-rose-400 shadow-[0_0_12px_rgba(239,68,68,0.5)]"
+                      : hourItem.rainMm >= 10
+                      ? "bg-gradient-to-t from-amber-600 to-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.4)]"
+                      : hourItem.rainMm > 0
+                      ? "bg-gradient-to-t from-cyan-600 to-cyan-400"
+                      : "bg-gradient-to-t from-blue-800/40 to-cyan-600/30";
+
+                  return (
+                    <button
+                      key={hourItem.id}
+                      type="button"
+                      onClick={() => setExpandedHourId(isSelected ? null : hourItem.id)}
+                      className={`flex-1 flex flex-col items-center justify-end h-full group focus:outline-none transition-transform hover:scale-105 cursor-pointer ${
+                        isSelected ? "scale-105" : ""
+                      }`}
+                      title={`${hourItem.hour}: ${hourItem.rainMm} mm/hr, Tide ${hourItem.tideLevel}m (${hourItem.floodRisk})`}
+                    >
+                      <span className="text-[10px] font-mono text-slate-300 opacity-80 mb-1 group-hover:text-cyan-300 transition-colors">
+                        {hourItem.rainMm > 0 ? `${hourItem.rainMm}m` : "-"}
+                      </span>
+                      <div
+                        style={{ height: `${heightPct}%` }}
+                        className={`w-full max-w-[28px] rounded-t-lg transition-all duration-300 ${barColor} ${
+                          isSelected ? "ring-2 ring-white shadow-[0_0_15px_rgba(255,255,255,0.6)]" : "group-hover:brightness-125"
+                        }`}
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Time labels below axis */}
+              <div className="flex items-center justify-between gap-2 min-w-[620px] px-1 mt-2">
+                {HOURLY_DETAILS.map((hourItem) => {
+                  const isSelected = expandedHourId === hourItem.id;
+                  return (
+                    <button
+                      key={`lbl-${hourItem.id}`}
+                      type="button"
+                      className={`flex-1 text-center cursor-pointer transition-colors focus:outline-none ${
+                        isSelected ? "text-cyan-400 font-bold" : "text-slate-400 hover:text-slate-200"
+                      }`}
+                      onClick={() => setExpandedHourId(isSelected ? null : hourItem.id)}
+                    >
+                      <div className="text-[9px] font-mono whitespace-nowrap">{hourItem.hour}</div>
+                      <div className="text-xs">{hourItem.icon}</div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Risk Legend */}
+            <div className="flex flex-wrap items-center justify-between gap-2 mt-3 pt-2 border-t border-white/5 text-[10px] font-mono text-slate-400">
+              <div className="flex items-center gap-4">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400/80" /> Baseline (&lt;10mm)
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-amber-400" /> Watch (10–20mm)
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-rose-500" /> Severe (&gt;20mm)
+                </span>
+              </div>
+              <span className="text-slate-400">Click any bar to inspect hourly hydrology</span>
             </div>
           </div>
 
@@ -1257,7 +1356,12 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         </div>
 
         {/* CARD 6: 10-DAY SYNOPTIC WEATHER & ARABIAN SEA TIDAL FORECAST (Inspired by AccuWeather Screenshots) */}
-        <div ref={tenDaySectionRef} className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
+        <div
+          ref={tenDaySectionRef}
+          className={`glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] transition-all duration-500 ${
+            activeTab === "10-DAY" ? "ring-2 ring-amber-400/80 shadow-[0_0_30px_rgba(245,158,11,0.3)]" : ""
+          }`}
+        >
           {/* Section Header */}
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3 mb-4">
             <div className="flex items-center gap-2">

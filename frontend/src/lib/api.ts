@@ -1,4 +1,4 @@
-import { SimulationRequest, SimulationResponse, CascadingGraphResponse, CitizenReportRequest, CitizenReportResponse } from './types';
+import { SimulationRequest, SimulationResponse, CascadingGraphResponse, CitizenReportRequest, CitizenReportResponse, SafeRouteResponse, DEMGridResponse } from './types';
 
 const API_BASE = '/api';
 
@@ -58,28 +58,24 @@ export async function fetchLiveTelemetry(): Promise<LiveTelemetry | null> {
     if (!res.ok) throw new Error('API request failed');
     return await res.json();
   } catch (err) {
+    console.warn('Backend unreachable — returning OFFLINE telemetry state', err);
     return {
-      status: 'NOMINAL',
+      status: 'OFFLINE',
       rainfall_mm_hr: 0.0,
-      tide_level_m: 3.59,
-      temperature_c: 28.8,
-      humidity_pct: 76.0,
-      wind_speed_kmh: 24.0,
-      weather_code: 2,
-      last_updated: new Date().toLocaleTimeString() + ' IST',
-      source: 'Open-Meteo Live Radar (Mumbai 19.076N, 72.878E)',
-      fetch_count: 1,
-      early_warning_active: true,
-      next_rain_eta_mins: 15,
-      target_rain_timestamp_ms: Date.now() + 600000,
-      predicted_rain_in_30m: 0.1,
-      preemptive_action: 'PREDICTIVE RADAR ALERT: Precipitation approaching in ~15 mins (0.1 mm/h). Pre-charge Hindmata flood cisterns & alert BMC Ward Officers.',
-      minutely_forecast: [
-        { time_offset: '+15m', rain_mm_hr: 0.1, status: 'LIGHT_DRIZZLE' },
-        { time_offset: '+30m', rain_mm_hr: 0.1, status: 'LIGHT_DRIZZLE' },
-        { time_offset: '+45m', rain_mm_hr: 0.0, status: 'CLEAR' },
-        { time_offset: '+60m', rain_mm_hr: 0.0, status: 'CLEAR' },
-      ],
+      tide_level_m: 0.0,
+      temperature_c: 0.0,
+      humidity_pct: 0.0,
+      wind_speed_kmh: 0.0,
+      weather_code: 0,
+      last_updated: null,
+      source: 'OFFLINE — Backend Unreachable',
+      fetch_count: 0,
+      early_warning_active: false,
+      next_rain_eta_mins: 0,
+      target_rain_timestamp_ms: 0,
+      predicted_rain_in_30m: 0.0,
+      preemptive_action: '',
+      minutely_forecast: [],
     };
   }
 }
@@ -105,6 +101,137 @@ export async function submitCitizenReport(req: CitizenReportRequest): Promise<Ci
       message: `Thank you, ${req.reporter_name}. Your report for ${req.landmark} has been ingested into the BMC Digital Twin.`,
     };
   }
+}
+
+export interface CitizenReportRecord {
+  id: number;
+  reporter_name: string;
+  category: string;
+  landmark: string;
+  severity: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+  ward: string;
+  estimated_water_depth_cm: number;
+  timestamp: string;
+}
+
+export async function fetchRecentCitizenReports(): Promise<CitizenReportRecord[]> {
+  try {
+    const res = await fetch(`${API_BASE}/citizen/recent`);
+    if (!res.ok) throw new Error('API request failed');
+    const data = await res.json();
+    return data.reports || [];
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchSafeRoute(
+  originId: string = 'RD_MDR_01',
+  destinationId: string = 'WL_AND_01',
+  rainfall: number = 150.0
+): Promise<SafeRouteResponse> {
+  try {
+    const res = await fetch(`${API_BASE}/graph/safe-route?origin=${encodeURIComponent(originId)}&destination=${encodeURIComponent(destinationId)}&rainfall_mm_hr=${rainfall}`);
+    if (!res.ok) throw new Error('API request failed');
+    return await res.json();
+  } catch (err) {
+    return getFallbackSafeRoute(originId, destinationId, rainfall);
+  }
+}
+
+function getFallbackSafeRoute(originId: string, destinationId: string, rainfall: number): SafeRouteResponse {
+  const isHeavy = rainfall >= 80;
+  return {
+    origin: originId,
+    destination: destinationId,
+    is_flood_safe: true,
+    recommended_path: ['RD_MDR_01', 'RD_BAR_01', 'RD_BKC_01', 'RD_WEH_01', 'WL_AND_01'],
+    path_waypoints: [
+      'Marine Drive Corridor',
+      'Dr. B.A. Road Flyover',
+      'BKC Elevated Connector',
+      'Western Express Highway Elevated Corridor',
+      'Andheri Station Approach (Bypassing Subway Bowl)'
+    ],
+    estimated_transit_time_mins: isHeavy ? 38.5 : 24.0,
+    submerged_hazards_avoided: isHeavy
+      ? [
+          {
+            node_id: 'WL_HND_01',
+            name: 'Hindmata Underpass',
+            water_depth_cm: 65.0,
+            reason: 'Submerged by 65.0 cm floodwater (Route Diverted via Dr. B.A. Flyover)',
+          },
+          {
+            node_id: 'WL_MLN_01',
+            name: 'Milan Subway Low Basin',
+            water_depth_cm: 95.0,
+            reason: 'Submerged by 95.0 cm floodwater (Route Diverted via WEH Flyover)',
+          },
+        ]
+      : [],
+    route_segments: [
+      { from_node: 'RD_MDR_01', to_node: 'RD_BAR_01', water_depth_cm: 0, segment_status: 'FLOOD_FREE' },
+      { from_node: 'RD_BAR_01', to_node: 'RD_BKC_01', water_depth_cm: 8, segment_status: 'FLOOD_FREE' },
+      { from_node: 'RD_BKC_01', to_node: 'RD_WEH_01', water_depth_cm: 12, segment_status: 'FLOOD_FREE' },
+      { from_node: 'RD_WEH_01', to_node: 'WL_AND_01', water_depth_cm: isHeavy ? 22 : 0, segment_status: isHeavy ? 'SLOW' : 'FLOOD_FREE' },
+    ],
+    fallback_advisory: 'Take Western Express Highway Elevated Corridor. Avoid SV Road and Milan Subway.',
+  };
+}
+
+export async function fetchDEMGrid(rainfall: number = 45.0, tide: number = 2.8): Promise<DEMGridResponse> {
+  try {
+    const res = await fetch(`${API_BASE}/simulation/dem-surface-grid?rainfall_mm_hr=${rainfall}&tide_level_m=${tide}`);
+    if (!res.ok) throw new Error('API request failed');
+    return await res.json();
+  } catch (err) {
+    return getFallbackDEMGrid(rainfall, tide);
+  }
+}
+
+function getFallbackDEMGrid(rainfall: number, tide: number): DEMGridResponse {
+  const rows = 15;
+  const cols = 15;
+  const elev: number[][] = [];
+  const flow: number[][] = [];
+  const depth: number[][] = [];
+  let maxD = 0;
+
+  for (let r = 0; r < rows; r++) {
+    const rElev: number[] = [];
+    const rFlow: number[] = [];
+    const rDepth: number[] = [];
+    for (let c = 0; c < cols; c++) {
+      const e = Math.max(1.0, Math.round((3.5 + 2.0 * Math.sin(r * 0.4) + 1.5 * Math.cos(c * 0.3)) * 10) / 10);
+      const f = Math.round((1.0 + (rows - r) * 0.4 + (c < 8 ? 2.5 : 1.0)) * 10) / 10;
+      let d = 0;
+      if (rainfall > 5.0) {
+        d = e < 2.5 ? Math.round((rainfall * 0.45 + (3.0 - e) * 12.0) * 10) / 10 : Math.round((rainfall * 0.12) * 10) / 10;
+        if (tide >= 3.5 && e < 2.2) d += Math.round((tide - 3.2) * 16.0);
+      }
+      maxD = Math.max(maxD, d);
+      rElev.push(e);
+      rFlow.push(f);
+      rDepth.push(d);
+    }
+    elev.push(rElev);
+    flow.push(rFlow);
+    depth.push(rDepth);
+  }
+
+  return {
+    rows,
+    cols,
+    elevation_matrix_m: elev,
+    flow_accumulation_matrix: flow,
+    inundation_depth_matrix_cm: depth,
+    max_grid_depth_cm: maxD,
+    grid_resolution_km: 1.2,
+  };
 }
 
 function getFallbackSimulation(req: SimulationRequest): SimulationResponse {

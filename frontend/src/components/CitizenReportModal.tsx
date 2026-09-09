@@ -10,10 +10,31 @@ interface CitizenReportModalProps {
   onClose: () => void;
 }
 
+const LANDMARK_COORDINATES: Record<string, { lat: number; lon: number; ward: string }> = {
+  "Hindmata Cinema Junction, Dadar": { lat: 19.0125, lon: 72.8432, ward: "F/S" },
+  "Milan Subway, Santacruz": { lat: 19.0832, lon: 72.8395, ward: "H/W" },
+  "Andheri Subway, SV Road": { lat: 19.1194, lon: 72.8441, ward: "K/W" },
+  "Khar Subway & Linking Road": { lat: 19.0712, lon: 72.8356, ward: "H/W" },
+  "Gandhi Market, King's Circle": { lat: 19.0280, lon: 72.8566, ward: "F/N" },
+  "Sion Circle & SIES Lowline": { lat: 19.0400, lon: 72.8620, ward: "F/N" },
+  "Kurla Kamani & LBS Marg": { lat: 19.0700, lon: 72.8800, ward: "L" },
+  "Malad Subway & SV Road": { lat: 19.1865, lon: 72.8460, ward: "P/N" },
+  "Dahisar Subway & WEH": { lat: 19.2350, lon: 72.8550, ward: "R/N" },
+  "Chunabhatti / Sion-Trombay Road": { lat: 19.0450, lon: 72.8750, ward: "L" },
+  "Dadar TT Circle & Tilak Bridge": { lat: 19.0200, lon: 72.8450, ward: "F/N" },
+  "Worli Naka & Dr. AB Road": { lat: 19.0060, lon: 72.8180, ward: "G/S" },
+  "Mumbra Station Underpass": { lat: 19.1906, lon: 73.0229, ward: "TMC-1" },
+  "Reti Bunder Lowline Basin": { lat: 19.1995, lon: 73.0165, ward: "TMC-1" },
+  "Kausa Junction & Almas Colony": { lat: 19.1764, lon: 73.0298, ward: "TMC-1" },
+  "Other (Custom Location)": { lat: 19.0760, lon: 72.8777, ward: "General" },
+};
+
+const LANDMARK_OPTIONS = Object.keys(LANDMARK_COORDINATES);
+
 export const CitizenReportModal: React.FC<CitizenReportModalProps> = ({ isOpen, onClose }) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("POTHOLE");
-  const [landmark, setLandmark] = useState("Hindmata Cinema Junction, Dadar");
+  const [landmark, setLandmark] = useState(LANDMARK_OPTIONS[0]);
   const [severity, setSeverity] = useState("CRITICAL");
   const [description, setDescription] = useState("Severe pothole cluster emerging under heavy waterlogging.");
   const [waterDepth, setWaterDepth] = useState(25);
@@ -21,6 +42,8 @@ export const CitizenReportModal: React.FC<CitizenReportModalProps> = ({ isOpen, 
   const [response, setResponse] = useState<CitizenReportResponse | null>(null);
 
   if (!isOpen) return null;
+
+  const selectedCoords = LANDMARK_COORDINATES[landmark] || LANDMARK_COORDINATES["Other (Custom Location)"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,9 +54,9 @@ export const CitizenReportModal: React.FC<CitizenReportModalProps> = ({ isOpen, 
       landmark,
       severity,
       description,
-      latitude: 19.0125,
-      longitude: 72.8432,
-      ward: "F/S",
+      latitude: selectedCoords.lat,
+      longitude: selectedCoords.lon,
+      ward: selectedCoords.ward,
       estimated_water_depth_cm: waterDepth,
     });
     setResponse(res);
@@ -122,12 +145,18 @@ export const CitizenReportModal: React.FC<CitizenReportModalProps> = ({ isOpen, 
 
             <div>
               <label className="text-slate-300 font-medium block mb-1">Landmark / Location</label>
-              <input
-                type="text"
+              <select
                 value={landmark}
                 onChange={(e) => setLandmark(e.target.value)}
-                className="glass-input w-full rounded-xl p-2.5 text-slate-100 outline-none text-xs transition-all"
-              />
+                className="glass-input w-full rounded-xl p-2.5 text-slate-100 outline-none text-xs transition-all bg-slate-900/90"
+              >
+                {LANDMARK_OPTIONS.map((loc) => (
+                  <option key={loc} value={loc}>{loc}</option>
+                ))}
+              </select>
+              <span className="text-[10px] text-slate-500 mt-0.5 block font-mono">
+                📍 {selectedCoords.lat.toFixed(4)}°N, {selectedCoords.lon.toFixed(4)}°E — Ward {selectedCoords.ward}
+              </span>
             </div>
 
             <div>
