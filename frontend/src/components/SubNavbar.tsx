@@ -68,7 +68,7 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
 
   return (
     <>
-      <nav className="w-full bg-slate-900/35 backdrop-blur-2xl border-b border-white/10 px-4 select-none z-20 sticky top-16 text-slate-300 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
+      <nav className="w-full bg-slate-900/35 backdrop-blur-2xl border-b border-white/10 px-4 select-none z-20 sticky top-0 text-slate-300 shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-300">
         <div className="max-w-7xl mx-auto flex items-center justify-between overflow-x-auto no-scrollbar py-1">
           {/* Main Tabs Strip - Frosted Acrylic Glass */}
           <div className="flex items-center space-x-1 sm:space-x-2 shrink-0 font-sans text-[11px] sm:text-xs font-semibold tracking-wider uppercase">

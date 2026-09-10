@@ -17,6 +17,7 @@ interface NavbarProps {
   liveTelemetry?: LiveTelemetry | null;
   portalViewMode?: "PORTAL" | "MAP";
   onTogglePortalViewMode?: () => void;
+  isVisible?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -32,6 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   liveTelemetry,
   portalViewMode = "MAP",
   onTogglePortalViewMode,
+  isVisible = true,
 }) => {
   const [time, setTime] = useState<string>("");
 
@@ -52,8 +54,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   const humidityVal = liveTelemetry?.humidity_pct ?? 74;
   const windVal = liveTelemetry?.wind_speed_kmh ?? 18;
 
+  // In 3D Twin Map mode, Navbar is ALWAYS visible and must never hide
+  const shouldShow = portalViewMode === "MAP" ? true : isVisible;
+
   return (
-    <header className="h-16 bg-slate-950/40 backdrop-blur-2xl border-b border-white/10 px-4 flex items-center justify-between select-none z-30 sticky top-0 text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+    <header
+      className={`h-16 bg-slate-950/40 backdrop-blur-2xl border-b border-white/10 px-4 flex items-center justify-between select-none z-30 sticky top-0 text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 ease-in-out ${
+        shouldShow
+          ? "translate-y-0 opacity-100 mt-0"
+          : "-translate-y-full opacity-0 -mt-16 pointer-events-none"
+      }`}
+    >
       {/* Left: Mode Switcher */}
       <div className="flex items-center gap-3 shrink-0">
 

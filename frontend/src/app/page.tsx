@@ -31,6 +31,10 @@ export default function Home() {
   // Portal View Mode ("PORTAL" for weather dashboard, "MAP" for 3D digital twin map)
   const [portalViewMode, setPortalViewMode] = useState<"PORTAL" | "MAP">("PORTAL");
 
+  // Top Navbar auto-hide on scroll state (active only in Weather Portal mode)
+  // In 3D Twin Map mode, Navbar is ALWAYS visible and never hidden
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+
   // 0-3h Timeline Selection State
   const [selectedTimelineIndex, setSelectedTimelineIndex] = useState<number>(0);
 
@@ -157,6 +161,63 @@ export default function Home() {
       .slice(0, 4);
   }, [displayedComponents]);
 
+  // Reset Navbar visibility on tab change or mode change
+  useEffect(() => {
+    setIsNavbarVisible(true);
+  }, [activeSubNavTab, portalViewMode]);
+
+  // Auto-hide Navbar on scroll down, show on scroll up (ONLY in Weather Portal mode)
+  // When in 3D Twin Map mode ("MAP"), Navbar is ALWAYS visible and never hidden.
+  useEffect(() => {
+    if (portalViewMode === "MAP") {
+      setIsNavbarVisible(true);
+      return;
+    }
+
+    let lastScrollTop = 0;
+    let ticking = false;
+
+    const handleScroll = (e: Event) => {
+      const target = e.target as HTMLElement | Document | null;
+      let currentScrollTop = 0;
+
+      if (target && "scrollTop" in target && typeof (target as HTMLElement).scrollTop === "number") {
+        const el = target as HTMLElement;
+        // Ignore small modals/flyouts
+        if (el.clientHeight < 200) return;
+        currentScrollTop = el.scrollTop;
+      } else if (typeof window !== "undefined") {
+        currentScrollTop = window.scrollY || document.documentElement?.scrollTop || 0;
+      }
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const delta = currentScrollTop - lastScrollTop;
+
+          // Always show when near the very top (<= 30px)
+          if (currentScrollTop <= 30) {
+            setIsNavbarVisible(true);
+          } else if (delta > 8 && currentScrollTop > 60) {
+            // Scrolling down past threshold: hide navbar
+            setIsNavbarVisible(false);
+          } else if (delta < -8) {
+            // Scrolling up: show navbar
+            setIsNavbarVisible(true);
+          }
+
+          lastScrollTop = Math.max(0, currentScrollTop);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll, { capture: true });
+    };
+  }, [portalViewMode]);
+
   if (!mounted) {
     return (
       <div className="h-screen w-screen bg-slate-950 flex items-center justify-center text-slate-400 font-mono text-xs select-none">
@@ -180,6 +241,7 @@ export default function Home() {
         onToggleLiveMode={handleToggleLiveMode}
         liveTelemetry={liveTelemetry}
         portalViewMode={portalViewMode}
+        isVisible={portalViewMode === "MAP" ? true : isNavbarVisible}
         onTogglePortalViewMode={() => {
           setPortalViewMode((prev) => {
             const nextMode = prev === "PORTAL" ? "MAP" : "PORTAL";
