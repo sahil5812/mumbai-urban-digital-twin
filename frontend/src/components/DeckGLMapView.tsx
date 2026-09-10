@@ -8,7 +8,7 @@ import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { ComponentTelemetry, SafeRouteResponse, DEMGridResponse } from "../lib/types";
 import { fetchSafeRoute, fetchDEMGrid, fetchRecentCitizenReports, fetchRoadNetworkGeoJSON, fetchWardZonesGeoJSON, CitizenReportRecord } from "../lib/api";
-import { Layers, Rotate3d, Route, Waves, Radio, Play, Pause, Compass, Sun, Moon, Satellite, Zap, AlertTriangle, Navigation, ShieldCheck, ShieldAlert, Clock, ArrowRight, X } from "lucide-react";
+import { Layers, Rotate3d, Route, Waves, Radio, Play, Pause, Compass, Sun, Moon, Satellite, Zap, AlertTriangle, Navigation, ShieldCheck, ShieldAlert, Clock, ArrowRight, X, Boxes } from "lucide-react";
 
 
 const MUMBAI_ROADS = [
@@ -63,6 +63,80 @@ const NODE_COORDINATES: Record<string, [number, number]> = {
   RD_TMC_MBR_01: [73.0180, 19.1950],
 };
 
+interface ClusterDefinition {
+  id: string;
+  name: string;
+  shortName: string;
+  wards: string[];
+  defaultCentroid: [number, number];
+}
+
+export interface HotspotCluster {
+  id: string;
+  isCluster: true;
+  name: string;
+  shortName: string;
+  centroid: [number, number];
+  spots: ComponentTelemetry[];
+  spotIds: Set<string>;
+  peakDepth: number;
+  severeCount: number;
+  warningCount: number;
+  status: "CRITICAL" | "WARNING" | "SAFE";
+}
+
+const CLUSTER_DEFINITIONS: ClusterDefinition[] = [
+  {
+    id: "dadar_parel",
+    name: "Dadar & Parel Basin",
+    shortName: "Dadar Area",
+    wards: ["F/S", "F/N", "G/S", "G/N"],
+    defaultCentroid: [72.8445, 19.0160],
+  },
+  {
+    id: "kurla_sion",
+    name: "Kurla & Sion Basin",
+    shortName: "Kurla Area",
+    wards: ["L", "M/W", "M/E", "N"],
+    defaultCentroid: [72.8800, 19.0680],
+  },
+  {
+    id: "andheri_santacruz",
+    name: "Andheri & Santacruz Basin",
+    shortName: "Andheri Area",
+    wards: ["H/W", "H/E", "K/W", "K/E"],
+    defaultCentroid: [72.8420, 19.0980],
+  },
+  {
+    id: "malad_borivali",
+    name: "Malad & Borivali Belt",
+    shortName: "Malad Area",
+    wards: ["P/N", "P/S", "R/S", "R/C", "R/N"],
+    defaultCentroid: [72.8540, 19.2080],
+  },
+  {
+    id: "south_mumbai",
+    name: "South Island City",
+    shortName: "South Mumbai",
+    wards: ["A", "B", "C", "D", "E"],
+    defaultCentroid: [72.8280, 18.9620],
+  },
+  {
+    id: "mulund_bhandup",
+    name: "Mulund & Bhandup Belt",
+    shortName: "Mulund Area",
+    wards: ["S", "T"],
+    defaultCentroid: [72.9380, 19.1650],
+  },
+  {
+    id: "thane_mumbra",
+    name: "Thane & Mumbra Belt",
+    shortName: "Thane Area",
+    wards: ["TMC-Ward-1", "TMC", "THANE"],
+    defaultCentroid: [73.0240, 19.1860],
+  },
+];
+
 interface DeckGLMapViewProps {
   components: ComponentTelemetry[];
   selectedComponentId: string | null;
@@ -85,6 +159,11 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   const [showDrains, setShowDrains] = useState<boolean>(true);
   const [showArcs, setShowArcs] = useState<boolean>(true);
   const [showRadarScan, setShowRadarScan] = useState<boolean>(true);
+
+  // Geographic Clustering State (Idea 4: Ward Summary Pills with Hover & Expansion)
+  const [clusteringEnabled, setClusteringEnabled] = useState<boolean>(true);
+  const [expandedClusterIds, setExpandedClusterIds] = useState<Set<string>>(new Set());
+  const [hoveredClusterId, setHoveredClusterId] = useState<string | null>(null);
 
   // Flood-Safe Route Navigation State
   const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState<boolean>(false);
@@ -342,11 +421,117 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     return depth >= 40.0 || d.status === "CRITICAL" || d.status === "WARNING";
   };
 
+  // 4. Geographic Clustering of Hotspots (Idea 4: Ward Summary Pills)
+  const hotspotClusters = useMemo<HotspotCluster[]>(() => {
+    const hotspots = components.filter((c) => c.component_type === "HOTSPOT");
+    if (!hotspots.length) return [];
+
+    const clustersMap: Record<string, HotspotCluster> = {};
+    for (const def of CLUSTER_DEFINITIONS) {
+      clustersMap[def.id] = {
+        id: def.id,
+        isCluster: true,
+        name: def.name,
+        shortName: def.shortName,
+        centroid: def.defaultCentroid,
+        spots: [],
+        spotIds: new Set(),
+        peakDepth: 0,
+        severeCount: 0,
+        warningCount: 0,
+        status: "SAFE",
+      };
+    }
+
+    for (const h of hotspots) {
+      const hWard = (h.ward || "").trim();
+      let matchedDef = CLUSTER_DEFINITIONS.find((def) => def.wards.includes(hWard));
+      if (!matchedDef) {
+        const hLon = h.longitude || 72.85;
+        const hLat = h.latitude || 19.06;
+        let minDist = Infinity;
+        for (const def of CLUSTER_DEFINITIONS) {
+          const d = Math.hypot(def.defaultCentroid[0] - hLon, def.defaultCentroid[1] - hLat);
+          if (d < minDist) {
+            minDist = d;
+            matchedDef = def;
+          }
+        }
+      }
+
+      if (matchedDef && clustersMap[matchedDef.id]) {
+        const c = clustersMap[matchedDef.id];
+        c.spots.push(h);
+        c.spotIds.add(h.component_id);
+      }
+    }
+
+    const result: HotspotCluster[] = [];
+    for (const def of CLUSTER_DEFINITIONS) {
+      const c = clustersMap[def.id];
+      if (!c || !c.spots.length) continue;
+
+      const avgLon = c.spots.reduce((sum, s) => sum + (s.longitude || def.defaultCentroid[0]), 0) / c.spots.length;
+      const avgLat = c.spots.reduce((sum, s) => sum + (s.latitude || def.defaultCentroid[1]), 0) / c.spots.length;
+      c.centroid = [Number(avgLon.toFixed(4)), Number(avgLat.toFixed(4))];
+
+      c.peakDepth = Math.round(Math.max(...c.spots.map((s) => s.water_depth_cm || 0)));
+      c.severeCount = c.spots.filter((s) => s.status === "CRITICAL" || (s.water_depth_cm || 0) >= 30).length;
+      c.warningCount = c.spots.filter(
+        (s) => s.status === "WARNING" || ((s.water_depth_cm || 0) >= 15 && (s.water_depth_cm || 0) < 30)
+      ).length;
+
+      if (c.severeCount > 0 || c.peakDepth >= 35) {
+        c.status = "CRITICAL";
+      } else if (c.warningCount > 0 || c.peakDepth >= 15) {
+        c.status = "WARNING";
+      } else {
+        c.status = "SAFE";
+      }
+
+      result.push(c);
+    }
+
+    return result;
+  }, [components]);
+
+  const isClusterExpanded = (clusterId: string) => {
+    if (!clusteringEnabled) return true;
+    if (viewState.zoom >= 13.8) return true;
+    return expandedClusterIds.has(clusterId);
+  };
+
+  const handleClusterExpand = (cluster: HotspotCluster) => {
+    setExpandedClusterIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(cluster.id)) {
+        next.delete(cluster.id);
+      } else {
+        next.add(cluster.id);
+      }
+      return next;
+    });
+
+    setViewState((prev) => ({
+      ...prev,
+      longitude: cluster.centroid[0],
+      latitude: cluster.centroid[1],
+      zoom: Math.max(14.2, prev.zoom + 2.2),
+    }));
+  };
+
   // Filter components that should display animated moving radar markers
   const activeRainHotspots = useMemo(() => {
     if (!components.length || rainfall_mm_hr <= 0) return [];
-    return components.filter(isActiveRainHotspot);
-  }, [components, rainfall_mm_hr]);
+    return components.filter((d) => {
+      if (!isActiveRainHotspot(d)) return false;
+      if (clusteringEnabled && viewState.zoom < 13.8) {
+        const cluster = hotspotClusters.find((c) => c.spotIds.has(d.component_id));
+        if (cluster && !expandedClusterIds.has(cluster.id)) return false;
+      }
+      return true;
+    });
+  }, [components, rainfall_mm_hr, clusteringEnabled, viewState.zoom, hotspotClusters, expandedClusterIds]);
 
   // 1. Primary Live Moving Animated Radar Ripple Layer (Expanding Concentric Wave Ring)
   const radarPulseWaveLayer = useMemo(() => {
@@ -359,7 +544,6 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       getRadius: (d: ComponentTelemetry) => {
         const sev = getSeverity(d);
         const isDangerous = sev === "HEAVY_CRITICAL";
-        // Dangerous spots have larger, high-velocity shockwaves
         const base = isDangerous ? 260 + (d.water_depth_cm || 0) * 4 : 160 + (d.water_depth_cm || 0) * 2;
         const multiplier = isDangerous ? 2.4 : 1.6;
         return base * (1 + pulsePhase * multiplier);
@@ -368,9 +552,9 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         const sev = getSeverity(d);
         const alpha = Math.floor((1 - pulsePhase) * 230);
         if (d.component_id === selectedComponentId) return [0, 242, 254, alpha];
-        if (sev === "HEAVY_CRITICAL") return [239, 68, 68, alpha]; // Dangerous Crimson Red
-        if (sev === "MODERATE_WARNING") return [245, 158, 11, alpha]; // Warning Amber
-        return [6, 182, 212, alpha]; // Normal Rain Gentle Cyan
+        if (sev === "HEAVY_CRITICAL") return [239, 68, 68, alpha];
+        if (sev === "MODERATE_WARNING") return [245, 158, 11, alpha];
+        return [6, 182, 212, alpha];
       },
       getFillColor: (d: ComponentTelemetry) => {
         const sev = getSeverity(d);
@@ -412,9 +596,9 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         const sev = getSeverity(d);
         const alpha = Math.floor((1 - p2) * 190);
         if (d.component_id === selectedComponentId) return [0, 242, 254, alpha];
-        if (sev === "HEAVY_CRITICAL") return [249, 115, 22, alpha]; // Fiery Orange trailing shockwave for Dangerous
+        if (sev === "HEAVY_CRITICAL") return [249, 115, 22, alpha];
         if (sev === "MODERATE_WARNING") return [245, 158, 11, alpha];
-        return [56, 189, 248, alpha]; // Sky Blue trailing wave for Normal
+        return [56, 189, 248, alpha];
       },
       getFillColor: (d: ComponentTelemetry) => {
         const sev = getSeverity(d);
@@ -436,49 +620,207 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     });
   }, [activeRainHotspots, showRadarScan, pulsePhase, rainfall_mm_hr, selectedComponentId]);
 
-  // 3. Central Solid Core Pin Markers (With subtle rhythmic size breathing ONLY on active flood spots)
+  // 2.5 Cluster Spider Lines Preview Layer (On Hover: Draws radiant lines to member spots)
+  const clusterSpiderLinesLayer = useMemo(() => {
+    if (!clusteringEnabled || viewState.zoom >= 13.8 || !hoveredClusterId) return null;
+    const targetCluster = hotspotClusters.find((c) => c.id === hoveredClusterId && !expandedClusterIds.has(c.id));
+    if (!targetCluster) return null;
+
+    const spiderPaths = targetCluster.spots.map((s) => ({
+      path: [targetCluster.centroid, [s.longitude || 72.85, s.latitude || 19.06]],
+      spot: s,
+    }));
+
+    return new PathLayer({
+      id: "cluster-spider-preview-lines",
+      data: spiderPaths,
+      getPath: (d: any) => d.path,
+      getColor: (d: any) => {
+        if (d.spot.status === "CRITICAL") return [239, 68, 68, 220];
+        if (d.spot.status === "WARNING") return [245, 158, 11, 200];
+        return [6, 182, 212, 180];
+      },
+      getWidth: 2.5,
+      widthMinPixels: 1.5,
+      widthMaxPixels: 4,
+      capRounded: true,
+      jointRounded: true,
+      pickable: false,
+    });
+  }, [clusteringEnabled, viewState.zoom, hoveredClusterId, hotspotClusters, expandedClusterIds]);
+
+  // 2.6 Cluster Member Preview Dots Layer (On Hover: Highlights member spots)
+  const clusterHoverMemberDotsLayer = useMemo(() => {
+    if (!clusteringEnabled || viewState.zoom >= 13.8 || !hoveredClusterId) return null;
+    const targetCluster = hotspotClusters.find((c) => c.id === hoveredClusterId && !expandedClusterIds.has(c.id));
+    if (!targetCluster) return null;
+
+    return new ScatterplotLayer({
+      id: "cluster-hover-member-dots",
+      data: targetCluster.spots,
+      getPosition: (d: ComponentTelemetry) => [d.longitude || 72.85, d.latitude || 19.06],
+      getRadius: 160,
+      radiusMinPixels: 5,
+      radiusMaxPixels: 12,
+      getFillColor: (d: ComponentTelemetry) => {
+        if (d.status === "CRITICAL") return [239, 68, 68, 255];
+        if (d.status === "WARNING") return [245, 158, 11, 255];
+        return [6, 182, 212, 240];
+      },
+      getLineColor: [255, 255, 255, 240],
+      lineWidthMinPixels: 1.5,
+      stroked: true,
+      filled: true,
+      pickable: false,
+    });
+  }, [clusteringEnabled, viewState.zoom, hoveredClusterId, hotspotClusters, expandedClusterIds]);
+
+  // 2.7 Cluster Centroid Pin Markers Layer (for unexpanded clusters)
+  const clusterCentroidMarkersLayer = useMemo(() => {
+    if (!showMarkers || !clusteringEnabled) return null;
+
+    const collapsedClusters = hotspotClusters.filter((c) => !isClusterExpanded(c.id));
+    if (!collapsedClusters.length) return null;
+
+    return new ScatterplotLayer({
+      id: "cluster-centroid-markers",
+      data: collapsedClusters,
+      getPosition: (c: HotspotCluster) => c.centroid,
+      getRadius: (c: HotspotCluster) => {
+        const base = 280 + c.spots.length * 10;
+        if (c.status === "CRITICAL") {
+          return base + Math.sin(pulsePhase * Math.PI * 2) * 25;
+        }
+        return base;
+      },
+      getFillColor: (c: HotspotCluster) => {
+        if (c.id === hoveredClusterId) return [0, 242, 254, 255];
+        if (c.status === "CRITICAL") return [239, 68, 68, 250];
+        if (c.status === "WARNING") return [245, 158, 11, 250];
+        return [16, 185, 129, 240];
+      },
+      getLineColor: [255, 255, 255, 255],
+      lineWidthMinPixels: 3,
+      stroked: true,
+      filled: true,
+      radiusMinPixels: 12,
+      radiusMaxPixels: 26,
+      pickable: true,
+      autoHighlight: true,
+      highlightColor: [255, 255, 255, 180],
+      onHover: (info: any) => setHoveredClusterId(info.object?.id || null),
+      onClick: (info: any) => {
+        if (info.object) {
+          handleClusterExpand(info.object);
+        }
+      },
+      updateTriggers: {
+        getRadius: [pulsePhase, rainfall_mm_hr],
+        getFillColor: [rainfall_mm_hr, hoveredClusterId],
+      },
+    });
+  }, [showMarkers, clusteringEnabled, hotspotClusters, expandedClusterIds, hoveredClusterId, pulsePhase, rainfall_mm_hr, viewState.zoom]);
+
+  // 2.8 Cluster Summary Pills Layer (Idea 4: Dadar Area -> [6 Severe Spots])
+  const clusterPillsLayer = useMemo(() => {
+    if (!showMarkers || !clusteringEnabled) return null;
+
+    const collapsedClusters = hotspotClusters.filter((c) => !isClusterExpanded(c.id));
+    if (!collapsedClusters.length) return null;
+
+    return new TextLayer({
+      id: "cluster-summary-pills",
+      data: collapsedClusters,
+      getPosition: (c: HotspotCluster) => [c.centroid[0], c.centroid[1], 0],
+      pixelOffset: [0, -22],
+      getText: (c: HotspotCluster) => {
+        if (c.severeCount > 0) {
+          return `${c.shortName} -> [${c.severeCount} Severe Spots]`;
+        }
+        if (c.warningCount > 0) {
+          return `${c.shortName} -> [${c.warningCount} Warning Spots]`;
+        }
+        return `${c.shortName} -> [${c.spots.length} Spots]`;
+      },
+      getSize: 12,
+      getColor: [255, 255, 255, 255],
+      getTextAnchor: "middle",
+      getAlignmentBaseline: "bottom",
+      background: true,
+      getBackgroundColor: (c: HotspotCluster) => {
+        if (c.id === hoveredClusterId) {
+          if (c.status === "CRITICAL") return [220, 38, 38, 255];
+          if (c.status === "WARNING") return [217, 119, 6, 255];
+          return [8, 145, 178, 255];
+        }
+        if (c.status === "CRITICAL") return [153, 27, 27, 240];
+        if (c.status === "WARNING") return [180, 83, 9, 240];
+        return [15, 23, 42, 230];
+      },
+      backgroundPadding: [8, 4, 8, 4],
+      pickable: true,
+      onHover: (info: any) => setHoveredClusterId(info.object?.id || null),
+      onClick: (info: any) => {
+        if (info.object) {
+          handleClusterExpand(info.object);
+        }
+      },
+      updateTriggers: {
+        getText: [rainfall_mm_hr],
+        getBackgroundColor: [rainfall_mm_hr, hoveredClusterId],
+      },
+    });
+  }, [showMarkers, clusteringEnabled, hotspotClusters, expandedClusterIds, hoveredClusterId, viewState.zoom, rainfall_mm_hr]);
+
+  // 3. Central Solid Core Pin Markers (Render individual spots when expanded or when clustering is OFF)
   const stationMarkersLayer = useMemo(() => {
     if (!components.length || !showMarkers) return null;
 
+    const visibleComponents = components.filter((d) => {
+      if (d.component_type !== "HOTSPOT") return true;
+      if (!clusteringEnabled || viewState.zoom >= 13.8) return true;
+      const cluster = hotspotClusters.find((c) => c.spotIds.has(d.component_id));
+      if (!cluster) return true;
+      return expandedClusterIds.has(cluster.id);
+    });
+
     return new ScatterplotLayer({
       id: "station-point-markers",
-      data: components,
+      data: visibleComponents,
       getPosition: (d: ComponentTelemetry) => [d.longitude || 72.85, d.latitude || 19.06],
       getRadius: (d: ComponentTelemetry) => {
         const base = d.component_id === selectedComponentId ? 250 : 170;
         
         // Heartbeat / breathing ONLY on active rain hotspots!
         const isMovingHotspot = isActiveRainHotspot(d);
-        if (!isMovingHotspot) return base; // completely static for all other 35+ components!
+        if (!isMovingHotspot) return base;
 
         const sev = getSeverity(d);
-        // Urgent heartbeat for heavy dangerous rain, gentle breath for normal rain
         const amplitude = sev === "HEAVY_CRITICAL" ? 24 : 12;
         const breath = Math.sin(pulsePhase * Math.PI * 2) * amplitude;
         return base + breath;
       },
       getFillColor: (d: ComponentTelemetry) => {
-        if (d.component_id === selectedComponentId) return [0, 242, 254, 255]; // Selected Neon Cyan
+        if (d.component_id === selectedComponentId) return [0, 242, 254, 255];
         
         const isMovingHotspot = isActiveRainHotspot(d);
         if (isMovingHotspot) {
           const sev = getSeverity(d);
-          if (sev === "HEAVY_CRITICAL") return [239, 68, 68, 255]; // Dangerous Crimson Red
-          if (sev === "MODERATE_WARNING") return [245, 158, 11, 255]; // Warning Amber
-          return [6, 182, 212, 245]; // Normal Rain Active Cyan
+          if (sev === "HEAVY_CRITICAL") return [239, 68, 68, 255];
+          if (sev === "MODERATE_WARNING") return [245, 158, 11, 255];
+          return [6, 182, 212, 245];
         }
 
-        // Dry / Safe spots and static infrastructure retain clean static colors
-        if (d.component_type === "PUMP") return [6, 182, 212, 245]; // SPS Cyan
-        if (d.component_type === "DRAIN") return [14, 165, 233, 245]; // Drain Blue
-        if (d.component_type === "ROAD") return [99, 102, 241, 245]; // Road Indigo
-        return [16, 185, 129, 250]; // Safe Emerald Green
+        if (d.component_type === "PUMP") return [6, 182, 212, 245];
+        if (d.component_type === "DRAIN") return [14, 165, 233, 245];
+        if (d.component_type === "ROAD") return [99, 102, 241, 245];
+        return [16, 185, 129, 250];
       },
       getLineColor: (d: ComponentTelemetry) => {
         if (d.component_id === selectedComponentId) return [255, 255, 255, 255];
         const isMovingHotspot = isActiveRainHotspot(d);
         if (isMovingHotspot && getSeverity(d) === "HEAVY_CRITICAL") {
-          return [254, 202, 202, 255]; // High-contrast border for danger
+          return [254, 202, 202, 255];
         }
         return [255, 255, 255, 220];
       },
@@ -497,9 +839,9 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         getLineColor: [rainfall_mm_hr, selectedComponentId],
       }
     });
-  }, [components, selectedComponentId, showMarkers, pulsePhase, rainfall_mm_hr]);
+  }, [components, selectedComponentId, showMarkers, pulsePhase, rainfall_mm_hr, clusteringEnabled, viewState.zoom, hotspotClusters, expandedClusterIds]);
 
-  // 4. Dynamic Status Text Badges Anchored Right Above Markers
+  // 4. Dynamic Status Text Badges Anchored Right Above Individual Markers
   const textTagsLayer = useMemo(() => {
     if (!components.length || !showMarkers) return null;
 
@@ -507,9 +849,11 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
 
     const filtered = components.filter((d) => {
       if (d.component_id === selectedComponentId) return true;
-      // Show text label ONLY on active moving hotspots where rain is logging water!
+      if (d.component_type === "HOTSPOT" && clusteringEnabled && viewState.zoom < 13.8) {
+        const cluster = hotspotClusters.find((c) => c.spotIds.has(d.component_id));
+        if (cluster && !expandedClusterIds.has(cluster.id)) return false;
+      }
       if (isActiveRainHotspot(d)) return true;
-      // In dry/calm mode, only show key anchor landmarks
       if (rainfall_mm_hr === 0 && ANCHOR_HUBS.has(d.component_id)) return true;
       return false;
     });
@@ -541,10 +885,10 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         if (d.component_id === selectedComponentId) return [2, 132, 199, 245];
         if (isActiveRainHotspot(d)) {
           const sev = getSeverity(d);
-          if (sev === "HEAVY_CRITICAL") return [185, 28, 28, 245]; // Dangerous Red
-          return [8, 145, 178, 235]; // Normal Rain Active Cyan
+          if (sev === "HEAVY_CRITICAL") return [185, 28, 28, 245];
+          return [8, 145, 178, 235];
         }
-        return [15, 23, 42, 220]; // Sleek Dark Slate
+        return [15, 23, 42, 220];
       },
       backgroundPadding: [6, 3, 6, 3],
       pickable: true,
@@ -554,7 +898,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         getBackgroundColor: [rainfall_mm_hr, selectedComponentId],
       }
     });
-  }, [components, selectedComponentId, showMarkers, rainfall_mm_hr]);
+  }, [components, selectedComponentId, showMarkers, rainfall_mm_hr, clusteringEnabled, viewState.zoom, hotspotClusters, expandedClusterIds]);
 
   // 5. 120-Segment High-Resolution Arterial Road Network (GeoJsonLayer with Dynamic Inundation Heatmap)
   const roadsLayer = useMemo(() => {
@@ -868,9 +1212,13 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     avoidedHazardsLayer,
     citizenReportsHaloLayer,
     citizenReportsLayer,
+    clusterSpiderLinesLayer,
     radarPulseWaveLayer, 
     radarSecondaryPulseLayer, 
+    clusterHoverMemberDotsLayer,
+    clusterCentroidMarkersLayer,
     stationMarkersLayer, 
+    clusterPillsLayer,
     textTagsLayer
   ].filter(Boolean);
 
@@ -882,8 +1230,71 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         controller={{ dragRotate: true, touchRotate: true, inertia: true }}
         layers={layers}
         onError={() => {}}
+        getCursor={({ isHovering }) => (isHovering ? "pointer" : "default")}
+        onHover={(info: any) => {
+          if (!info.object?.isCluster && hoveredClusterId) {
+            setHoveredClusterId(null);
+          }
+        }}
         getTooltip={({ object }: any) => {
           if (!object) return null;
+
+          // 0. Geographic Cluster Summary Pill / Centroid Marker
+          if (object.isCluster) {
+            const cluster = object as HotspotCluster;
+            const statusColor =
+              cluster.status === "CRITICAL"
+                ? "#f87171"
+                : cluster.status === "WARNING"
+                ? "#fbbf24"
+                : "#38bdf8";
+
+            const spotsListHtml = cluster.spots
+              .slice(0, 7)
+              .map((s) => {
+                const sColor =
+                  s.status === "CRITICAL"
+                    ? "#f87171"
+                    : s.status === "WARNING"
+                    ? "#fbbf24"
+                    : "#34d399";
+                return `<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 3px; font-size: 10px; color: #cbd5e1;">
+                  <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 175px;">📍 ${s.name || s.component_id}</span>
+                  <span style="color: ${sColor}; font-weight: bold; font-family: monospace; margin-left: 6px;">${Math.round(s.water_depth_cm || 0)}cm</span>
+                </div>`;
+              })
+              .join("");
+
+            const overflowNote =
+              cluster.spots.length > 7
+                ? `<div style="color: #94a3b8; font-size: 9px; margin-top: 4px; font-style: italic;">+ ${cluster.spots.length - 7} more chronic spots</div>`
+                : "";
+
+            return {
+              html: `<div style="padding: 10px 14px; background: rgba(15,23,42,0.96); backdrop-filter: blur(12px); border: 1.5px solid ${statusColor}; border-radius: 14px; color: #fff; font-family: system-ui, -apple-system, sans-serif; font-size: 11px; min-width: 250px; max-width: 300px; box-shadow: 0 16px 36px rgba(0,0,0,0.7);">
+                <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 6px; margin-bottom: 6px;">
+                  <span style="font-weight: 700; color: #f8fafc; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                    🏙️ ${cluster.name}
+                  </span>
+                  <span style="font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 6px; background: ${cluster.status === 'CRITICAL' ? 'rgba(239,68,68,0.25)' : cluster.status === 'WARNING' ? 'rgba(245,158,11,0.25)' : 'rgba(56,189,248,0.25)'}; color: ${statusColor}; border: 1px solid ${statusColor};">
+                    ${cluster.status}
+                  </span>
+                </div>
+                <div style="color: #94a3b8; font-size: 10px; margin-bottom: 6px; display: flex; justify-content: space-between;">
+                  <span>Spots: <b>${cluster.spots.length}</b> (🔴 ${cluster.severeCount} Severe)</span>
+                  <span>Peak: <b style="color: ${statusColor};">${cluster.peakDepth}cm</b></span>
+                </div>
+                <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 5px;">
+                  <div style="font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: 600; margin-bottom: 2px; letter-spacing: 0.5px;">Member Chronic Hotspots:</div>
+                  ${spotsListHtml}
+                  ${overflowNote}
+                </div>
+                <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.1); color: #38bdf8; font-size: 10px; text-align: center; font-weight: 500;">
+                  ⚡ Click to zoom & expand individual spots
+                </div>
+              </div>`,
+            };
+          }
 
           // 1. Citizen Grievance Marker
           if (object.reporter_name) {
@@ -1055,6 +1466,21 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           <span>Markers</span>
         </button>
 
+        {/* Geographic Basin Clustering (Ward Summary Pills) */}
+        <button
+          type="button"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setClusteringEnabled(!clusteringEnabled); }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+            clusteringEnabled
+              ? "bg-purple-600/35 border-purple-400/60 text-purple-200 shadow-[0_0_12px_rgba(168,85,247,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
+              : "glass-button text-slate-300 hover:text-white font-medium"
+          }`}
+          title="Toggle Geographic Basin Clustering (Summary Pills & Spider Breakdown)"
+        >
+          <Boxes className="w-3.5 h-3.5 text-purple-400 drop-shadow-sm" />
+          <span>Clusters ({clusteringEnabled ? "ON" : "OFF"})</span>
+        </button>
+
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowRoads(!showRoads); }}
@@ -1160,6 +1586,33 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           <span>360° Drone Orbit</span>
         </button>
       </div>
+
+      {/* Active Expanded Basin Breadcrumb Chip */}
+      {clusteringEnabled && expandedClusterIds.size > 0 && (
+        <div className="absolute top-16 right-4 z-20 flex items-center gap-2 glass-panel px-3.5 py-1.5 rounded-xl border border-purple-400/40 shadow-[0_8px_24px_rgba(0,0,0,0.6)] text-xs text-slate-200 backdrop-blur-md animate-fadeIn">
+          <span className="w-2 h-2 rounded-full bg-purple-400 animate-ping" />
+          <span>
+            Expanded Basin:{" "}
+            <b className="text-purple-300">
+              {Array.from(expandedClusterIds)
+                .map((id) => CLUSTER_DEFINITIONS.find((d) => d.id === id)?.shortName || id)
+                .join(", ")}
+            </b>
+          </span>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setExpandedClusterIds(new Set());
+            }}
+            className="ml-1.5 px-2 py-0.5 rounded-md bg-purple-500/20 hover:bg-purple-500/40 text-purple-200 border border-purple-400/30 text-[10px] font-bold transition-all"
+            title="Collapse all expanded clusters back to summary pills"
+          >
+            Collapse All
+          </button>
+        </div>
+      )}
 
       {/* Flood-Safe Route Navigator Drawer (Top-Left) */}
       {isRoutePlannerOpen && (
