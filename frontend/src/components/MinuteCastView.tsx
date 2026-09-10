@@ -424,7 +424,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
       <div className="max-w-4xl mx-auto space-y-4 pb-20">
 
         {/* Tactical Scenario Quick-Tester Bar */}
-        <div className="glass-panel p-2.5 rounded-2xl flex flex-wrap items-center justify-between gap-2 text-xs border border-white/15 shadow-[0_12px_28px_rgba(0,0,0,0.4)]">
+        <div className="glass-panel p-2.5 rounded-2xl flex flex-wrap items-center justify-between gap-2 text-xs border border-white/15 shadow-[0_12px_28px_rgba(0,0,0,0.4)] scroll-reveal">
           <div className="flex items-center gap-2 pl-2">
             <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
             <span className="font-bold text-slate-200 uppercase tracking-wider font-mono text-[11px]">
@@ -458,14 +458,14 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                   : "glass-button text-slate-300 hover:text-white"
               }`}
             >
-              ☀️ Clear (Dry)
+              ☀️ Dry 0mm
             </button>
 
             <button
               type="button"
               onClick={() => {
                 setActiveScenario("INCOMING_18M");
-                onSimulateScenario?.("Storm Landfall (+18m)", 15, 3.8, 30);
+                onSimulateScenario?.("Incoming Storm in 18m", 15, 3.8, 30);
               }}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeScenario === "INCOMING_18M"
@@ -510,7 +510,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
         </div>
 
         {/* CARD 1: ACCUWEATHER-STYLE 120-MINUTE PRECIPITATION TIMELINE (Frosted Acrylic) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] scroll-reveal">
           {/* Header row */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4 mb-4">
             <div>
@@ -628,7 +628,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
         </div>
 
         {/* CARD 2: MUMBAI WEATHER RADAR (Exact Match to Screenshot Image 2) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] scroll-reveal">
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <div className="flex items-center gap-2">
               <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
@@ -752,7 +752,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
         </div>
 
         {/* CARD 2.5: 5-ZONE METROPOLITAN SPATIAL RADAR MESH (MUMBAI + THANE MMR) */}
-        <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5)] space-y-3">
+        <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5)] space-y-3 scroll-reveal">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2.5">
             <div className="flex items-center gap-2">
               <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
@@ -850,7 +850,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
         </div>
 
         {/* CARD 3: 30-MINUTE INTERVAL ACCORDIONS WITH HYPERLOCAL LOCATIONS */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] space-y-3">
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] space-y-3 scroll-reveal">
           
           {/* Section Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3 mb-2">
@@ -974,7 +974,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
               return (
                 <div
                   key={group.id}
-                  className="rounded-2xl border border-white/10 overflow-hidden glass-panel-subtle transition-all"
+                  className="rounded-2xl border border-white/10 overflow-hidden glass-panel-subtle transition-all scroll-reveal"
                 >
                   {/* Accordion Header */}
                   <button

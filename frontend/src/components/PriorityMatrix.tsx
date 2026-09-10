@@ -17,7 +17,7 @@ export const PriorityMatrix: React.FC<PriorityMatrixProps> = ({ priorities, onSe
   };
 
   return (
-    <div className="glass-panel rounded-3xl p-5 text-slate-100 shadow-[0_24px_50px_rgba(0,0,0,0.65),inset_0_1px_1px_rgba(255,255,255,0.2)] flex flex-col gap-3.5">
+    <div className="glass-panel rounded-3xl p-5 text-slate-100 shadow-[0_24px_50px_rgba(0,0,0,0.65),inset_0_1px_1px_rgba(255,255,255,0.2)] flex flex-col gap-3.5 scroll-reveal">
       {/* Title */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
         <div className="flex items-center gap-2">

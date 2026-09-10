@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import OceanSkyBackground from "@/components/OceanSkyBackground";
+import { ScrollRevealInit } from "@/components/ScrollRevealInit";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,6 +31,9 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased text-slate-100 min-h-screen relative overflow-x-hidden`}
       >
+        {/* Global Scroll Reveal Animation Observer */}
+        <ScrollRevealInit />
+
         {/* Full-Body Fixed Interactive Procedural WebGL Ocean & Sky Shader Background */}
         <OceanSkyBackground />
 

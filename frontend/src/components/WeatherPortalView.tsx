@@ -929,7 +929,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
       <div className="max-w-4xl mx-auto space-y-4 pb-16">
         
         {/* CARD 1: TONIGHT'S WEATHER & ALERTS (Frosted Acrylic) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6">
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 scroll-reveal">
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
               TONIGHT'S WEATHER & HYDROLOGY ALERT
@@ -959,7 +959,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         </div>
 
         {/* CARD 2: CURRENT WEATHER & HYDROLOGICAL METRICS (Frosted Acrylic) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6">
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 scroll-reveal">
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
               CURRENT WEATHER & TELEMETRY
@@ -1050,7 +1050,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         </div>
 
         {/* CARD 3: LOOKING AHEAD ADVISORY BANNER (Frosted Amber Glass) */}
-        <div className="glass-panel rounded-3xl p-4 sm:p-5 border-amber-500/30 bg-gradient-to-r from-amber-950/30 via-slate-950/40 to-slate-950/50 flex items-center justify-between gap-4">
+        <div className="glass-panel rounded-3xl p-4 sm:p-5 border-amber-500/30 bg-gradient-to-r from-amber-950/30 via-slate-950/40 to-slate-950/50 flex items-center justify-between gap-4 scroll-reveal">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-400/40 shrink-0 backdrop-blur-xl shadow-[0_0_12px_rgba(245,158,11,0.2)]">
               <ShieldAlert className="w-5 h-5" />
@@ -1075,7 +1075,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         </div>
 
         {/* CARD 4: MUMBAI & THANE WEATHER RADAR PREVIEW (Frosted Acrylic) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6 overflow-hidden">
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 overflow-hidden scroll-reveal">
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
@@ -1170,7 +1170,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         {/* CARD 5: HOURLY WEATHER & HYDROLOGY EXPANDABLE LIST (AccuWeather Inspired) */}
         <div
           ref={hourlySectionRef}
-          className={`glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] transition-all duration-500 ${
+          className={`glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] transition-all duration-500 scroll-reveal ${
             activeTab === "HOURLY" ? "ring-2 ring-cyan-400/80 shadow-[0_0_30px_rgba(6,182,212,0.3)]" : ""
           }`}
         >
@@ -1472,7 +1472,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         {/* CARD 6: 10-DAY SYNOPTIC WEATHER & ARABIAN SEA TIDAL FORECAST (Inspired by AccuWeather Screenshots) */}
         <div
           ref={tenDaySectionRef}
-          className={`glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] transition-all duration-500 ${
+          className={`glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] transition-all duration-500 scroll-reveal ${
             activeTab === "10-DAY" ? "ring-2 ring-amber-400/80 shadow-[0_0_30px_rgba(245,158,11,0.3)]" : ""
           }`}
         >
@@ -1494,7 +1494,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
             {TEN_DAY_FORECAST.map((day) => (
               <div
                 key={day.day + day.date}
-                className="glass-panel-subtle rounded-2xl p-4 sm:p-5 border border-white/15 hover:border-white/25 transition-all shadow-[inset_0_1.2px_1.5px_rgba(255,255,255,0.4),0_8px_24px_rgba(0,0,0,0.25)] flex flex-col gap-3"
+                className="glass-panel-subtle rounded-2xl p-4 sm:p-5 border border-white/15 hover:border-white/25 transition-all shadow-[inset_0_1.2px_1.5px_rgba(255,255,255,0.4),0_8px_24px_rgba(0,0,0,0.25)] flex flex-col gap-3 scroll-reveal"
               >
                 {/* Header Row: Day/Date + Icon + Big Hi/Lo Temp + Rain Prob */}
                 <div className="flex items-center justify-between">
@@ -1596,7 +1596,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         </div>
 
         {/* CARD 7: SUN, MOON & ASTRONOMICAL SPRING TIDE (Frosted Acrylic) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)]">
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] scroll-reveal">
           <div className="border-b border-white/10 pb-3 mb-3">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
               SUN, MOON & COASTAL ASTRONOMICAL TIDES
