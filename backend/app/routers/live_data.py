@@ -18,3 +18,15 @@ async def get_current_live_data():
 @router.post("/refresh")
 async def trigger_live_refresh():
     return await force_refresh_telemetry()
+
+
+@router.get("/status")
+async def get_live_status():
+    cache = get_cached_telemetry()
+    return {
+        "status": cache.get("status", "OPERATIONAL"),
+        "source": cache.get("source", "Open-Meteo & IMD AWS"),
+        "last_updated": cache.get("last_updated"),
+        "weather": cache.get("weather", {}),
+        "tide": cache.get("tide", {})
+    }

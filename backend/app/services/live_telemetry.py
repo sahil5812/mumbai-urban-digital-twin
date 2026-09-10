@@ -3,6 +3,8 @@ Live Telemetry Ingestion Service with Real Target Wall-Clock Timestamps
 """
 
 import asyncio
+import os
+import sqlite3
 import httpx
 import logging
 import time
@@ -17,7 +19,10 @@ MUMBAI_LON = 72.8777
 WEATHER_API_URL = (
     f"https://api.open-meteo.com/v1/forecast?latitude={MUMBAI_LAT}&longitude={MUMBAI_LON}"
     f"&current=precipitation,rain,temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code"
-    f"&minutely_15=precipitation&forecast_minutely_15=12&timezone=Asia%2FKolkata"
+    f"&minutely_15=precipitation&forecast_minutely_15=12"
+    f"&hourly=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&forecast_hours=24"
+    f"&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&forecast_days=10"
+    f"&timezone=Asia%2FKolkata"
 )
 MARINE_API_URL = (
     f"https://marine-api.open-meteo.com/v1/marine?latitude={MUMBAI_LAT}&longitude={MUMBAI_LON}"
@@ -49,6 +54,8 @@ _TELEMETRY_CACHE: Dict[str, Any] = {
         {"time_offset": "+45m", "rain_mm_hr": 0.0, "status": "CLEAR"},
         {"time_offset": "+60m", "rain_mm_hr": 0.0, "status": "CLEAR"},
     ],
+    "hourly_forecast": [],
+    "daily_forecast": [],
 }
 
 _CACHE_LOCK = asyncio.Lock()
@@ -63,6 +70,8 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
     code = 2
     tide = 3.59
     minutely_forecast = []
+    hourly_forecast = []
+    daily_forecast = []
     next_rain_eta = None
     target_ts_ms = _TELEMETRY_CACHE.get("target_rain_timestamp_ms") or int((time.time() + 900) * 1000)
     predicted_30m = 0.0
@@ -111,12 +120,65 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
                 if next_rain_eta is not None:
                     early_warning = True
                     action = f"PREDICTIVE RADAR ALERT: Precipitation approaching in ~{next_rain_eta} mins ({predicted_30m} mm/h). Pre-charge Hindmata flood cisterns & alert BMC Ward Officers."
+
+                # Parse 24-hour hourly forecast
+                hourly = data.get("hourly", {})
+                h_times = hourly.get("time", [])
+                h_temps = hourly.get("temperature_2m", [])
+                h_hum = hourly.get("relative_humidity_2m", [])
+                h_precip = hourly.get("precipitation", [])
+                h_codes = hourly.get("weather_code", [])
+                h_winds = hourly.get("wind_speed_10m", [])
+
+                for i in range(min(24, len(h_times))):
+                    hourly_forecast.append({
+                        "time": h_times[i],
+                        "temp_c": round(float(h_temps[i]), 1) if i < len(h_temps) else 28.0,
+                        "humidity_pct": round(float(h_hum[i]), 1) if i < len(h_hum) else 75.0,
+                        "precip_mm": round(float(h_precip[i]), 1) if i < len(h_precip) else 0.0,
+                        "weather_code": int(h_codes[i]) if i < len(h_codes) else 2,
+                        "wind_kmh": round(float(h_winds[i]), 1) if i < len(h_winds) else 15.0,
+                    })
+
+                # Parse 10-day synoptic outlook
+                daily = data.get("daily", {})
+                d_times = daily.get("time", [])
+                d_codes = daily.get("weather_code", [])
+                d_max = daily.get("temperature_2m_max", [])
+                d_min = daily.get("temperature_2m_min", [])
+                d_precip = daily.get("precipitation_sum", [])
+                d_wind_max = daily.get("wind_speed_10m_max", [])
+
+                for i in range(min(10, len(d_times))):
+                    daily_forecast.append({
+                        "date": d_times[i],
+                        "weather_code": int(d_codes[i]) if i < len(d_codes) else 2,
+                        "temp_max_c": round(float(d_max[i]), 1) if i < len(d_max) else 32.0,
+                        "temp_min_c": round(float(d_min[i]), 1) if i < len(d_min) else 26.0,
+                        "precipitation_sum_mm": round(float(d_precip[i]), 1) if i < len(d_precip) else 0.0,
+                        "wind_speed_max_kmh": round(float(d_wind_max[i]), 1) if i < len(d_wind_max) else 20.0,
+                    })
         except Exception as e:
             logger.warning(f"Weather API fetch warning: {e}")
 
+        # Task 12: Real Tide Data from Database (with marine API fallback)
+        try:
+            db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "dataset", "09_digital_twin_unified_db", "mumbai_digital_twin.db"))
+            if os.path.exists(db_path):
+                conn = sqlite3.connect(db_path)
+                cursor = conn.cursor()
+                current_time_str = datetime.now().strftime("%H:%M:%S")
+                cursor.execute("SELECT tide_height_meters FROM tide_levels ORDER BY abs(strftime('%s', time(timestamp)) - strftime('%s', ?)) ASC LIMIT 1", (current_time_str,))
+                row = cursor.fetchone()
+                if row and row[0] is not None:
+                    tide = round(float(row[0]), 2)
+                conn.close()
+        except Exception as e:
+            logger.debug(f"DB tide lookup fallback: {e}")
+
         try:
             m_res = await client.get(MARINE_API_URL)
-            if m_res.status_code == 200:
+            if m_res.status_code == 200 and tide == 3.59:
                 m_current = m_res.json().get("current", {})
                 wave_height = float(m_current.get("wave_height", 1.42))
                 tide = round(2.6 + (wave_height * 0.7), 2)
@@ -150,6 +212,8 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
         "predicted_rain_in_30m": predicted_30m,
         "preemptive_action": action,
         "minutely_forecast": minutely_forecast,
+        "hourly_forecast": hourly_forecast,
+        "daily_forecast": daily_forecast,
     }
 
 

@@ -8,6 +8,24 @@ export interface MinutelyForecast {
   status: string;
 }
 
+export interface HourlyForecastItem {
+  time: string;
+  temp_c: number;
+  humidity_pct: number;
+  precip_mm: number;
+  weather_code: number;
+  wind_kmh: number;
+}
+
+export interface DailyForecastItem {
+  date: string;
+  weather_code: number;
+  temp_max_c: number;
+  temp_min_c: number;
+  precipitation_sum_mm: number;
+  wind_speed_max_kmh: number;
+}
+
 export interface LiveTelemetry {
   status: string;
   rainfall_mm_hr: number;
@@ -25,6 +43,8 @@ export interface LiveTelemetry {
   predicted_rain_in_30m: number;
   preemptive_action: string;
   minutely_forecast: MinutelyForecast[];
+  hourly_forecast?: HourlyForecastItem[];
+  daily_forecast?: DailyForecastItem[];
 }
 
 export async function runSimulation(req: SimulationRequest): Promise<SimulationResponse> {
@@ -76,6 +96,8 @@ export async function fetchLiveTelemetry(): Promise<LiveTelemetry | null> {
       predicted_rain_in_30m: 0.0,
       preemptive_action: '',
       minutely_forecast: [],
+      hourly_forecast: [],
+      daily_forecast: [],
     };
   }
 }

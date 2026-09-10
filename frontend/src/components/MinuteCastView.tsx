@@ -81,11 +81,12 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
   onSimulateScenario,
   onOpenMap,
 }) => {
-  // Scenario selector state: 'DRY' | 'INCOMING_18M' | 'NORMAL' | 'HEAVY'
-  const [activeScenario, setActiveScenario] = useState<"DRY" | "INCOMING_18M" | "NORMAL" | "HEAVY">(() => {
+  // Scenario selector state: 'LIVE' | 'DRY' | 'INCOMING_18M' | 'NORMAL' | 'HEAVY'
+  const [activeScenario, setActiveScenario] = useState<"LIVE" | "DRY" | "INCOMING_18M" | "NORMAL" | "HEAVY">(() => {
+    if (liveTelemetry?.status === "LIVE_SYNCHRONIZED") return "LIVE";
     if (currentRainfallMmHr >= 70) return "HEAVY";
     if (currentRainfallMmHr > 0) return "NORMAL";
-    return "INCOMING_18M"; // Default matches the user's reference screenshot where rain starts at 10:55 AM!
+    return "INCOMING_18M";
   });
 
   // Selected Corridor Filter: 'ALL' | 'WESTERN' | 'CENTRAL' | 'THANE_MUMBRA'
@@ -93,9 +94,14 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
 
   // Keep in sync if parent passes live rainfall
   useEffect(() => {
-    if (currentRainfallMmHr >= 70) setActiveScenario("HEAVY");
-    else if (currentRainfallMmHr > 0) setActiveScenario("NORMAL");
-  }, [currentRainfallMmHr]);
+    if (liveTelemetry?.status === "LIVE_SYNCHRONIZED") {
+      setActiveScenario("LIVE");
+    } else if (currentRainfallMmHr >= 70) {
+      setActiveScenario("HEAVY");
+    } else if (currentRainfallMmHr > 0) {
+      setActiveScenario("NORMAL");
+    }
+  }, [currentRainfallMmHr, liveTelemetry?.status]);
 
   // Expanded Accordions State:
   // By default, expand "8:40 AM - 9:09 AM" and "10:40 AM - 11:09 AM" (matching user's screenshots 2 & 3)
@@ -153,7 +159,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
       const formattedMin = curMin < 10 ? `0${curMin}` : `${curMin}`;
       const period = curHour >= 12 ? "PM" : "AM";
       const displayHour = curHour > 12 ? curHour - 12 : curHour;
-      const timeStr = `${displayHour}:${formattedMin} ${period}`;
+      let timeStr = `${displayHour}:${formattedMin} ${period}`;
 
       let hasRain = false;
       let condition: MinuteEntry["condition"] = "No Precipitation";
@@ -164,7 +170,50 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
       let ward = "Citywide";
       let corridor: MinuteEntry["corridor"] = "CITYWIDE";
 
-      if (activeScenario === "DRY") {
+      if (activeScenario === "LIVE") {
+        // Real-time wall-clock minute progression derived from Open-Meteo live feed
+        const d = new Date(Date.now() + i * 60 * 1000);
+        const curH = d.getHours();
+        const curM = d.getMinutes();
+        const formattedMin = curM < 10 ? `0${curM}` : `${curM}`;
+        const period = curH >= 12 ? "PM" : "AM";
+        const displayH = curH > 12 ? curH - 12 : (curH === 0 ? 12 : curH);
+        timeStr = `${displayH}:${formattedMin} ${period}`;
+
+        // Get rain from minutely_forecast slots (15-min intervals)
+        const slotIdx = Math.floor(i / 15);
+        let rainVal = 0;
+        if (liveTelemetry?.minutely_forecast && slotIdx < liveTelemetry.minutely_forecast.length) {
+          rainVal = liveTelemetry.minutely_forecast[slotIdx].rain_mm_hr || 0;
+        } else if (liveTelemetry?.hourly_forecast) {
+          const hourIdx = Math.floor(i / 60);
+          rainVal = liveTelemetry.hourly_forecast[hourIdx]?.precip_mm || 0;
+        }
+
+        if (rainVal > 0) {
+          hasRain = true;
+          condition = rainVal >= 25 ? "Heavy Downpour" : (rainVal >= 5 ? "Moderate Rain" : "Light Rain");
+          icon = rainVal >= 25 ? "⛈️" : (rainVal >= 5 ? "🌧️" : "🌦️");
+          rainMmHr = rainVal;
+          if (i > 0 && list[i - 1] && !list[i - 1].hasRain) {
+            isStartOfRain = true;
+          } else if (i === 0) {
+            isStartOfRain = true;
+          }
+          const spot = CHRONIC_HOTSPOTS[i % CHRONIC_HOTSPOTS.length];
+          locationName = spot.name;
+          ward = spot.ward;
+          corridor = spot.corridor;
+        } else {
+          hasRain = false;
+          condition = "No Precipitation";
+          icon = i % 4 === 0 ? "🌤️" : "☀️";
+          rainMmHr = 0;
+          locationName = "Mumbai Metropolitan (Radar Clear)";
+          ward = "Citywide";
+          corridor = "CITYWIDE";
+        }
+      } else if (activeScenario === "DRY") {
         hasRain = false;
         condition = "No Precipitation";
         icon = i % 5 === 0 ? "🌤️" : "☀️";
@@ -278,7 +327,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
     }
 
     return list;
-  }, [activeScenario]);
+  }, [activeScenario, liveTelemetry]);
 
   // Group minutes into 30-minute intervals (matching user's screenshots)
   const INTERVAL_GROUPS: IntervalGroup[] = useMemo(() => {
@@ -337,6 +386,19 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setActiveScenario("LIVE")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                activeScenario === "LIVE"
+                  ? "bg-emerald-600/40 border border-emerald-400/70 text-emerald-200 shadow-[0_0_12px_rgba(16,185,129,0.4)]"
+                  : "glass-button text-slate-300 hover:text-white"
+              }`}
+              title="Live Open-Meteo Minutely Nowcasting"
+            >
+              🛰️ Live Radar ({liveTelemetry?.rainfall_mm_hr || 0} mm/h)
+            </button>
+
             <button
               type="button"
               onClick={() => {

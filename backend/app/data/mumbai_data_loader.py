@@ -5,11 +5,13 @@ and builds the coupled GIS infrastructure node-edge topology.
 """
 
 import os
+import sqlite3
 import pandas as pd
 from typing import Dict, List, Any
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATASET_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "dataset"))
+DB_PATH = os.path.abspath(os.path.join(DATASET_DIR, "09_digital_twin_unified_db", "mumbai_digital_twin.db"))
 
 def load_master_infrastructure() -> Dict[str, Any]:
     hotspots = []
@@ -18,11 +20,22 @@ def load_master_infrastructure() -> Dict[str, Any]:
     pumps = []
     edges = []
 
-    # 1. Load Chronic Waterlogging Hotspots CSV (72 real spots)
-    hotspots_csv = os.path.join(DATASET_DIR, "05_waterlogging_spots", "bmc_chronic_waterlogging_hotspots.csv")
-    if os.path.exists(hotspots_csv):
-        df_h = pd.read_csv(hotspots_csv)
-        for _, row in df_h.head(15).iterrows():
+    use_db = os.path.exists(DB_PATH)
+
+    # 1. Load Chronic Waterlogging Hotspots (70 in DB / 72 in CSV)
+    if use_db:
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            df_h = pd.read_sql_query("SELECT * FROM waterlogging_spots", conn)
+            conn.close()
+        except Exception:
+            df_h = pd.DataFrame()
+    else:
+        hotspots_csv = os.path.join(DATASET_DIR, "05_waterlogging_spots", "bmc_chronic_waterlogging_hotspots.csv")
+        df_h = pd.read_csv(hotspots_csv) if os.path.exists(hotspots_csv) else pd.DataFrame()
+
+    if not df_h.empty:
+        for _, row in df_h.iterrows():
             clean_name = str(row["location_name"]).split(",")[0].strip()
             hotspots.append({
                 "id": str(row["spot_id"]),
@@ -59,11 +72,20 @@ def load_master_infrastructure() -> Dict[str, Any]:
                     "description": f"Surface runoff converges into {row['linked_drain_id']}"
                 })
 
-    # 2. Load Road Network Master CSV
-    roads_csv = os.path.join(DATASET_DIR, "03_road_network", "mumbai_road_network_master.csv")
-    if os.path.exists(roads_csv):
-        df_r = pd.read_csv(roads_csv)
-        for _, row in df_r.head(10).iterrows():
+    # 2. Load Road Network Master (119 in DB / full in CSV)
+    if use_db:
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            df_r = pd.read_sql_query("SELECT * FROM road_network", conn)
+            conn.close()
+        except Exception:
+            df_r = pd.DataFrame()
+    else:
+        roads_csv = os.path.join(DATASET_DIR, "03_road_network", "mumbai_road_network_master.csv")
+        df_r = pd.read_csv(roads_csv) if os.path.exists(roads_csv) else pd.DataFrame()
+
+    if not df_r.empty:
+        for _, row in df_r.iterrows():
             roads.append({
                 "id": str(row["road_id"]),
                 "name": str(row.get("road_name", row["road_id"])),
@@ -71,7 +93,7 @@ def load_master_infrastructure() -> Dict[str, Any]:
                 "ward": str(row.get("ward", "H/E")),
                 "latitude": float(row.get("start_lat", 19.07)),
                 "longitude": float(row.get("start_lon", 72.85)),
-                "elevation_m": float(row.get("elevation_m", 4.5)),
+                "elevation_m": float(row.get("elev_m", row.get("elevation_m", 4.5))),
                 "pci": float(row.get("pci", 75.0)),
                 "lanes": int(row.get("lanes", 6)),
                 "daily_traffic": int(row.get("avg_daily_traffic", 150000)),
@@ -81,11 +103,46 @@ def load_master_infrastructure() -> Dict[str, Any]:
                 "status": "SAFE"
             })
 
-    # 3. Load Major Drains & Rivers CSV (60 real channels)
-    drains_csv = os.path.join(DATASET_DIR, "04_drainage_stormwater", "mumbai_major_nallahs_and_rivers.csv")
-    if os.path.exists(drains_csv):
-        df_d = pd.read_csv(drains_csv)
-        for _, row in df_d.head(8).iterrows():
+    # 2b. Load Road Network Topology Edges (357 arterial road-to-road connections)
+    if use_db:
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            df_rt = pd.read_sql_query("SELECT * FROM road_topology_graph", conn)
+            conn.close()
+        except Exception:
+            df_rt = pd.DataFrame()
+    else:
+        rt_csv = os.path.join(DATASET_DIR, "03_road_network", "mumbai_road_segments_topology.csv")
+        df_rt = pd.read_csv(rt_csv) if os.path.exists(rt_csv) else pd.DataFrame()
+
+    if not df_rt.empty:
+        for _, row in df_rt.iterrows():
+            dist_km = float(row.get("distance_km", 2.0))
+            conn_type = str(row.get("connection_type", "Interchange"))
+            edges.append({
+                "source_node_id": str(row["source_road_id"]),
+                "target_node_id": str(row["target_road_id"]),
+                "relationship_type": "ROAD_CORRIDOR",
+                "weight_impact_factor": round(max(0.1, dist_km), 2),
+                "distance_km": dist_km,
+                "base_time_mins": round(dist_km * 1.5, 1),
+                "description": f"{conn_type} connection ({dist_km} km)"
+            })
+
+    # 3. Load Major Drains & Rivers (58 in DB / full in CSV)
+    if use_db:
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            df_d = pd.read_sql_query("SELECT * FROM drainage_network", conn)
+            conn.close()
+        except Exception:
+            df_d = pd.DataFrame()
+    else:
+        drains_csv = os.path.join(DATASET_DIR, "04_drainage_stormwater", "mumbai_major_nallahs_and_rivers.csv")
+        df_d = pd.read_csv(drains_csv) if os.path.exists(drains_csv) else pd.DataFrame()
+
+    if not df_d.empty:
+        for _, row in df_d.iterrows():
             drains.append({
                 "id": str(row["drain_id"]),
                 "name": str(row["name"]),
@@ -104,11 +161,20 @@ def load_master_infrastructure() -> Dict[str, Any]:
                 "status": "SAFE"
             })
 
-    # 4. Load Stormwater Pumping Stations (SPS) CSV (8 real stations)
-    pumps_csv = os.path.join(DATASET_DIR, "04_drainage_stormwater", "bmc_stormwater_pumping_stations.csv")
-    if os.path.exists(pumps_csv):
-        df_p = pd.read_csv(pumps_csv)
-        for _, row in df_p.head(8).iterrows():
+    # 4. Load Stormwater Pumping Stations (SPS) (8 in DB / full in CSV)
+    if use_db:
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            df_p = pd.read_sql_query("SELECT * FROM stormwater_pumping_stations", conn)
+            conn.close()
+        except Exception:
+            df_p = pd.DataFrame()
+    else:
+        pumps_csv = os.path.join(DATASET_DIR, "04_drainage_stormwater", "bmc_stormwater_pumping_stations.csv")
+        df_p = pd.read_csv(pumps_csv) if os.path.exists(pumps_csv) else pd.DataFrame()
+
+    if not df_p.empty:
+        for _, row in df_p.iterrows():
             pumps.append({
                 "id": str(row["station_id"]),
                 "name": str(row["name"]),

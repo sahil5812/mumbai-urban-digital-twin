@@ -324,6 +324,8 @@ export default function Home() {
                 graphData={graphData}
                 components={displayedComponents}
                 selectedNodeId={selectedComponent?.component_id || null}
+                rainfallMmHr={simParams.rainfall_mm_hr}
+                siltationPct={simParams.siltation_pct}
                 onSelectNode={(id) => {
                   const found = displayedComponents.find((c) => c.component_id === id);
                   if (found) setSelectedComponent(found);

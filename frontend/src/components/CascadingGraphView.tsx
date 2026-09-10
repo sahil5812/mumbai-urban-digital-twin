@@ -2,12 +2,14 @@
 
 import React, { useState, useMemo } from "react";
 import { CascadingGraphResponse, ComponentTelemetry } from "../lib/types";
-import { GitBranch, ArrowRight, AlertTriangle, Zap, Compass } from "lucide-react";
+import { GitBranch, ArrowRight, AlertTriangle, Zap, Compass, CloudRain, Sun, Waves, Car } from "lucide-react";
 
 interface CascadingGraphViewProps {
   graphData: CascadingGraphResponse;
   components?: ComponentTelemetry[];
   selectedNodeId: string | null;
+  rainfallMmHr?: number;
+  siltationPct?: number;
   onSelectNode: (nodeId: string) => void;
   onCloseAndFocus?: (nodeId: string) => void;
 }
@@ -16,6 +18,8 @@ export const CascadingGraphView: React.FC<CascadingGraphViewProps> = ({
   graphData,
   components = [],
   selectedNodeId,
+  rainfallMmHr,
+  siltationPct,
   onSelectNode,
   onCloseAndFocus,
 }) => {
@@ -46,6 +50,27 @@ export const CascadingGraphView: React.FC<CascadingGraphViewProps> = ({
 
   const criticalNodesCount = liveNodes.filter((n) => n.status === "CRITICAL" || n.failure_risk_score > 65).length;
 
+  // Derive dynamic cascade chain telemetry from live simulation state
+  const cascadeTelemetry = useMemo(() => {
+    const rain = Math.round(rainfallMmHr ?? (components.length > 0 ? (components[0]?.metrics?.rainfall_mm_hr || 0) : 0));
+    
+    const drains = components.filter((c) => c.component_type === "DRAIN");
+    const avgSilt = Math.round(siltationPct ?? (drains.length > 0 
+      ? drains.reduce((sum, d) => sum + (d.drain_siltation_pct || 0), 0) / drains.length 
+      : 35));
+
+    const maxDepth = components.length > 0 
+      ? Math.round(Math.max(0, ...components.map((c) => c.water_depth_cm || 0))) 
+      : 0;
+
+    const roads = components.filter((c) => c.component_type === "ROAD");
+    const minSpeed = roads.length > 0 
+      ? Math.round(Math.min(...roads.map((r) => r.traffic_speed_kmh ?? 45))) 
+      : (maxDepth > 30 ? 12 : 45);
+
+    return { rain, avgSilt, maxDepth, minSpeed };
+  }, [components, rainfallMmHr, siltationPct]);
+
   return (
     <div className="text-slate-100 flex flex-col gap-4">
       {/* Title & Multi-Hop Propagation Summary */}
@@ -74,25 +99,77 @@ export const CascadingGraphView: React.FC<CascadingGraphViewProps> = ({
       <div className="glass-panel-subtle p-3.5 rounded-2xl flex flex-col gap-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
         <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-300">
           <span>Active Domino Propagation Wave:</span>
-          <span className="text-amber-400 font-mono drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]">Transmission Delay: ~15 mins/hop</span>
+          <span className={`font-mono ${cascadeTelemetry.rain > 0 ? "text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]" : "text-emerald-400"}`}>
+            {cascadeTelemetry.rain > 0 ? `Transmission Delay: ~${cascadeTelemetry.rain > 70 ? 8 : 15} mins/hop` : "Nominal Baseline • No Active Cascades"}
+          </span>
         </div>
 
         <div className="flex items-center justify-between bg-black/25 p-3 rounded-xl border border-white/10 text-xs overflow-x-auto gap-2 scrollbar-thin">
-          <div className="flex items-center gap-2 text-rose-300 font-bold shrink-0 bg-rose-950/40 px-3 py-2 rounded-xl border border-rose-500/30 backdrop-blur-md shadow-[0_0_10px_rgba(244,63,94,0.2)]">
-            <AlertTriangle className="w-4 h-4 text-rose-400" />
-            <span>1. Heavy Downpour (150mm/h)</span>
+          {/* Step 1: Precipitation Trigger */}
+          <div className={`flex items-center gap-2 font-bold shrink-0 px-3 py-2 rounded-xl border backdrop-blur-md shadow-sm transition-all ${
+            cascadeTelemetry.rain === 0
+              ? "text-emerald-300 bg-emerald-950/40 border-emerald-500/30"
+              : (cascadeTelemetry.rain < 35
+                ? "text-cyan-300 bg-cyan-950/40 border-cyan-500/30"
+                : (cascadeTelemetry.rain < 75
+                  ? "text-amber-300 bg-amber-950/40 border-amber-500/30"
+                  : "text-rose-300 bg-rose-950/40 border-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.2)]"))
+          }`}>
+            {cascadeTelemetry.rain === 0 ? (
+              <Sun className="w-4 h-4 text-emerald-400" />
+            ) : cascadeTelemetry.rain < 35 ? (
+              <CloudRain className="w-4 h-4 text-cyan-400" />
+            ) : (
+              <AlertTriangle className="w-4 h-4 text-rose-400" />
+            )}
+            <span>
+              1. {cascadeTelemetry.rain === 0 ? "Clear Weather" : (cascadeTelemetry.rain < 35 ? "Light Rain" : (cascadeTelemetry.rain < 75 ? "Heavy Downpour" : "Extreme Monsoon"))} ({cascadeTelemetry.rain} mm/h)
+            </span>
           </div>
+
           <ArrowRight className="w-4 h-4 text-purple-400 shrink-0 animate-pulse" />
-          <div className="flex items-center gap-2 text-amber-300 font-bold shrink-0 bg-amber-950/40 px-3 py-2 rounded-xl border border-amber-500/30 backdrop-blur-md shadow-[0_0_10px_rgba(245,158,11,0.2)]">
-            <span>2. Nallah Silt Choke (50%)</span>
+
+          {/* Step 2: Siltation / Drainage Choke */}
+          <div className={`flex items-center gap-2 font-bold shrink-0 px-3 py-2 rounded-xl border backdrop-blur-md shadow-sm transition-all ${
+            cascadeTelemetry.avgSilt >= 50
+              ? "text-rose-300 bg-rose-950/40 border-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.2)]"
+              : (cascadeTelemetry.avgSilt >= 30
+                ? "text-amber-300 bg-amber-950/40 border-amber-500/30"
+                : "text-emerald-300 bg-emerald-950/40 border-emerald-500/30")
+          }`}>
+            <Waves className="w-4 h-4 text-amber-400" />
+            <span>2. Nallah Silt Choke ({cascadeTelemetry.avgSilt}%)</span>
           </div>
+
           <ArrowRight className="w-4 h-4 text-purple-400 shrink-0 animate-pulse" />
-          <div className="flex items-center gap-2 text-cyan-300 font-bold shrink-0 bg-cyan-950/40 px-3 py-2 rounded-xl border border-cyan-500/30 backdrop-blur-md shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-            <span>3. Subway Inundation (75cm)</span>
+
+          {/* Step 3: Subway & Hotspot Inundation */}
+          <div className={`flex items-center gap-2 font-bold shrink-0 px-3 py-2 rounded-xl border backdrop-blur-md shadow-sm transition-all ${
+            cascadeTelemetry.maxDepth >= 50
+              ? "text-rose-300 bg-rose-950/40 border-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.2)]"
+              : (cascadeTelemetry.maxDepth > 10
+                ? "text-cyan-300 bg-cyan-950/40 border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]"
+                : "text-emerald-300 bg-emerald-950/40 border-emerald-500/30")
+          }`}>
+            <span>
+              3. {cascadeTelemetry.maxDepth === 0 ? "Subways Flood-Free" : "Subway Inundation"} ({cascadeTelemetry.maxDepth} cm)
+            </span>
           </div>
+
           <ArrowRight className="w-4 h-4 text-purple-400 shrink-0 animate-pulse" />
-          <div className="flex items-center gap-2 text-rose-300 font-bold shrink-0 bg-rose-950/40 px-3 py-2 rounded-xl border border-rose-500/30 backdrop-blur-md shadow-[0_0_10px_rgba(244,63,94,0.2)]">
-            <span>4. Highway Gridlock (19 km/h)</span>
+
+          {/* Step 4: Arterial Traffic Speed & Gridlock */}
+          <div className={`flex items-center gap-2 font-bold shrink-0 px-3 py-2 rounded-xl border backdrop-blur-md shadow-sm transition-all ${
+            cascadeTelemetry.minSpeed <= 18
+              ? "text-rose-300 bg-rose-950/40 border-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.2)]"
+              : (cascadeTelemetry.minSpeed <= 32
+                ? "text-amber-300 bg-amber-950/40 border-amber-500/30"
+                : "text-emerald-300 bg-emerald-950/40 border-emerald-500/30")
+          }`}>
+            <Car className="w-4 h-4 text-rose-400" />
+            <span>
+              4. {cascadeTelemetry.minSpeed <= 18 ? "Highway Gridlock" : (cascadeTelemetry.minSpeed <= 32 ? "Arterial Congestion" : "Corridor Free Flow")} ({cascadeTelemetry.minSpeed} km/h)
+            </span>
           </div>
         </div>
       </div>

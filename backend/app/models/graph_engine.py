@@ -49,10 +49,14 @@ class MumbaiInfrastructureGraph:
                 description=edge.get("description", "")
             )
             # Build road network connectivity
+            base_time = edge.get("base_time_mins")
+            if base_time is None:
+                dist_km = edge.get("distance_km", edge.get("weight_impact_factor", 2.0))
+                base_time = round(max(1.0, float(dist_km) * 1.5), 1)
             self.road_graph.add_edge(
                 edge["source_node_id"],
                 edge["target_node_id"],
-                base_time_mins=edge.get("weight_impact_factor", 1.0) * 10
+                base_time_mins=base_time
             )
 
     def propagate_cascading_failures(self, failure_threshold_risk=65.0):
@@ -121,12 +125,13 @@ class MumbaiInfrastructureGraph:
             for i in range(len(path) - 1):
                 u, v = path[i], path[i+1]
                 edge_data = cost_G[u][v]
-                total_time += edge_data["base_time"]
                 depth = edge_data["max_depth"]
+                slowdown_factor = (1.0 + (depth / 20.0)) if depth >= 15.0 else 1.0
+                total_time += round(edge_data["base_time"] * slowdown_factor, 1)
                 path_details.append({
                     "from_node": u,
                     "to_node": v,
-                    "water_depth_cm": depth,
+                    "water_depth_cm": round(depth, 1),
                     "segment_status": "FLOOD_FREE" if depth < 15 else ("SLOW" if depth < 40 else "SUBMERGED")
                 })
 

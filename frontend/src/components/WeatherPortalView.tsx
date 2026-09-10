@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   CloudRain,
   Sun,
@@ -87,8 +87,8 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
   const tideM = liveTelemetry?.tide_level_m || currentTideLevelM || 3.59;
   const rainMmHr = liveTelemetry?.rainfall_mm_hr || currentRainfallMmHr || 0;
 
-  // AccuWeather-inspired 24-Hour Detailed Forecast Data (8 AM to 11 PM)
-  const HOURLY_DETAILS = [
+  // Static fallback for AccuWeather-inspired 24-Hour Detailed Forecast Data
+  const STATIC_HOURLY_DETAILS = [
     {
       id: "8 AM",
       hour: "8 AM",
@@ -491,8 +491,8 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
     }
   ];
 
-  // AccuWeather-inspired 10-Day / 15-Day Synoptic Monsoon Forecast (SEP 7 – SEP 21)
-  const TEN_DAY_FORECAST = [
+  // Static fallback for AccuWeather-inspired 10-Day / 15-Day Synoptic Monsoon Forecast
+  const STATIC_TEN_DAY_FORECAST = [
     {
       day: "MON",
       date: "9/7",
@@ -809,6 +809,120 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
       badgeColor: "text-cyan-300 bg-cyan-500/20 border-cyan-400/30"
     }
   ];
+
+  // Dynamic 24-Hour Forecast derived from Live Open-Meteo telemetry (Task 5)
+  const HOURLY_DETAILS = useMemo(() => {
+    if (liveTelemetry?.hourly_forecast && liveTelemetry.hourly_forecast.length > 0) {
+      return liveTelemetry.hourly_forecast.map((hf) => {
+        let hourLabel = hf.time;
+        try {
+          const d = new Date(hf.time);
+          hourLabel = d.toLocaleTimeString([], { hour: 'numeric', hour12: true });
+        } catch {
+          // fallback
+        }
+
+        const condition = hf.precip_mm >= 25 
+          ? "Heavy Downpour" 
+          : (hf.precip_mm >= 5 
+            ? "Moderate Rain" 
+            : (hf.precip_mm > 0 
+              ? "Light Drizzle" 
+              : (hf.weather_code <= 2 ? "Intermittent clouds" : "Overcast")));
+
+        const icon = hf.precip_mm >= 25 ? "⛈️" : (hf.precip_mm >= 5 ? "🌧️" : (hf.precip_mm > 0 ? "🌦️" : (hf.weather_code <= 1 ? "☀️" : "🌤️")));
+        const floodRisk = (hf.precip_mm >= 25 ? "DANGER" : (hf.precip_mm >= 10 ? "WARNING" : "SAFE")) as "SAFE" | "WARNING" | "DANGER";
+        const realFeel = Math.round(hf.temp_c + (hf.humidity_pct > 70 ? 4 : 2));
+
+        return {
+          id: hourLabel,
+          hour: hourLabel,
+          temp: Math.round(hf.temp_c),
+          realFeel,
+          realFeelShade: realFeel - 2,
+          condition,
+          icon,
+          rainProb: `${Math.min(100, Math.round(hf.precip_mm * 12 + 15))}%`,
+          rainMm: hf.precip_mm,
+          wind: `SW ${Math.round(hf.wind_kmh)} km/h`,
+          windGusts: `${Math.round(hf.wind_kmh * 1.5)} km/h`,
+          humidity: Math.round(hf.humidity_pct),
+          indoorHumidity: `${Math.round(hf.humidity_pct)}% (${hf.humidity_pct > 80 ? "Extremely Humid" : "Humid"})`,
+          dewPoint: Math.round(hf.temp_c - (100 - hf.humidity_pct) / 5),
+          uvIndex: "3.5 (Moderate)",
+          brightnessIndex: "7 (Bright)",
+          cloudCover: hf.precip_mm > 0 ? "85%" : "55%",
+          visibility: hf.precip_mm > 10 ? "5 km" : "11 km",
+          cloudCeiling: hf.precip_mm > 10 ? "350 m" : "520 m",
+          tideLevel: tideM,
+          floodRisk,
+          pumpsArmed: hf.precip_mm >= 15 ? "6 SPS Armed (High Alert)" : "2 SPS Operational",
+          vulnerability: hf.precip_mm >= 20 ? "Severe lowline inundation risk" : "Normal baseline flow",
+        };
+      });
+    }
+    return STATIC_HOURLY_DETAILS;
+  }, [liveTelemetry?.hourly_forecast, tideM]);
+
+  // Dynamic 10-Day Synoptic Monsoon Outlook derived from Live Open-Meteo telemetry (Task 6)
+  const TEN_DAY_FORECAST = useMemo(() => {
+    if (liveTelemetry?.daily_forecast && liveTelemetry.daily_forecast.length > 0) {
+      const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+      return liveTelemetry.daily_forecast.map((df) => {
+        let dayName = "MON";
+        let dateLabel = df.date;
+        try {
+          const d = new Date(df.date);
+          dayName = DAYS[d.getDay()];
+          dateLabel = `${d.getMonth() + 1}/${d.getDate()}`;
+        } catch {
+          // fallback
+        }
+
+        const rainMm = Math.round(df.precipitation_sum_mm);
+        const icon = rainMm >= 40 ? "⛈️" : (rainMm >= 10 ? "🌧️" : (rainMm > 0 ? "🌦️" : "🌤️"));
+        const severity = rainMm >= 60 ? "RED ALERT" : (rainMm >= 25 ? "AMBER ALERT" : (rainMm >= 10 ? "MODERATE" : "SAFE"));
+        const badgeColor = rainMm >= 60 
+          ? "text-red-300 bg-red-500/25 border-red-400/50 shadow-[0_0_12px_rgba(239,68,68,0.35)]"
+          : (rainMm >= 25
+            ? "text-amber-300 bg-amber-500/20 border-amber-400/40"
+            : (rainMm >= 10 
+              ? "text-cyan-300 bg-cyan-500/20 border-cyan-400/30"
+              : "text-emerald-300 bg-emerald-500/20 border-emerald-400/30"));
+
+        const summary = rainMm >= 50
+          ? "Torrential monsoon precipitation with active municipal pumping and low-lying alert"
+          : (rainMm >= 20
+            ? "Cloudy with passing rain bands, thunder and gusty afternoon showers"
+            : (rainMm > 0
+              ? "Sun breaking through clouds at times with a passing localized shower"
+              : "Partly cloudy with pleasant sea breezes and dry conditions"));
+
+        return {
+          day: dayName,
+          date: dateLabel,
+          icon,
+          hiTemp: Math.round(df.temp_max_c),
+          loTemp: Math.round(df.temp_min_c),
+          rainProb: `${Math.min(95, Math.round(rainMm * 1.5 + 20))}%`,
+          rainMm,
+          summary,
+          realFeel: Math.round(df.temp_max_c + 6),
+          realFeelShade: Math.round(df.temp_max_c + 3),
+          maxUv: "9.0 (Very High)",
+          wind: `W ${Math.round(df.wind_speed_max_kmh)} km/h`,
+          precipHours: rainMm > 20 ? "3.5" : "1.5",
+          rainHours: rainMm > 20 ? "3.5" : "1.5",
+          tidePeak: 3.8,
+          spsStatus: rainMm >= 40 ? "All 9 SPS Armed" : "4 SPS Armed",
+          vulnerability: rainMm >= 40 ? "Subways & lowlines on inundation watch" : "Normal drainage capacity",
+          severity,
+          badgeColor,
+        };
+      });
+    }
+    return STATIC_TEN_DAY_FORECAST;
+  }, [liveTelemetry?.daily_forecast]);
 
   return (
     <div className="w-full h-full overflow-y-auto bg-transparent text-slate-100 p-4 sm:p-6 font-sans select-none">
