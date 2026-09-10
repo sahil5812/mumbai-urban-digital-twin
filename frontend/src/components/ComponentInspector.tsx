@@ -88,7 +88,10 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
   const surrounding = getSurroundingImpacts(component);
 
   return (
-    <div className="glass-panel rounded-3xl p-4.5 shadow-[0_24px_50px_rgba(0,0,0,0.65),inset_0_1px_1px_rgba(255,255,255,0.2)] flex flex-col gap-3.5 text-slate-100 w-84 max-h-[85vh] overflow-y-auto scrollbar-thin">
+    <div
+      className="glass-panel rounded-3xl p-4.5 shadow-[0_24px_50px_rgba(0,0,0,0.65),inset_0_1px_1px_rgba(255,255,255,0.2)] flex flex-col gap-3.5 text-slate-100 w-[371px] h-[410px] overflow-y-auto scrollbar-thin"
+      style={{ width: "371px", height: "410px" }}
+    >
       {/* Header */}
       <div className="flex items-start justify-between border-b border-white/10 pb-2.5">
         <div>
