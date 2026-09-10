@@ -984,13 +984,13 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       </DeckGL>
 
       {/* Floating Tactical Layer & Camera Bar */}
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-2 glass-panel p-1.5 rounded-2xl shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] text-xs text-slate-100 border border-white/15">
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 glass-panel p-1 rounded-2xl shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] text-xs text-slate-100 border border-white/15">
         {/* Basemap Switcher */}
-        <div className="flex items-center gap-1 bg-white/[0.05] p-1 rounded-xl border border-white/10 backdrop-blur-md">
+        <div className="flex items-center gap-1 bg-white/[0.05] p-0.5 rounded-xl border border-white/10 backdrop-blur-md">
           <button
             type="button"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMapTheme("DARK"); }}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10.5px] font-bold transition-all ${
               mapTheme === "DARK" ? "bg-slate-700/80 text-white shadow-[0_0_10px_rgba(255,255,255,0.15),inset_0_1px_0_rgba(255,255,255,0.25)] border border-white/20" : "text-slate-400 hover:text-slate-100"
             }`}
             title="Cyber Dark Gray Canvas (Esri Dark Canvas)"
@@ -1002,19 +1002,19 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           <button
             type="button"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMapTheme("SATELLITE"); }}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10.5px] font-bold transition-all ${
               mapTheme === "SATELLITE" ? "bg-blue-700/80 text-white shadow-[0_0_10px_rgba(59,130,246,0.3),inset_0_1px_0_rgba(255,255,255,0.25)] border border-blue-400/40" : "text-slate-400 hover:text-slate-100"
             }`}
             title="Photorealistic Satellite Imagery (Esri World Satellite)"
           >
             <Satellite className="w-3 h-3" />
-            <span>Satellite</span>
+            <span>Sat</span>
           </button>
 
           <button
             type="button"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMapTheme("STREET"); }}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10.5px] font-bold transition-all ${
               mapTheme === "STREET" ? "bg-cyan-600/80 text-white shadow-[0_0_12px_rgba(6,182,212,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] border border-cyan-400/50" : "text-slate-400 hover:text-slate-100"
             }`}
             title="Daylight Urban Street Map (Esri Street Map)"
@@ -1024,140 +1024,141 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           </button>
         </div>
 
-        <div className="h-5 w-px bg-white/15 mx-0.5" />
+        <div className="h-4 w-px bg-white/15 mx-0.5" />
 
         {/* Live Animated Radar Marker Toggle Button */}
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowRadarScan(!showRadarScan); }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-xl border text-[10.5px] transition-all ${
             showRadarScan
               ? "bg-cyan-600/35 border-cyan-400/60 text-cyan-200 shadow-[0_0_12px_rgba(6,182,212,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
           title="Toggle Live Animated Doppler Radar Wave Markers"
         >
-          <Radio className="w-3.5 h-3.5 text-cyan-400 drop-shadow-sm" />
-          <span>Radar Waves</span>
+          <Radio className="w-3 h-3 text-cyan-400 drop-shadow-sm" />
+          <span>Radar</span>
         </button>
 
         {/* Layer Visibility Toggles */}
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowMarkers(!showMarkers); }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-xl border text-[10.5px] transition-all ${
             showMarkers
               ? "bg-emerald-600/35 border-emerald-400/60 text-emerald-200 shadow-[0_0_12px_rgba(16,185,129,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
+          title="Toggle Hotspot Markers"
         >
-          <Compass className="w-3.5 h-3.5 text-emerald-400 drop-shadow-sm" />
+          <Compass className="w-3 h-3 text-emerald-400 drop-shadow-sm" />
           <span>Markers</span>
         </button>
 
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowRoads(!showRoads); }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-xl border text-[10.5px] transition-all ${
             showRoads
               ? "bg-blue-600/35 border-blue-400/60 text-blue-200 shadow-[0_0_12px_rgba(59,130,246,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
           title="Toggle Authentic Major Arterial Highway Corridors"
         >
-          <Route className="w-3.5 h-3.5 text-blue-400 drop-shadow-sm" />
-          <span>Roads ({roadGeoJson?.features?.length || 36})</span>
+          <Route className="w-3 h-3 text-blue-400 drop-shadow-sm" />
+          <span>Roads</span>
         </button>
 
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowDrains(!showDrains); }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-xl border text-[10.5px] transition-all ${
             showDrains
               ? "bg-cyan-600/35 border-cyan-400/60 text-cyan-200 shadow-[0_0_12px_rgba(6,182,212,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
           title="Toggle 12 Major Drainage & River Channels"
         >
-          <Waves className="w-3.5 h-3.5 text-cyan-400 drop-shadow-sm" />
-          <span>Drains ({MUMBAI_DRAINS.length})</span>
+          <Waves className="w-3 h-3 text-cyan-400 drop-shadow-sm" />
+          <span>Drains</span>
         </button>
 
         {/* Flood-Safe Emergency Navigation Route Toggle */}
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsRoutePlannerOpen(!isRoutePlannerOpen); }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-xl border text-[10.5px] transition-all ${
             isRoutePlannerOpen
               ? "bg-emerald-600/35 border-emerald-400/60 text-emerald-200 shadow-[0_0_12px_rgba(16,185,129,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
           title="Toggle Flood-Safe Evacuation Route Navigator"
         >
-          <Navigation className="w-3.5 h-3.5 text-emerald-400 drop-shadow-sm" />
-          <span>Safe Route</span>
+          <Navigation className="w-3 h-3 text-emerald-400 drop-shadow-sm" />
+          <span>Route</span>
         </button>
 
         {/* 2D DEM Surface Runoff Flow Grid Toggle */}
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowDEMGrid(!showDEMGrid); }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-xl border text-[10.5px] transition-all ${
             showDEMGrid
               ? "bg-indigo-600/35 border-indigo-400/60 text-indigo-200 shadow-[0_0_12px_rgba(99,102,241,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
           title="Toggle 2D DEM Topographic Surface Runoff Grid"
         >
-          <Layers className="w-3.5 h-3.5 text-indigo-400 drop-shadow-sm" />
-          <span>DEM Grid</span>
+          <Layers className="w-3 h-3 text-indigo-400 drop-shadow-sm" />
+          <span>DEM</span>
         </button>
 
         {/* 24 Administrative Ward Inundation Zones Toggle */}
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowWardZones(!showWardZones); }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-xl border text-[10.5px] transition-all ${
             showWardZones
               ? "bg-purple-600/35 border-purple-400/60 text-purple-200 shadow-[0_0_12px_rgba(168,85,247,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
           title="Toggle 24 Administrative Ward Inundation Zones"
         >
-          <ShieldAlert className="w-3.5 h-3.5 text-purple-400 drop-shadow-sm" />
-          <span>Wards ({wardGeoJson?.features?.length || 24})</span>
+          <ShieldAlert className="w-3 h-3 text-purple-400 drop-shadow-sm" />
+          <span>Wards</span>
         </button>
 
         {/* Citizen Reports Overlay Toggle */}
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowCitizenReports(!showCitizenReports); }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+          className={`flex items-center gap-1 px-2 py-1 rounded-xl border text-[10.5px] transition-all ${
             showCitizenReports
               ? "bg-rose-600/35 border-rose-400/60 text-rose-200 shadow-[0_0_12px_rgba(244,63,94,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
           title="Toggle Citizen Ground Grievance Pins"
         >
-          <AlertTriangle className="w-3.5 h-3.5 text-rose-400 drop-shadow-sm" />
-          <span>Citizen ({citizenReports.length})</span>
+          <AlertTriangle className="w-3 h-3 text-rose-400 drop-shadow-sm" />
+          <span>Citizen</span>
         </button>
 
-
-        <div className="h-5 w-px bg-white/15 mx-0.5" />
+        <div className="h-4 w-px bg-white/15 mx-0.5" />
 
         {/* 360° Drone Flyover Orbit Toggle */}
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsOrbiting(!isOrbiting); }}
-          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-bold transition-all border ${
+          className={`flex items-center gap-1 px-2.5 py-1 rounded-xl font-bold text-[10.5px] transition-all border ${
             isOrbiting
               ? "bg-cyan-500/35 border-cyan-400/70 text-cyan-200 shadow-[0_0_15px_rgba(6,182,212,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] animate-pulse"
               : "glass-button text-slate-200 hover:text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
           }`}
+          title="Toggle 360° Drone Flyover Orbit"
         >
-          {isOrbiting ? <Pause className="w-3.5 h-3.5 text-cyan-400" /> : <Play className="w-3.5 h-3.5 text-cyan-400" />}
-          <span>360° Drone Orbit</span>
+          {isOrbiting ? <Pause className="w-3 h-3 text-cyan-400" /> : <Play className="w-3 h-3 text-cyan-400" />}
+          <span>360° Orbit</span>
         </button>
       </div>
 

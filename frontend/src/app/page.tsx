@@ -248,9 +248,9 @@ export default function Home() {
           />
 
           {/* Unified Left Slide-out Command Deck (Sandbox + High-Risk Hotspots) */}
-          <div className="absolute top-4 left-4 z-20 flex flex-col items-start gap-2">
+          <div className="absolute top-16 left-4 z-20 flex flex-col items-start gap-2">
             {isScenarioControlsOpen ? (
-              <div className="w-88 max-h-[calc(100vh-140px)] flex flex-col glass-panel rounded-3xl border border-white/15 shadow-[0_24px_50px_rgba(0,0,0,0.7)] backdrop-blur-2xl overflow-hidden animate-fadeIn">
+              <div className="w-88 max-h-[calc(100vh-180px)] flex flex-col glass-panel rounded-3xl border border-white/15 shadow-[0_24px_50px_rgba(0,0,0,0.7)] backdrop-blur-2xl overflow-hidden animate-fadeIn">
                 {/* Header with Segmented Tab */}
                 <div className="flex items-center justify-between p-2.5 border-b border-white/10 bg-white/[0.02]">
                   <div className="flex items-center gap-1 bg-white/[0.06] p-1 rounded-xl border border-white/10">
@@ -290,7 +290,7 @@ export default function Home() {
                 </div>
 
                 {/* Content Body */}
-                <div className="p-3 overflow-y-auto max-h-[calc(100vh-210px)] custom-scrollbar">
+                <div className="p-3 overflow-y-auto max-h-[calc(100vh-250px)] custom-scrollbar">
                   {leftDockTab === "SANDBOX" ? (
                     <ScenarioControls
                       params={simParams}

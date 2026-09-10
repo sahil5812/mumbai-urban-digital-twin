@@ -54,22 +54,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="h-16 bg-slate-950/40 backdrop-blur-2xl border-b border-white/10 px-4 flex items-center justify-between select-none z-30 sticky top-0 text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
-      {/* Left: Brand / Crest & Mode Switcher */}
-      <div className="flex items-center gap-4 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/40 via-indigo-600/30 to-cyan-400/40 backdrop-blur-xl flex items-center justify-center shadow-lg border border-white/20 shadow-cyan-950/50">
-            <ShieldAlert className="w-6 h-6 text-cyan-300 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-base font-bold tracking-wider text-slate-100 flex items-center gap-1.5 whitespace-nowrap glass-text-title">
-                <span>MUMBAI URBAN TWIN</span>
-                <span className="text-xs px-1.5 py-0.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 font-mono backdrop-blur-md shadow-sm">PS010</span>
-              </h1>
-            </div>
-            <p className="text-[11px] text-slate-400 font-medium whitespace-nowrap">MCGM / BMC Disaster Management Command Center</p>
-          </div>
-        </div>
+      {/* Left: Mode Switcher */}
+      <div className="flex items-center gap-3 shrink-0">
 
         {/* Unified 2-Way Portal / Map Mode Switcher */}
         {onTogglePortalViewMode && (
