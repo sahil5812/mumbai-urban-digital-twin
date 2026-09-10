@@ -85,11 +85,15 @@ export default function Home() {
         const live = await fetchLiveTelemetry();
         if (live && isSubscribed) {
           setLiveTelemetry(live);
+          const peakRain = live.citywide_max_rain_mm_hr ?? live.rainfall_mm_hr ?? 0;
+          const activeScenarioName = live.primary_active_zone
+            ? `Live Weather (${live.primary_active_zone.zone_name})`
+            : "Real-Time Live Weather";
           const newP: SimulationRequest = {
-            rainfall_mm_hr: live.rainfall_mm_hr || 0,
+            rainfall_mm_hr: peakRain,
             tide_level_m: live.tide_level_m || 2.8,
             siltation_pct: simParams.siltation_pct,
-            active_scenario_name: "Real-Time Live Weather",
+            active_scenario_name: activeScenarioName,
           };
           setSimParams(newP);
           triggerSimulation(newP);

@@ -55,6 +55,8 @@ export const EarlyWarningBanner: React.FC<EarlyWarningBannerProps> = ({
     telemetry.minutely_forecast?.some((slot) => (slot.rain_mm_hr || 0) > 0) ||
     (telemetry.predicted_rain_in_30m || 0) > 0 ||
     (telemetry.rainfall_mm_hr || 0) > 0 ||
+    (telemetry.citywide_max_rain_mm_hr || 0) > 0 ||
+    (telemetry.active_rain_zones && telemetry.active_rain_zones.length > 0) ||
     currentRainfallMmHr > 0
   );
 
@@ -74,7 +76,8 @@ export const EarlyWarningBanner: React.FC<EarlyWarningBannerProps> = ({
     return `${mins}m ${secs < 10 ? "0" : ""}${secs}s`;
   };
 
-  const predictedRain = Math.max(telemetry.predicted_rain_in_30m || 0, currentRainfallMmHr || 0);
+  const effectiveLiveRain = telemetry.citywide_max_rain_mm_hr ?? telemetry.rainfall_mm_hr ?? 0;
+  const predictedRain = Math.max(telemetry.predicted_rain_in_30m || 0, currentRainfallMmHr || effectiveLiveRain);
   const isSevere = predictedRain >= 25.0;
 
   // DYNAMICALLY derived from Backend ML predictions (Safe immutability)
@@ -95,7 +98,7 @@ export const EarlyWarningBanner: React.FC<EarlyWarningBannerProps> = ({
           {/* Row 1: Radar Alert Badge + Real-Time Countdown / Active Status */}
           <div className="flex flex-wrap items-center gap-2">
             <div className={`flex items-center gap-1.5 px-3 py-1 rounded-xl border font-bold uppercase tracking-wider text-[11px] backdrop-blur-xl ${
-              currentRainfallMmHr > 0
+              currentRainfallMmHr > 0 || effectiveLiveRain > 0
                 ? isSevere
                   ? "bg-red-500/30 border-red-400/60 text-red-200 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.5)]"
                   : "bg-cyan-500/25 border-cyan-400/50 text-cyan-200 shadow-[0_0_12px_rgba(6,182,212,0.4)]"
@@ -107,12 +110,14 @@ export const EarlyWarningBanner: React.FC<EarlyWarningBannerProps> = ({
               <span className="glass-text-title">
                 {currentRainfallMmHr > 0 
                   ? `LIVE RADAR PRECIPITATION: ${currentRainfallMmHr} mm/h` 
-                  : "RADAR NOWCAST INCOMING"}
+                  : (telemetry.primary_active_zone
+                      ? `LIVE RADAR: ${telemetry.primary_active_zone.zone_name.toUpperCase()} (${effectiveLiveRain} MM/H)`
+                      : "RADAR NOWCAST INCOMING")}
               </span>
             </div>
 
             {/* LIVE COUNTDOWN TICKER OR ACTIVE PULSE INDICATOR */}
-            {currentRainfallMmHr > 0 ? (
+            {currentRainfallMmHr > 0 || effectiveLiveRain > 0 ? (
               <div className="glass-button flex items-center gap-1.5 px-3 py-1 rounded-xl border-cyan-400/50 text-cyan-300 font-mono font-bold text-xs shadow-[0_0_12px_rgba(6,182,212,0.3)]">
                 <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
                 <span>ACTIVE SHOCKWAVES: <strong className="text-white font-extrabold">{dynamicTargetHotspots.length} SUBWAYS</strong></span>
@@ -125,20 +130,26 @@ export const EarlyWarningBanner: React.FC<EarlyWarningBannerProps> = ({
             ) : null}
 
             <span className="text-slate-300 text-[11px] hidden lg:inline font-medium">
-              {currentRainfallMmHr > 0 
+              {(currentRainfallMmHr > 0 || effectiveLiveRain > 0)
                 ? "| Moving radar shockwaves active on map (Cyan: Normal, Amber: Warning, Red: Danger)"
                 : "| Pre-Emptive Action: Dewatering pumps pre-charged on standby"}
             </span>
           </div>
 
-          {/* Row 2: Dynamic Live ML Target Locations */}
+          {/* Row 2: Dynamic Live ML Target Locations or Active Spatial Rain Belts */}
           <div className="glass-panel-subtle flex items-center gap-2 px-3 py-1.5 rounded-xl text-[11px] overflow-hidden border-amber-400/25">
             <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0 animate-bounce" />
-            <span className="font-bold text-amber-300 shrink-0">Live ML Targets:</span>
+            <span className="font-bold text-amber-300 shrink-0">
+              {telemetry.active_rain_zones && telemetry.active_rain_zones.length > 0
+                ? "Active Spatial Rain Belts:"
+                : "Live ML Targets:"}
+            </span>
             <span className="text-slate-200 font-medium truncate">
-              {dynamicTargetHotspots.length > 0
+              {telemetry.active_rain_zones && telemetry.active_rain_zones.length > 0
+                ? telemetry.active_rain_zones.map((z) => `${z.zone_name} (${z.landmarks.split(',')[0]} - ${z.rainfall_mm_hr} mm/h)`).join(" • ")
+                : dynamicTargetHotspots.length > 0
                 ? dynamicTargetHotspots.map((h) => `${h.name} (${h.ward})`).join(" • ")
-                : "Scanning 24 Mumbai MCGM Wards..."}
+                : "Scanning 24 Mumbai MCGM & Thane Wards..."}
             </span>
           </div>
         </div>

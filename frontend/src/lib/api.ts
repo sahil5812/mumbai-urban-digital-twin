@@ -26,9 +26,26 @@ export interface DailyForecastItem {
   wind_speed_max_kmh: number;
 }
 
+export interface RegionalZoneTelemetry {
+  zone_id: string;
+  zone_name: string;
+  landmarks: string;
+  corridor: string;
+  latitude: number;
+  longitude: number;
+  rainfall_mm_hr: number;
+  temperature_c: number;
+  humidity_pct: number;
+  wind_speed_kmh: number;
+  weather_code: number;
+  minutely_forecast: MinutelyForecast[];
+  has_rain: boolean;
+}
+
 export interface LiveTelemetry {
   status: string;
   rainfall_mm_hr: number;
+  citywide_max_rain_mm_hr?: number;
   tide_level_m: number;
   temperature_c: number;
   humidity_pct: number;
@@ -45,6 +62,10 @@ export interface LiveTelemetry {
   minutely_forecast: MinutelyForecast[];
   hourly_forecast?: HourlyForecastItem[];
   daily_forecast?: DailyForecastItem[];
+  regional_zones?: Record<string, RegionalZoneTelemetry>;
+  active_rain_zones?: RegionalZoneTelemetry[];
+  primary_active_zone?: RegionalZoneTelemetry | null;
+  regional_alert_headline?: string;
 }
 
 export async function runSimulation(req: SimulationRequest): Promise<SimulationResponse> {
@@ -82,6 +103,7 @@ export async function fetchLiveTelemetry(): Promise<LiveTelemetry | null> {
     return {
       status: 'OFFLINE',
       rainfall_mm_hr: 0.0,
+      citywide_max_rain_mm_hr: 0.0,
       tide_level_m: 0.0,
       temperature_c: 0.0,
       humidity_pct: 0.0,
@@ -98,6 +120,10 @@ export async function fetchLiveTelemetry(): Promise<LiveTelemetry | null> {
       minutely_forecast: [],
       hourly_forecast: [],
       daily_forecast: [],
+      regional_zones: {},
+      active_rain_zones: [],
+      primary_active_zone: null,
+      regional_alert_headline: 'Offline',
     };
   }
 }

@@ -180,17 +180,54 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
         const displayH = curH > 12 ? curH - 12 : (curH === 0 ? 12 : curH);
         timeStr = `${displayH}:${formattedMin} ${period}`;
 
-        // Get rain from minutely_forecast slots (15-min intervals)
-        const slotIdx = Math.floor(i / 15);
-        let rainVal = 0;
-        if (liveTelemetry?.minutely_forecast && slotIdx < liveTelemetry.minutely_forecast.length) {
-          rainVal = liveTelemetry.minutely_forecast[slotIdx].rain_mm_hr || 0;
-        } else if (liveTelemetry?.hourly_forecast) {
-          const hourIdx = Math.floor(i / 60);
-          rainVal = liveTelemetry.hourly_forecast[hourIdx]?.precip_mm || 0;
+        // Regional Zone Resolution (Thane/Mumbra, Western, Central, or Citywide)
+        const rZones = liveTelemetry?.regional_zones || {};
+        let targetZone = null;
+        if (selectedCorridor === "THANE_MUMBRA") {
+          targetZone = rZones["ZONE_THANE_MUMBRA"] || null;
+        } else if (selectedCorridor === "WESTERN") {
+          targetZone = rZones["ZONE_WEST_CENTRAL"] || rZones["ZONE_WEST_NORTH"] || null;
+        } else if (selectedCorridor === "CENTRAL") {
+          targetZone = rZones["ZONE_CENTRAL_HARBOUR"] || rZones["ZONE_SOUTH"] || null;
+        } else {
+          // If "ALL", dynamically prioritize the active raining zone across Mumbai & Thane MMR
+          if (liveTelemetry?.active_rain_zones && liveTelemetry.active_rain_zones.length > 0) {
+            targetZone = liveTelemetry.active_rain_zones[i % liveTelemetry.active_rain_zones.length];
+          } else {
+            targetZone = liveTelemetry?.primary_active_zone || rZones["ZONE_THANE_MUMBRA"] || rZones["ZONE_WEST_CENTRAL"] || null;
+          }
         }
 
-        if (rainVal > 0) {
+        // Minutely forecast slot (15-min intervals)
+        const slotIdx = Math.floor(i / 15);
+        let rainVal = 0;
+        if (targetZone?.minutely_forecast && slotIdx < targetZone.minutely_forecast.length) {
+          rainVal = targetZone.minutely_forecast[slotIdx].rain_mm_hr || 0;
+        } else if (targetZone) {
+          rainVal = targetZone.rainfall_mm_hr || 0;
+        } else if (liveTelemetry?.minutely_forecast && slotIdx < liveTelemetry.minutely_forecast.length) {
+          rainVal = liveTelemetry.minutely_forecast[slotIdx].rain_mm_hr || 0;
+        } else if (liveTelemetry) {
+          rainVal = liveTelemetry.citywide_max_rain_mm_hr || liveTelemetry.rainfall_mm_hr || 0;
+        }
+
+        if (rainVal > 0 && targetZone) {
+          hasRain = true;
+          condition = rainVal >= 25 ? "Heavy Downpour" : (rainVal >= 5 ? "Moderate Rain" : "Light Rain");
+          icon = rainVal >= 25 ? "⛈️" : (rainVal >= 5 ? "🌧️" : "🌦️");
+          rainMmHr = rainVal;
+          if (i > 0 && list[i - 1] && !list[i - 1].hasRain) {
+            isStartOfRain = true;
+          } else if (i === 0) {
+            isStartOfRain = true;
+          }
+
+          const landmarks = targetZone.landmarks ? targetZone.landmarks.split(",").map((s) => s.trim()) : [targetZone.zone_name];
+          const lm = landmarks[i % landmarks.length] || targetZone.zone_name;
+          locationName = `${lm} (${targetZone.zone_name})`;
+          ward = targetZone.corridor === "THANE_MUMBRA" ? "TMC-1" : targetZone.corridor;
+          corridor = targetZone.corridor as any;
+        } else if (rainVal > 0) {
           hasRain = true;
           condition = rainVal >= 25 ? "Heavy Downpour" : (rainVal >= 5 ? "Moderate Rain" : "Light Rain");
           icon = rainVal >= 25 ? "⛈️" : (rainVal >= 5 ? "🌧️" : "🌦️");
@@ -209,9 +246,9 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
           condition = "No Precipitation";
           icon = i % 4 === 0 ? "🌤️" : "☀️";
           rainMmHr = 0;
-          locationName = "Mumbai Metropolitan (Radar Clear)";
-          ward = "Citywide";
-          corridor = "CITYWIDE";
+          locationName = targetZone ? `${targetZone.zone_name} (Radar Clear)` : "Mumbai & Thane MMR (Radar Clear)";
+          ward = targetZone?.corridor === "THANE_MUMBRA" ? "TMC-1" : (targetZone?.corridor || "MMR");
+          corridor = (targetZone?.corridor as any) || "CITYWIDE";
         }
       } else if (activeScenario === "DRY") {
         hasRain = false;
@@ -327,7 +364,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
     }
 
     return list;
-  }, [activeScenario, liveTelemetry]);
+  }, [activeScenario, liveTelemetry, selectedCorridor]);
 
   // Group minutes into 30-minute intervals (matching user's screenshots)
   const INTERVAL_GROUPS: IntervalGroup[] = useMemo(() => {
@@ -357,6 +394,16 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
 
   // Dynamic Headline
   const headline = useMemo(() => {
+    if (activeScenario === "LIVE") {
+      if (liveTelemetry?.active_rain_zones && liveTelemetry.active_rain_zones.length > 0) {
+        const names = liveTelemetry.active_rain_zones.map((z) => `${z.zone_name} (${z.rainfall_mm_hr} mm/h)`).join(", ");
+        return `⚡ Convective precipitation active in ${names}`;
+      }
+      if (liveTelemetry?.citywide_max_rain_mm_hr && liveTelemetry.citywide_max_rain_mm_hr > 0) {
+        return `Precipitation active across MMR (${liveTelemetry.citywide_max_rain_mm_hr} mm/h)`;
+      }
+      return "No precipitation detected across Mumbai & Thane Radar Mesh (All 5 Zones Clear)";
+    }
     if (activeScenario === "DRY") {
       return "No precipitation for at least 120 min";
     }
@@ -367,7 +414,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
       return "Precipitation continuing for at least 120 min (Active Normal Monsoon across Subways)";
     }
     return "Heavy torrential downpour continuing across Western & Central corridors";
-  }, [activeScenario]);
+  }, [activeScenario, liveTelemetry]);
 
   // 120-Minute chart slice for the top graph
   const chartMinutes = useMemo(() => ALL_MINUTES.slice(0, 120), [ALL_MINUTES]);
@@ -396,7 +443,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
               }`}
               title="Live Open-Meteo Minutely Nowcasting"
             >
-              🛰️ Live Radar ({liveTelemetry?.rainfall_mm_hr || 0} mm/h)
+              🛰️ Live 5-Zone Radar ({liveTelemetry?.citywide_max_rain_mm_hr ?? liveTelemetry?.rainfall_mm_hr ?? 0} mm/h)
             </button>
 
             <button
@@ -704,6 +751,104 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
           </div>
         </div>
 
+        {/* CARD 2.5: 5-ZONE METROPOLITAN SPATIAL RADAR MESH (MUMBAI + THANE MMR) */}
+        <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5)] space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2.5">
+            <div className="flex items-center gap-2">
+              <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
+              <span className="text-xs font-mono uppercase tracking-widest text-white font-bold glass-text-title">
+                5-ZONE SPATIAL RADAR MESH • MUMBAI & THANE MMR
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-[11px] font-mono text-slate-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Multi-Station Ingestion: <strong className="text-cyan-300">5 Live Radar Nodes Synced</strong></span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+            {[
+              {
+                id: "ZONE_THANE_MUMBRA",
+                corridor: "THANE_MUMBRA",
+                name: "Thane & Mumbra Belt",
+                landmarks: "Mumbra Stn, Shilphata, Reti Bunder, Kalwa",
+              },
+              {
+                id: "ZONE_WEST_CENTRAL",
+                corridor: "WESTERN",
+                name: "Western Suburbs (Central)",
+                landmarks: "Santacruz, Andheri, Milan Subway, Vile Parle",
+              },
+              {
+                id: "ZONE_WEST_NORTH",
+                corridor: "WESTERN",
+                name: "Western Suburbs (North)",
+                landmarks: "Borivali, Kandivali, Malad, Dahisar",
+              },
+              {
+                id: "ZONE_CENTRAL_HARBOUR",
+                corridor: "CENTRAL",
+                name: "Central & Harbour Basin",
+                landmarks: "Kurla, Sion, Ghatkopar, Chembur",
+              },
+              {
+                id: "ZONE_SOUTH",
+                corridor: "CENTRAL",
+                name: "South & Island City",
+                landmarks: "Dadar, Hindmata, Worli, Byculla",
+              },
+            ].map((st) => {
+              const zoneData = liveTelemetry?.regional_zones?.[st.id];
+              const rain = zoneData ? zoneData.rainfall_mm_hr : 0;
+              const hasRain = rain > 0 || Boolean(zoneData?.has_rain);
+              const isSelected = selectedCorridor === st.corridor;
+
+              return (
+                <div
+                  key={st.id}
+                  onClick={() => {
+                    setSelectedCorridor(st.corridor as any);
+                    setActiveScenario("LIVE");
+                  }}
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between select-none ${
+                    hasRain
+                      ? "bg-red-950/40 border-red-400/60 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse"
+                      : isSelected
+                      ? "bg-cyan-950/50 border-cyan-400/60 shadow-[0_0_12px_rgba(6,182,212,0.3)]"
+                      : "glass-panel-subtle hover:border-white/30 hover:bg-white/[0.06]"
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      <span className="text-[11px] font-bold text-white truncate">{st.name}</span>
+                      {hasRain ? (
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-red-500/30 text-red-200 border border-red-400/50 animate-bounce shrink-0">
+                          ⚡ INITIATED
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 shrink-0">
+                          CLEAR
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-[10px] text-slate-400 truncate" title={st.landmarks}>
+                      {st.landmarks}
+                    </div>
+                  </div>
+
+                  <div className="mt-2 pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+                    <span className="text-[10px] text-slate-400">Precipitation</span>
+                    <span className={hasRain ? "text-red-300 font-bold" : "text-cyan-300 font-semibold"}>
+                      {rain.toFixed(1)} mm/h
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* CARD 3: 30-MINUTE INTERVAL ACCORDIONS WITH HYPERLOCAL LOCATIONS */}
         <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] space-y-3">
           
@@ -753,46 +898,62 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
             <button
               type="button"
               onClick={() => setSelectedCorridor("ALL")}
-              className={`px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all ${
+              className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all ${
                 selectedCorridor === "ALL"
                   ? "bg-cyan-600/40 text-cyan-200 border border-cyan-400/50 shadow-sm"
                   : "glass-button text-slate-400 hover:text-white"
               }`}
             >
-              All Mumbai Locations
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedCorridor("WESTERN")}
-              className={`px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all ${
-                selectedCorridor === "WESTERN"
-                  ? "bg-cyan-600/40 text-cyan-200 border border-cyan-400/50 shadow-sm"
-                  : "glass-button text-slate-400 hover:text-white"
-              }`}
-            >
-              📍 Western (Milan / Andheri / Khar)
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedCorridor("CENTRAL")}
-              className={`px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all ${
-                selectedCorridor === "CENTRAL"
-                  ? "bg-cyan-600/40 text-cyan-200 border border-cyan-400/50 shadow-sm"
-                  : "glass-button text-slate-400 hover:text-white"
-              }`}
-            >
-              📍 Central (Hindmata / Kurla / Sion)
+              All Mumbai & Thane MMR
+              {liveTelemetry?.citywide_max_rain_mm_hr ? ` (${liveTelemetry.citywide_max_rain_mm_hr} mm/h)` : ""}
             </button>
             <button
               type="button"
               onClick={() => setSelectedCorridor("THANE_MUMBRA")}
-              className={`px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all ${
+              className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1.5 ${
                 selectedCorridor === "THANE_MUMBRA"
                   ? "bg-cyan-600/40 text-cyan-200 border border-cyan-400/50 shadow-sm"
                   : "glass-button text-slate-400 hover:text-white"
               }`}
             >
-              📍 Thane & Mumbra (Station / Reti Bunder)
+              <span>📍 Thane, Mumbra & Shilphata</span>
+              {(liveTelemetry?.regional_zones?.ZONE_THANE_MUMBRA?.rainfall_mm_hr || 0) > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-red-500/30 text-red-200 border border-red-400/50 animate-pulse font-mono">
+                  {liveTelemetry?.regional_zones?.ZONE_THANE_MUMBRA?.rainfall_mm_hr} mm/h
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedCorridor("WESTERN")}
+              className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1.5 ${
+                selectedCorridor === "WESTERN"
+                  ? "bg-cyan-600/40 text-cyan-200 border border-cyan-400/50 shadow-sm"
+                  : "glass-button text-slate-400 hover:text-white"
+              }`}
+            >
+              <span>📍 Western Suburbs (Milan / Andheri / Borivali)</span>
+              {(liveTelemetry?.regional_zones?.ZONE_WEST_CENTRAL?.rainfall_mm_hr || 0) > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-red-500/30 text-red-200 border border-red-400/50 animate-pulse font-mono">
+                  {liveTelemetry?.regional_zones?.ZONE_WEST_CENTRAL?.rainfall_mm_hr} mm/h
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedCorridor("CENTRAL")}
+              className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1.5 ${
+                selectedCorridor === "CENTRAL"
+                  ? "bg-cyan-600/40 text-cyan-200 border border-cyan-400/50 shadow-sm"
+                  : "glass-button text-slate-400 hover:text-white"
+              }`}
+            >
+              <span>📍 Central & Island City (Hindmata / Kurla / Dadar)</span>
+              {(liveTelemetry?.regional_zones?.ZONE_CENTRAL_HARBOUR?.rainfall_mm_hr || 0) > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-red-500/30 text-red-200 border border-red-400/50 animate-pulse font-mono">
+                  {liveTelemetry?.regional_zones?.ZONE_CENTRAL_HARBOUR?.rainfall_mm_hr} mm/h
+                </span>
+              )}
             </button>
           </div>
 
