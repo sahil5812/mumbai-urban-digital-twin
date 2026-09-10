@@ -526,9 +526,9 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         if (isActiveRainHotspot(d)) {
           const sev = getSeverity(d);
           if (sev === "HEAVY_CRITICAL") {
-            return `🚨 DANGER: ${nameClean} (${depth}cm)`;
+            return `[ALERT] ${nameClean} (${depth}cm)`;
           }
-          return `🌧️ ${nameClean} (${depth}cm)`;
+          return `[RAIN] ${nameClean} (${depth}cm)`;
         }
         return nameClean;
       },
