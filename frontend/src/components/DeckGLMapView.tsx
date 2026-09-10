@@ -1063,10 +1063,10 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
               ? "bg-blue-600/35 border-blue-400/60 text-blue-200 shadow-[0_0_12px_rgba(59,130,246,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
-          title="Toggle 120 Arterial Road GIS LineStrings"
+          title="Toggle Authentic Major Arterial Highway Corridors"
         >
           <Route className="w-3.5 h-3.5 text-blue-400 drop-shadow-sm" />
-          <span>Roads ({roadGeoJson?.features?.length || 120})</span>
+          <span>Roads ({roadGeoJson?.features?.length || 36})</span>
         </button>
 
         <button
