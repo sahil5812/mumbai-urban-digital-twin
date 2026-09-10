@@ -259,24 +259,26 @@ export default function Home() {
                       onClick={() => setLeftDockTab("SANDBOX")}
                       className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
                         leftDockTab === "SANDBOX"
-                          ? "bg-amber-600/80 text-white shadow-md border border-amber-400/50"
-                          : "text-slate-400 hover:text-slate-200"
+                          ? "bg-amber-400 text-black shadow-md border border-amber-300"
+                          : "text-black/70 hover:text-black"
                       }`}
+                      style={{ color: "black" }}
                     >
-                      <Sliders className="w-3.5 h-3.5 text-amber-300" />
-                      <span>Sandbox</span>
+                      <Sliders className="w-3.5 h-3.5 text-black" style={{ color: "black" }} />
+                      <span style={{ color: "black" }}>Sandbox</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setLeftDockTab("HOTSPOTS")}
                       className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
                         leftDockTab === "HOTSPOTS"
-                          ? "bg-red-600/80 text-white shadow-md border border-red-400/50"
-                          : "text-slate-400 hover:text-slate-200"
+                          ? "bg-red-400 text-black shadow-md border border-red-300"
+                          : "text-black/70 hover:text-black"
                       }`}
+                      style={{ color: "black" }}
                     >
-                      <AlertTriangle className="w-3.5 h-3.5 text-red-300" />
-                      <span>Hotspots ({topHotspots.length})</span>
+                      <AlertTriangle className="w-3.5 h-3.5 text-black" style={{ color: "black" }} />
+                      <span style={{ color: "black" }}>Hotspots ({topHotspots.length})</span>
                     </button>
                   </div>
                   <button
@@ -344,10 +346,11 @@ export default function Home() {
               <button
                 type="button"
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsScenarioControlsOpen(true); }}
-                className="glass-button flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-amber-300 shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:border-amber-400/50 hover:text-amber-200 transition-all hover:scale-105"
+                className="glass-button flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-black shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:border-black/50 hover:text-black transition-all hover:scale-105"
+                style={{ position: "relative", bottom: "50px", color: "black" }}
               >
-                <Sliders className="w-4 h-4 text-amber-400" />
-                <span>Command Deck & Hotspots ({topHotspots.length})</span>
+                <Sliders className="w-4 h-4 text-black" style={{ color: "black" }} />
+                <span style={{ color: "black" }}>Command Deck & Hotspots ({topHotspots.length})</span>
               </button>
             )}
           </div>
