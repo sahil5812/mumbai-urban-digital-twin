@@ -215,6 +215,29 @@ export async function fetchDEMGrid(rainfall: number = 45.0, tide: number = 2.8):
   }
 }
 
+export async function fetchRoadNetworkGeoJSON(): Promise<any> {
+  try {
+    const res = await fetch('/data/mumbai_road_network.geojson');
+    if (res.ok) return await res.json();
+    const backendRes = await fetch(`${API_BASE}/simulation/road-network-geojson`);
+    if (backendRes.ok) return await backendRes.json();
+    return { type: 'FeatureCollection', features: [] };
+  } catch {
+    return { type: 'FeatureCollection', features: [] };
+  }
+}
+
+export async function fetchWardZonesGeoJSON(): Promise<any> {
+  try {
+    const res = await fetch('/data/mumbai_flood_inundation_zones.geojson');
+    if (res.ok) return await res.json();
+    return { type: 'FeatureCollection', features: [] };
+  } catch {
+    return { type: 'FeatureCollection', features: [] };
+  }
+}
+
+
 function getFallbackDEMGrid(rainfall: number, tide: number): DEMGridResponse {
   const rows = 15;
   const cols = 15;

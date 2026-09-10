@@ -1,0 +1,3820 @@
+{
+  "type": "FeatureCollection",
+  "name": "mumbai_road_network",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_WEH_01",
+        "road_name": "Western Express Highway (Bandra to Santacruz)",
+        "ward": "H/E",
+        "road_type": "Expressway",
+        "surface_type": "Asphalt Over CC Base",
+        "lanes": 8,
+        "length_km": 4.5,
+        "width_m": 35.0,
+        "elevation_m": 5.2,
+        "pavement_condition_index": 72
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.842,
+            19.055
+          ],
+          [
+            72.84664,
+            19.07151
+          ],
+          [
+            72.852,
+            19.088
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_WEH_02",
+        "road_name": "Western Express Highway (Santacruz to Andheri Flyover)",
+        "ward": "K/E",
+        "road_type": "Expressway",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 8,
+        "length_km": 5.2,
+        "width_m": 35.0,
+        "elevation_m": 6.8,
+        "pavement_condition_index": 68
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.852,
+            19.088
+          ],
+          [
+            72.85432,
+            19.10308
+          ],
+          [
+            72.858,
+            19.12
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_WEH_03",
+        "road_name": "Western Express Highway (Andheri to Goregaon Hub)",
+        "ward": "P/S",
+        "road_type": "Expressway",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 8,
+        "length_km": 4.8,
+        "width_m": 35.0,
+        "elevation_m": 7.5,
+        "pavement_condition_index": 65
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.858,
+            19.12
+          ],
+          [
+            72.86098,
+            19.14185
+          ],
+          [
+            72.86,
+            19.162
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_WEH_04",
+        "road_name": "Western Express Highway (Goregaon to Borivali National Park)",
+        "ward": "R/C",
+        "road_type": "Expressway",
+        "surface_type": "Cement Concrete",
+        "lanes": 8,
+        "length_km": 6.5,
+        "width_m": 35.0,
+        "elevation_m": 8.2,
+        "pavement_condition_index": 88
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.86,
+            19.162
+          ],
+          [
+            72.86053,
+            19.19273
+          ],
+          [
+            72.865,
+            19.225
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_WEH_05",
+        "road_name": "Western Express Highway (Borivali to Dahisar Toll Naka)",
+        "ward": "R/N",
+        "road_type": "Expressway",
+        "surface_type": "Cement Concrete",
+        "lanes": 8,
+        "length_km": 4.0,
+        "width_m": 35.0,
+        "elevation_m": 5.0,
+        "pavement_condition_index": 84
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.865,
+            19.225
+          ],
+          [
+            72.86624,
+            19.2384
+          ],
+          [
+            72.87,
+            19.255
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_SVR_01",
+        "road_name": "Swami Vivekanand (SV) Road (Bandra Lucky Jn to Khar)",
+        "ward": "H/W",
+        "road_type": "Major Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 3.2,
+        "width_m": 24.0,
+        "elevation_m": 3.8,
+        "pavement_condition_index": 52
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.836,
+            19.055
+          ],
+          [
+            72.83818,
+            19.06303
+          ],
+          [
+            72.837,
+            19.075
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_SVR_02",
+        "road_name": "SV Road (Santacruz Milan Subway Approach)",
+        "ward": "H/W",
+        "road_type": "Major Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 2.1,
+        "width_m": 22.0,
+        "elevation_m": 2.2,
+        "pavement_condition_index": 44
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.837,
+            19.075
+          ],
+          [
+            72.83907,
+            19.0824
+          ],
+          [
+            72.838,
+            19.092
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_SVR_03",
+        "road_name": "SV Road (Vile Parle to Andheri Station West)",
+        "ward": "K/W",
+        "road_type": "Major Arterial",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 4,
+        "length_km": 3.5,
+        "width_m": 24.0,
+        "elevation_m": 3.1,
+        "pavement_condition_index": 58
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.838,
+            19.092
+          ],
+          [
+            72.83797,
+            19.10458
+          ],
+          [
+            72.84,
+            19.12
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_SVR_04",
+        "road_name": "SV Road (Andheri Subway Section to Jogeshwari)",
+        "ward": "K/W",
+        "road_type": "Major Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 3.0,
+        "width_m": 22.0,
+        "elevation_m": 1.9,
+        "pavement_condition_index": 39
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.84,
+            19.12
+          ],
+          [
+            72.84137,
+            19.13336
+          ],
+          [
+            72.842,
+            19.145
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_SVR_05",
+        "road_name": "SV Road (Goregaon to Malad Subway Jn)",
+        "ward": "P/N",
+        "road_type": "Major Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 4.2,
+        "width_m": 24.0,
+        "elevation_m": 3.4,
+        "pavement_condition_index": 48
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.842,
+            19.145
+          ],
+          [
+            72.8443,
+            19.16467
+          ],
+          [
+            72.845,
+            19.185
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_SVR_06",
+        "road_name": "SV Road (Kandivali to Borivali Station West)",
+        "ward": "R/C",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 4.6,
+        "width_m": 24.0,
+        "elevation_m": 5.5,
+        "pavement_condition_index": 82
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.845,
+            19.185
+          ],
+          [
+            72.84742,
+            19.20509
+          ],
+          [
+            72.852,
+            19.228
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LNK_01",
+        "road_name": "New Link Road (Bandra West to Khar Danda)",
+        "ward": "H/W",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 6,
+        "length_km": 2.8,
+        "width_m": 30.0,
+        "elevation_m": 3.5,
+        "pavement_condition_index": 86
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.828,
+            19.062
+          ],
+          [
+            72.82979,
+            19.07076
+          ],
+          [
+            72.829,
+            19.082
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LNK_02",
+        "road_name": "New Link Road (Juhu Circle to Andheri Infinity Mall)",
+        "ward": "K/W",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 6,
+        "length_km": 4.1,
+        "width_m": 30.0,
+        "elevation_m": 3.2,
+        "pavement_condition_index": 80
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.829,
+            19.082
+          ],
+          [
+            72.82911,
+            19.10994
+          ],
+          [
+            72.831,
+            19.135
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LNK_03",
+        "road_name": "New Link Road (Oshiwara to Goregaon West / Bangur Nagar)",
+        "ward": "P/S",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 6,
+        "length_km": 3.6,
+        "width_m": 30.0,
+        "elevation_m": 3.8,
+        "pavement_condition_index": 84
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.831,
+            19.135
+          ],
+          [
+            72.83279,
+            19.14929
+          ],
+          [
+            72.833,
+            19.165
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LNK_04",
+        "road_name": "New Link Road (Malad Inorbit to Mith Chowki)",
+        "ward": "P/N",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 6,
+        "length_km": 3.2,
+        "width_m": 30.0,
+        "elevation_m": 4.1,
+        "pavement_condition_index": 78
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.833,
+            19.165
+          ],
+          [
+            72.83508,
+            19.17803
+          ],
+          [
+            72.835,
+            19.192
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LNK_05",
+        "road_name": "New Link Road (Kandivali to Dahisar Link Road Extension)",
+        "ward": "R/N",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 6,
+        "length_km": 5.8,
+        "width_m": 30.0,
+        "elevation_m": 4.5,
+        "pavement_condition_index": 85
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.835,
+            19.192
+          ],
+          [
+            72.83769,
+            19.21955
+          ],
+          [
+            72.842,
+            19.25
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_EEH_01",
+        "road_name": "Eastern Express Highway (Sion Circle to Priyadarshini Park)",
+        "ward": "F/N",
+        "road_type": "Expressway",
+        "surface_type": "Asphalt Over CC Base",
+        "lanes": 8,
+        "length_km": 3.8,
+        "width_m": 36.0,
+        "elevation_m": 2.3,
+        "pavement_condition_index": 62
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.862,
+            19.038
+          ],
+          [
+            72.87169,
+            19.05126
+          ],
+          [
+            72.88,
+            19.062
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_EEH_02",
+        "road_name": "Eastern Express Highway (Kurla Amar Mahal to Ghatkopar)",
+        "ward": "L",
+        "road_type": "Expressway",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 8,
+        "length_km": 4.5,
+        "width_m": 36.0,
+        "elevation_m": 3.5,
+        "pavement_condition_index": 70
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.88,
+            19.062
+          ],
+          [
+            72.89235,
+            19.08012
+          ],
+          [
+            72.905,
+            19.095
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_EEH_03",
+        "road_name": "Eastern Express Highway (Ghatkopar to Vikhroli / Godrej)",
+        "ward": "N",
+        "road_type": "Expressway",
+        "surface_type": "Cement Concrete",
+        "lanes": 8,
+        "length_km": 4.2,
+        "width_m": 36.0,
+        "elevation_m": 5.8,
+        "pavement_condition_index": 89
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.905,
+            19.095
+          ],
+          [
+            72.91464,
+            19.11249
+          ],
+          [
+            72.925,
+            19.13
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_EEH_04",
+        "road_name": "Eastern Express Highway (Vikhroli to Bhandup / Mulund Toll)",
+        "ward": "T",
+        "road_type": "Expressway",
+        "surface_type": "Cement Concrete",
+        "lanes": 8,
+        "length_km": 6.8,
+        "width_m": 36.0,
+        "elevation_m": 8.0,
+        "pavement_condition_index": 91
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.925,
+            19.13
+          ],
+          [
+            72.94439,
+            19.15881
+          ],
+          [
+            72.96,
+            19.185
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LBS_01",
+        "road_name": "Lal Bahadur Shastri (LBS) Marg (Sion to Kurla Kamani)",
+        "ward": "L",
+        "road_type": "Major Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 3.9,
+        "width_m": 22.0,
+        "elevation_m": 2.2,
+        "pavement_condition_index": 38
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.868,
+            19.042
+          ],
+          [
+            72.87697,
+            19.05674
+          ],
+          [
+            72.885,
+            19.072
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LBS_02",
+        "road_name": "LBS Marg (Kurla to Ghatkopar Gandhi Nagar)",
+        "ward": "N",
+        "road_type": "Major Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 4.1,
+        "width_m": 22.0,
+        "elevation_m": 3.8,
+        "pavement_condition_index": 46
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.885,
+            19.072
+          ],
+          [
+            72.89928,
+            19.08947
+          ],
+          [
+            72.91,
+            19.105
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LBS_03",
+        "road_name": "LBS Marg (Ghatkopar to Vikhroli / Kanjurmarg)",
+        "ward": "S",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 4.5,
+        "width_m": 24.0,
+        "elevation_m": 6.2,
+        "pavement_condition_index": 75
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.91,
+            19.105
+          ],
+          [
+            72.92273,
+            19.12189
+          ],
+          [
+            72.932,
+            19.14
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LBS_04",
+        "road_name": "LBS Marg (Bhandup to Mulund Check Naka)",
+        "ward": "T",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 4.8,
+        "width_m": 24.0,
+        "elevation_m": 9.5,
+        "pavement_condition_index": 81
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.932,
+            19.14
+          ],
+          [
+            72.943,
+            19.15905
+          ],
+          [
+            72.952,
+            19.182
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_JVL_01",
+        "road_name": "Jogeshwari-Vikhroli Link Road (JVLR - WEH to Powai)",
+        "ward": "K/E",
+        "road_type": "Major Arterial",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 6,
+        "length_km": 5.4,
+        "width_m": 32.0,
+        "elevation_m": 12.5,
+        "pavement_condition_index": 74
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.855,
+            19.132
+          ],
+          [
+            72.87836,
+            19.12925
+          ],
+          [
+            72.905,
+            19.125
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_JVL_02",
+        "road_name": "JVLR (Powai Lake to EEH Kanjurmarg Jn)",
+        "ward": "S",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 6,
+        "length_km": 4.2,
+        "width_m": 32.0,
+        "elevation_m": 10.0,
+        "pavement_condition_index": 85
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.905,
+            19.125
+          ],
+          [
+            72.91636,
+            19.12668
+          ],
+          [
+            72.93,
+            19.13
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_SCL_01",
+        "road_name": "Santacruz-Chembur Link Road (SCLR - Kurla to Amar Mahal)",
+        "ward": "L",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 6,
+        "length_km": 4.8,
+        "width_m": 30.0,
+        "elevation_m": 4.2,
+        "pavement_condition_index": 87
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.86,
+            19.07
+          ],
+          [
+            72.87927,
+            19.06674
+          ],
+          [
+            72.898,
+            19.065
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_SCL_02",
+        "road_name": "BKC Connector & Extension Road",
+        "ward": "H/E",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 2.6,
+        "width_m": 26.0,
+        "elevation_m": 3.8,
+        "pavement_condition_index": 90
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.868,
+            19.06
+          ],
+          [
+            72.87461,
+            19.05588
+          ],
+          [
+            72.88,
+            19.048
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_AMB_01",
+        "road_name": "Dr. Babasaheb Ambedkar Road (Byculla to Dadar TT)",
+        "ward": "F/S",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 6,
+        "length_km": 4.2,
+        "width_m": 30.0,
+        "elevation_m": 2.5,
+        "pavement_condition_index": 83
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.836,
+            18.975
+          ],
+          [
+            72.84041,
+            18.99582
+          ],
+          [
+            72.845,
+            19.018
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_AMB_02",
+        "road_name": "Dr Ambedkar Road (Dadar TT to Sion Circle / Gandhi Market)",
+        "ward": "F/N",
+        "road_type": "Major Arterial",
+        "surface_type": "Bituminous Asphalt Over CC",
+        "lanes": 6,
+        "length_km": 3.1,
+        "width_m": 30.0,
+        "elevation_m": 1.9,
+        "pavement_condition_index": 42
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.845,
+            19.018
+          ],
+          [
+            72.85511,
+            19.02645
+          ],
+          [
+            72.862,
+            19.038
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_SNB_01",
+        "road_name": "Senapati Bapat Marg (Mahalakshmi to Dadar West)",
+        "ward": "G/S",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 4.8,
+        "width_m": 24.0,
+        "elevation_m": 2.8,
+        "pavement_condition_index": 79
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.825,
+            18.985
+          ],
+          [
+            72.83196,
+            19.00289
+          ],
+          [
+            72.838,
+            19.022
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_MDR_01",
+        "road_name": "Marine Drive / Netaji Subhash Chandra Bose Road",
+        "ward": "A",
+        "road_type": "Major Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 6,
+        "length_km": 3.6,
+        "width_m": 28.0,
+        "elevation_m": 3.8,
+        "pavement_condition_index": 92
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.822,
+            18.925
+          ],
+          [
+            72.8171,
+            18.93908
+          ],
+          [
+            72.815,
+            18.955
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_EFR_01",
+        "road_name": "Eastern Freeway (Orange Gate to Chembur Panjrapol)",
+        "ward": "M/W",
+        "road_type": "Elevated Expressway",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 4,
+        "length_km": 16.8,
+        "width_m": 18.0,
+        "elevation_m": 14.5,
+        "pavement_condition_index": 86
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.845,
+            18.945
+          ],
+          [
+            72.87496,
+            18.99864
+          ],
+          [
+            72.905,
+            19.055
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_CST_01",
+        "road_name": "Mumbai Coastal Road (Princess Street Flyover to Worli)",
+        "ward": "D",
+        "road_type": "Expressway / Tunnel",
+        "surface_type": "Cement Concrete",
+        "lanes": 8,
+        "length_km": 10.5,
+        "width_m": 34.0,
+        "elevation_m": 4.0,
+        "pavement_condition_index": 96
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.818,
+            18.948
+          ],
+          [
+            72.81601,
+            18.9807
+          ],
+          [
+            72.812,
+            19.015
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_001",
+        "road_name": "B Ward Sector 1 Connector Road",
+        "ward": "B",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 0.57,
+        "width_m": 12.0,
+        "elevation_m": 3.7,
+        "pavement_condition_index": 75
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.84519,
+            18.96494
+          ],
+          [
+            72.84312,
+            18.96515
+          ],
+          [
+            72.84121,
+            18.96164
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_002",
+        "road_name": "H/E Ward Sector 2 Connector Road",
+        "ward": "H/E",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 1.65,
+        "width_m": 12.0,
+        "elevation_m": 4.8,
+        "pavement_condition_index": 58
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.84091,
+            19.0784
+          ],
+          [
+            72.84662,
+            19.07449
+          ],
+          [
+            72.85026,
+            19.06688
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_003",
+        "road_name": "S Ward Sector 3 Connector Road",
+        "ward": "S",
+        "road_type": "Collector Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 1.1,
+        "width_m": 12.0,
+        "elevation_m": 11.0,
+        "pavement_condition_index": 83
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.93688,
+            19.1533
+          ],
+          [
+            72.9429,
+            19.15451
+          ],
+          [
+            72.94672,
+            19.15245
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_004",
+        "road_name": "K/E Ward Sector 4 Connector Road",
+        "ward": "K/E",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.24,
+        "width_m": 18.0,
+        "elevation_m": 8.7,
+        "pavement_condition_index": 42
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.87958,
+            19.11195
+          ],
+          [
+            72.88317,
+            19.10914
+          ],
+          [
+            72.88907,
+            19.10607
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_005",
+        "road_name": "C Ward Sector 5 Connector Road",
+        "ward": "C",
+        "road_type": "Collector Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 1.41,
+        "width_m": 18.0,
+        "elevation_m": 3.0,
+        "pavement_condition_index": 79
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.80736,
+            18.93367
+          ],
+          [
+            72.80871,
+            18.92926
+          ],
+          [
+            72.80916,
+            18.92108
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_006",
+        "road_name": "R/S Ward Sector 6 Connector Road",
+        "ward": "R/S",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.39,
+        "width_m": 18.0,
+        "elevation_m": 6.2,
+        "pavement_condition_index": 68
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.86537,
+            19.19795
+          ],
+          [
+            72.86443,
+            19.19099
+          ],
+          [
+            72.86593,
+            19.18543
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_007",
+        "road_name": "N Ward Sector 7 Connector Road",
+        "ward": "N",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.62,
+        "width_m": 18.0,
+        "elevation_m": 9.9,
+        "pavement_condition_index": 67
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.91484,
+            19.08612
+          ],
+          [
+            72.91035,
+            19.07883
+          ],
+          [
+            72.90714,
+            19.07368
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_008",
+        "road_name": "R/N Ward Sector 8 Connector Road",
+        "ward": "R/N",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 0.88,
+        "width_m": 12.0,
+        "elevation_m": 5.1,
+        "pavement_condition_index": 77
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.86947,
+            19.27314
+          ],
+          [
+            72.86554,
+            19.27072
+          ],
+          [
+            72.86333,
+            19.26818
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_009",
+        "road_name": "F/S Ward Sector 9 Connector Road",
+        "ward": "F/S",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 0.54,
+        "width_m": 12.0,
+        "elevation_m": 4.2,
+        "pavement_condition_index": 68
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.83916,
+            18.9986
+          ],
+          [
+            72.84156,
+            18.99917
+          ],
+          [
+            72.84324,
+            19.00119
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_010",
+        "road_name": "S Ward Sector 10 Connector Road",
+        "ward": "S",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.03,
+        "width_m": 12.0,
+        "elevation_m": 9.2,
+        "pavement_condition_index": 45
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.92667,
+            19.12768
+          ],
+          [
+            72.92205,
+            19.1262
+          ],
+          [
+            72.91833,
+            19.12359
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_011",
+        "road_name": "F/S Ward Sector 11 Connector Road",
+        "ward": "F/S",
+        "road_type": "Collector Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 0.4,
+        "width_m": 12.0,
+        "elevation_m": 3.9,
+        "pavement_condition_index": 47
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8352,
+            19.00055
+          ],
+          [
+            72.83365,
+            19.00053
+          ],
+          [
+            72.83294,
+            19.00019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_012",
+        "road_name": "R/S Ward Sector 12 Connector Road",
+        "ward": "R/S",
+        "road_type": "Local Ward Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 1.13,
+        "width_m": 12.0,
+        "elevation_m": 6.4,
+        "pavement_condition_index": 52
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.875,
+            19.19389
+          ],
+          [
+            72.87924,
+            19.19869
+          ],
+          [
+            72.88103,
+            19.20209
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_013",
+        "road_name": "T Ward Sector 13 Connector Road",
+        "ward": "T",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 4,
+        "length_km": 1.77,
+        "width_m": 18.0,
+        "elevation_m": 12.2,
+        "pavement_condition_index": 53
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.96611,
+            19.16462
+          ],
+          [
+            72.97083,
+            19.17126
+          ],
+          [
+            72.97306,
+            19.17898
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_014",
+        "road_name": "R/S Ward Sector 14 Connector Road",
+        "ward": "R/S",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.37,
+        "width_m": 15.0,
+        "elevation_m": 7.7,
+        "pavement_condition_index": 66
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.87822,
+            19.22261
+          ],
+          [
+            72.88192,
+            19.22732
+          ],
+          [
+            72.88413,
+            19.23345
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_015",
+        "road_name": "M/E Ward Sector 15 Connector Road",
+        "ward": "M/E",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 1.55,
+        "width_m": 12.0,
+        "elevation_m": 4.7,
+        "pavement_condition_index": 86
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.90915,
+            19.04778
+          ],
+          [
+            72.91589,
+            19.04905
+          ],
+          [
+            72.92305,
+            19.04916
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_016",
+        "road_name": "K/E Ward Sector 16 Connector Road",
+        "ward": "K/E",
+        "road_type": "Local Ward Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.51,
+        "width_m": 18.0,
+        "elevation_m": 7.5,
+        "pavement_condition_index": 35
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8622,
+            19.11437
+          ],
+          [
+            72.85725,
+            19.11025
+          ],
+          [
+            72.85617,
+            19.10214
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_017",
+        "road_name": "H/W Ward Sector 17 Connector Road",
+        "ward": "H/W",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 1.32,
+        "width_m": 12.0,
+        "elevation_m": 5.7,
+        "pavement_condition_index": 41
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8298,
+            19.05551
+          ],
+          [
+            72.82585,
+            19.05875
+          ],
+          [
+            72.82116,
+            19.06366
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_018",
+        "road_name": "T Ward Sector 18 Connector Road",
+        "ward": "T",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.43,
+        "width_m": 12.0,
+        "elevation_m": 13.6,
+        "pavement_condition_index": 50
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.96864,
+            19.1871
+          ],
+          [
+            72.96548,
+            19.18031
+          ],
+          [
+            72.96113,
+            19.17664
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_019",
+        "road_name": "D Ward Sector 19 Connector Road",
+        "ward": "D",
+        "road_type": "Local Ward Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 1.24,
+        "width_m": 18.0,
+        "elevation_m": 8.5,
+        "pavement_condition_index": 94
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.81953,
+            18.97384
+          ],
+          [
+            72.82235,
+            18.98052
+          ],
+          [
+            72.82316,
+            18.98436
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_020",
+        "road_name": "D Ward Sector 20 Connector Road",
+        "ward": "D",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 4,
+        "length_km": 1.66,
+        "width_m": 18.0,
+        "elevation_m": 10.0,
+        "pavement_condition_index": 51
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8055,
+            18.97121
+          ],
+          [
+            72.80215,
+            18.96264
+          ],
+          [
+            72.79845,
+            18.95804
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_021",
+        "road_name": "F/N Ward Sector 21 Connector Road",
+        "ward": "F/N",
+        "road_type": "Local Ward Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.71,
+        "width_m": 12.0,
+        "elevation_m": 2.5,
+        "pavement_condition_index": 53
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.87729,
+            19.01427
+          ],
+          [
+            72.86968,
+            19.01874
+          ],
+          [
+            72.86456,
+            19.02298
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_022",
+        "road_name": "D Ward Sector 22 Connector Road",
+        "ward": "D",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 1.0,
+        "width_m": 15.0,
+        "elevation_m": 8.5,
+        "pavement_condition_index": 50
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.80413,
+            18.9637
+          ],
+          [
+            72.80478,
+            18.96976
+          ],
+          [
+            72.80171,
+            18.97234
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_023",
+        "road_name": "M/E Ward Sector 23 Connector Road",
+        "ward": "M/E",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 0.81,
+        "width_m": 18.0,
+        "elevation_m": 2.2,
+        "pavement_condition_index": 72
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.92394,
+            19.02866
+          ],
+          [
+            72.92696,
+            19.02849
+          ],
+          [
+            72.93093,
+            19.03083
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_024",
+        "road_name": "R/C Ward Sector 24 Connector Road",
+        "ward": "R/C",
+        "road_type": "Local Ward Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 0.94,
+        "width_m": 12.0,
+        "elevation_m": 6.5,
+        "pavement_condition_index": 78
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.86816,
+            19.24404
+          ],
+          [
+            72.86767,
+            19.24036
+          ],
+          [
+            72.86422,
+            19.23654
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_025",
+        "road_name": "F/S Ward Sector 25 Connector Road",
+        "ward": "F/S",
+        "road_type": "Local Ward Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 1.65,
+        "width_m": 18.0,
+        "elevation_m": 4.1,
+        "pavement_condition_index": 75
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.82267,
+            19.00261
+          ],
+          [
+            72.82822,
+            19.0091
+          ],
+          [
+            72.8315,
+            19.01459
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_026",
+        "road_name": "T Ward Sector 26 Connector Road",
+        "ward": "T",
+        "road_type": "Local Ward Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 4,
+        "length_km": 1.82,
+        "width_m": 15.0,
+        "elevation_m": 13.6,
+        "pavement_condition_index": 65
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.93798,
+            19.18025
+          ],
+          [
+            72.94432,
+            19.18657
+          ],
+          [
+            72.94848,
+            19.19281
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_027",
+        "road_name": "S Ward Sector 27 Connector Road",
+        "ward": "S",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.33,
+        "width_m": 12.0,
+        "elevation_m": 9.4,
+        "pavement_condition_index": 59
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.92162,
+            19.13837
+          ],
+          [
+            72.92297,
+            19.13212
+          ],
+          [
+            72.92676,
+            19.12759
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_028",
+        "road_name": "F/N Ward Sector 28 Connector Road",
+        "ward": "F/N",
+        "road_type": "Collector Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 1.8,
+        "width_m": 12.0,
+        "elevation_m": 2.4,
+        "pavement_condition_index": 78
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.85876,
+            19.0231
+          ],
+          [
+            72.8539,
+            19.01633
+          ],
+          [
+            72.84583,
+            19.01338
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_029",
+        "road_name": "G/S Ward Sector 29 Connector Road",
+        "ward": "G/S",
+        "road_type": "Collector Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 0.55,
+        "width_m": 12.0,
+        "elevation_m": 2.2,
+        "pavement_condition_index": 90
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.82197,
+            19.0112
+          ],
+          [
+            72.81928,
+            19.01405
+          ],
+          [
+            72.81791,
+            19.01407
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_030",
+        "road_name": "A Ward Sector 30 Connector Road",
+        "ward": "A",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 1.93,
+        "width_m": 18.0,
+        "elevation_m": 5.2,
+        "pavement_condition_index": 77
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.83135,
+            18.92245
+          ],
+          [
+            72.82406,
+            18.92855
+          ],
+          [
+            72.81808,
+            18.93371
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_031",
+        "road_name": "F/S Ward Sector 31 Connector Road",
+        "ward": "F/S",
+        "road_type": "Local Ward Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 1.7,
+        "width_m": 15.0,
+        "elevation_m": 3.5,
+        "pavement_condition_index": 37
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.82975,
+            18.9818
+          ],
+          [
+            72.83676,
+            18.98417
+          ],
+          [
+            72.84441,
+            18.98635
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_032",
+        "road_name": "M/E Ward Sector 32 Connector Road",
+        "ward": "M/E",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.09,
+        "width_m": 15.0,
+        "elevation_m": 4.8,
+        "pavement_condition_index": 57
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.90759,
+            19.03366
+          ],
+          [
+            72.90744,
+            19.02837
+          ],
+          [
+            72.90664,
+            19.02393
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_033",
+        "road_name": "R/N Ward Sector 33 Connector Road",
+        "ward": "R/N",
+        "road_type": "Local Ward Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 0.9,
+        "width_m": 12.0,
+        "elevation_m": 5.6,
+        "pavement_condition_index": 41
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.86701,
+            19.27197
+          ],
+          [
+            72.86917,
+            19.2721
+          ],
+          [
+            72.87513,
+            19.27269
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_034",
+        "road_name": "K/W Ward Sector 34 Connector Road",
+        "ward": "K/W",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 1.78,
+        "width_m": 12.0,
+        "elevation_m": 2.1,
+        "pavement_condition_index": 85
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.82134,
+            19.13829
+          ],
+          [
+            72.81419,
+            19.14048
+          ],
+          [
+            72.80735,
+            19.14612
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_035",
+        "road_name": "F/N Ward Sector 35 Connector Road",
+        "ward": "F/N",
+        "road_type": "Collector Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 1.82,
+        "width_m": 12.0,
+        "elevation_m": 3.0,
+        "pavement_condition_index": 82
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.84037,
+            19.03678
+          ],
+          [
+            72.84512,
+            19.04206
+          ],
+          [
+            72.85117,
+            19.04909
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_036",
+        "road_name": "H/W Ward Sector 36 Connector Road",
+        "ward": "H/W",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 2.15,
+        "width_m": 12.0,
+        "elevation_m": 5.7,
+        "pavement_condition_index": 93
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.81988,
+            19.07115
+          ],
+          [
+            72.82497,
+            19.06248
+          ],
+          [
+            72.83305,
+            19.05692
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_037",
+        "road_name": "L Ward Sector 37 Connector Road",
+        "ward": "L",
+        "road_type": "Local Ward Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 4,
+        "length_km": 0.61,
+        "width_m": 12.0,
+        "elevation_m": 3.8,
+        "pavement_condition_index": 72
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.88402,
+            19.08265
+          ],
+          [
+            72.8857,
+            19.08328
+          ],
+          [
+            72.88925,
+            19.08097
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_038",
+        "road_name": "G/S Ward Sector 38 Connector Road",
+        "ward": "G/S",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 1.62,
+        "width_m": 18.0,
+        "elevation_m": 4.0,
+        "pavement_condition_index": 69
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.80288,
+            19.00618
+          ],
+          [
+            72.79801,
+            19.00088
+          ],
+          [
+            72.79409,
+            18.99456
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_039",
+        "road_name": "R/S Ward Sector 39 Connector Road",
+        "ward": "R/S",
+        "road_type": "Local Ward Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 1.5,
+        "width_m": 18.0,
+        "elevation_m": 5.6,
+        "pavement_condition_index": 40
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.85873,
+            19.21027
+          ],
+          [
+            72.85381,
+            19.20632
+          ],
+          [
+            72.84772,
+            19.20239
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_040",
+        "road_name": "L Ward Sector 40 Connector Road",
+        "ward": "L",
+        "road_type": "Collector Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 0.63,
+        "width_m": 15.0,
+        "elevation_m": 2.9,
+        "pavement_condition_index": 65
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.895,
+            19.0492
+          ],
+          [
+            72.8905,
+            19.05016
+          ],
+          [
+            72.88968,
+            19.04715
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_041",
+        "road_name": "T Ward Sector 41 Connector Road",
+        "ward": "T",
+        "road_type": "Local Ward Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 1.15,
+        "width_m": 15.0,
+        "elevation_m": 13.2,
+        "pavement_condition_index": 95
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.97232,
+            19.16028
+          ],
+          [
+            72.97707,
+            19.15645
+          ],
+          [
+            72.97977,
+            19.15313
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_042",
+        "road_name": "R/N Ward Sector 42 Connector Road",
+        "ward": "R/N",
+        "road_type": "Collector Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 4,
+        "length_km": 0.57,
+        "width_m": 15.0,
+        "elevation_m": 5.1,
+        "pavement_condition_index": 43
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.84065,
+            19.2413
+          ],
+          [
+            72.83877,
+            19.24342
+          ],
+          [
+            72.83578,
+            19.24287
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_043",
+        "road_name": "P/N Ward Sector 43 Connector Road",
+        "ward": "P/N",
+        "road_type": "Local Ward Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 1.66,
+        "width_m": 18.0,
+        "elevation_m": 5.9,
+        "pavement_condition_index": 87
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.82259,
+            19.16789
+          ],
+          [
+            72.82464,
+            19.17569
+          ],
+          [
+            72.82481,
+            19.18264
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_044",
+        "road_name": "P/N Ward Sector 44 Connector Road",
+        "ward": "P/N",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 0.82,
+        "width_m": 18.0,
+        "elevation_m": 3.9,
+        "pavement_condition_index": 44
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8217,
+            19.18
+          ],
+          [
+            72.82021,
+            19.18379
+          ],
+          [
+            72.82168,
+            19.18738
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_045",
+        "road_name": "A Ward Sector 45 Connector Road",
+        "ward": "A",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 0.41,
+        "width_m": 15.0,
+        "elevation_m": 4.3,
+        "pavement_condition_index": 67
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.82211,
+            18.9158
+          ],
+          [
+            72.82198,
+            18.91776
+          ],
+          [
+            72.82311,
+            18.91933
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_046",
+        "road_name": "M/W Ward Sector 46 Connector Road",
+        "ward": "M/W",
+        "road_type": "Collector Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 0.65,
+        "width_m": 15.0,
+        "elevation_m": 4.9,
+        "pavement_condition_index": 68
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.90716,
+            19.04764
+          ],
+          [
+            72.90772,
+            19.04978
+          ],
+          [
+            72.90854,
+            19.05336
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_047",
+        "road_name": "G/N Ward Sector 47 Connector Road",
+        "ward": "G/N",
+        "road_type": "Local Ward Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 1.74,
+        "width_m": 12.0,
+        "elevation_m": 4.2,
+        "pavement_condition_index": 64
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.85926,
+            19.0395
+          ],
+          [
+            72.85422,
+            19.03344
+          ],
+          [
+            72.84704,
+            19.02962
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_048",
+        "road_name": "C Ward Sector 48 Connector Road",
+        "ward": "C",
+        "road_type": "Local Ward Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 1.67,
+        "width_m": 12.0,
+        "elevation_m": 5.3,
+        "pavement_condition_index": 67
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.81849,
+            18.94469
+          ],
+          [
+            72.80945,
+            18.94457
+          ],
+          [
+            72.80386,
+            18.94802
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_049",
+        "road_name": "S Ward Sector 49 Connector Road",
+        "ward": "S",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 0.9,
+        "width_m": 18.0,
+        "elevation_m": 8.6,
+        "pavement_condition_index": 79
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.91403,
+            19.15016
+          ],
+          [
+            72.91095,
+            19.14763
+          ],
+          [
+            72.90886,
+            19.14391
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_050",
+        "road_name": "M/W Ward Sector 50 Connector Road",
+        "ward": "M/W",
+        "road_type": "Collector Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 1.36,
+        "width_m": 15.0,
+        "elevation_m": 5.6,
+        "pavement_condition_index": 75
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.88269,
+            19.04463
+          ],
+          [
+            72.87838,
+            19.04201
+          ],
+          [
+            72.87075,
+            19.04184
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_051",
+        "road_name": "R/S Ward Sector 51 Connector Road",
+        "ward": "R/S",
+        "road_type": "Local Ward Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.84,
+        "width_m": 15.0,
+        "elevation_m": 7.2,
+        "pavement_condition_index": 36
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.88276,
+            19.19569
+          ],
+          [
+            72.87552,
+            19.20036
+          ],
+          [
+            72.86783,
+            19.20292
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_052",
+        "road_name": "E Ward Sector 52 Connector Road",
+        "ward": "E",
+        "road_type": "Local Ward Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 0.99,
+        "width_m": 12.0,
+        "elevation_m": 2.6,
+        "pavement_condition_index": 67
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.83121,
+            18.97978
+          ],
+          [
+            72.83044,
+            18.98313
+          ],
+          [
+            72.82704,
+            18.98769
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_053",
+        "road_name": "P/N Ward Sector 53 Connector Road",
+        "ward": "P/N",
+        "road_type": "Collector Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 1.45,
+        "width_m": 15.0,
+        "elevation_m": 6.0,
+        "pavement_condition_index": 76
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.82972,
+            19.1661
+          ],
+          [
+            72.82462,
+            19.16471
+          ],
+          [
+            72.8173,
+            19.16217
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_054",
+        "road_name": "K/E Ward Sector 54 Connector Road",
+        "ward": "K/E",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 1.57,
+        "width_m": 15.0,
+        "elevation_m": 8.2,
+        "pavement_condition_index": 41
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.88215,
+            19.12788
+          ],
+          [
+            72.8797,
+            19.11951
+          ],
+          [
+            72.87906,
+            19.11405
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_055",
+        "road_name": "E Ward Sector 55 Connector Road",
+        "ward": "E",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.02,
+        "width_m": 15.0,
+        "elevation_m": 3.8,
+        "pavement_condition_index": 41
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.85129,
+            18.9581
+          ],
+          [
+            72.8474,
+            18.95624
+          ],
+          [
+            72.84585,
+            18.95064
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_056",
+        "road_name": "T Ward Sector 56 Connector Road",
+        "ward": "T",
+        "road_type": "Collector Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 1.54,
+        "width_m": 12.0,
+        "elevation_m": 13.5,
+        "pavement_condition_index": 80
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.96119,
+            19.19009
+          ],
+          [
+            72.95558,
+            19.1908
+          ],
+          [
+            72.94752,
+            19.1927
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_057",
+        "road_name": "K/E Ward Sector 57 Connector Road",
+        "ward": "K/E",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.53,
+        "width_m": 15.0,
+        "elevation_m": 6.5,
+        "pavement_condition_index": 60
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.85395,
+            19.12966
+          ],
+          [
+            72.86161,
+            19.12785
+          ],
+          [
+            72.86776,
+            19.12981
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_058",
+        "road_name": "S Ward Sector 58 Connector Road",
+        "ward": "S",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.03,
+        "width_m": 12.0,
+        "elevation_m": 11.3,
+        "pavement_condition_index": 40
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.92621,
+            19.16226
+          ],
+          [
+            72.93134,
+            19.16077
+          ],
+          [
+            72.93407,
+            19.15736
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_059",
+        "road_name": "B Ward Sector 59 Connector Road",
+        "ward": "B",
+        "road_type": "Local Ward Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 0.82,
+        "width_m": 12.0,
+        "elevation_m": 5.5,
+        "pavement_condition_index": 82
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.84079,
+            18.96894
+          ],
+          [
+            72.84416,
+            18.97136
+          ],
+          [
+            72.84482,
+            18.97508
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_060",
+        "road_name": "H/E Ward Sector 60 Connector Road",
+        "ward": "H/E",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 0.94,
+        "width_m": 15.0,
+        "elevation_m": 3.6,
+        "pavement_condition_index": 52
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.85756,
+            19.06922
+          ],
+          [
+            72.85587,
+            19.07249
+          ],
+          [
+            72.85034,
+            19.07363
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_061",
+        "road_name": "S Ward Sector 61 Connector Road",
+        "ward": "S",
+        "road_type": "Local Ward Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 0.47,
+        "width_m": 18.0,
+        "elevation_m": 9.0,
+        "pavement_condition_index": 67
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.9281,
+            19.1455
+          ],
+          [
+            72.9278,
+            19.14874
+          ],
+          [
+            72.925,
+            19.14843
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_062",
+        "road_name": "E Ward Sector 62 Connector Road",
+        "ward": "E",
+        "road_type": "Collector Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 4,
+        "length_km": 1.79,
+        "width_m": 12.0,
+        "elevation_m": 5.1,
+        "pavement_condition_index": 67
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.83031,
+            18.97701
+          ],
+          [
+            72.83644,
+            18.98257
+          ],
+          [
+            72.84234,
+            18.98781
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_063",
+        "road_name": "R/N Ward Sector 63 Connector Road",
+        "ward": "R/N",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 1.19,
+        "width_m": 12.0,
+        "elevation_m": 3.3,
+        "pavement_condition_index": 40
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.87349,
+            19.25178
+          ],
+          [
+            72.87716,
+            19.25088
+          ],
+          [
+            72.88264,
+            19.24625
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_064",
+        "road_name": "C Ward Sector 64 Connector Road",
+        "ward": "C",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 1.42,
+        "width_m": 15.0,
+        "elevation_m": 2.8,
+        "pavement_condition_index": 71
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.81577,
+            18.94257
+          ],
+          [
+            72.80901,
+            18.94166
+          ],
+          [
+            72.80315,
+            18.94442
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_065",
+        "road_name": "A Ward Sector 65 Connector Road",
+        "ward": "A",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 1.13,
+        "width_m": 18.0,
+        "elevation_m": 5.2,
+        "pavement_condition_index": 67
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.81614,
+            18.90428
+          ],
+          [
+            72.81401,
+            18.90751
+          ],
+          [
+            72.80987,
+            18.9123
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_066",
+        "road_name": "K/W Ward Sector 66 Connector Road",
+        "ward": "K/W",
+        "road_type": "Local Ward Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 1.53,
+        "width_m": 12.0,
+        "elevation_m": 3.4,
+        "pavement_condition_index": 57
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.84255,
+            19.13921
+          ],
+          [
+            72.84819,
+            19.14041
+          ],
+          [
+            72.85631,
+            19.1381
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_067",
+        "road_name": "K/W Ward Sector 67 Connector Road",
+        "ward": "K/W",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 4,
+        "length_km": 0.61,
+        "width_m": 15.0,
+        "elevation_m": 4.4,
+        "pavement_condition_index": 70
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.83552,
+            19.12946
+          ],
+          [
+            72.83284,
+            19.12751
+          ],
+          [
+            72.83242,
+            19.12494
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_068",
+        "road_name": "F/N Ward Sector 68 Connector Road",
+        "ward": "F/N",
+        "road_type": "Local Ward Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 1.92,
+        "width_m": 15.0,
+        "elevation_m": 2.4,
+        "pavement_condition_index": 89
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8587,
+            19.02936
+          ],
+          [
+            72.8537,
+            19.03781
+          ],
+          [
+            72.84773,
+            19.0427
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_069",
+        "road_name": "D Ward Sector 69 Connector Road",
+        "ward": "D",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 0.4,
+        "width_m": 15.0,
+        "elevation_m": 8.3,
+        "pavement_condition_index": 50
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.80145,
+            18.97523
+          ],
+          [
+            72.80025,
+            18.9724
+          ],
+          [
+            72.80024,
+            18.97336
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_070",
+        "road_name": "S Ward Sector 70 Connector Road",
+        "ward": "S",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 0.93,
+        "width_m": 12.0,
+        "elevation_m": 8.6,
+        "pavement_condition_index": 79
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.94621,
+            19.16402
+          ],
+          [
+            72.94672,
+            19.15882
+          ],
+          [
+            72.94839,
+            19.15589
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_071",
+        "road_name": "M/E Ward Sector 71 Connector Road",
+        "ward": "M/E",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.07,
+        "width_m": 18.0,
+        "elevation_m": 3.8,
+        "pavement_condition_index": 40
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.89989,
+            19.04924
+          ],
+          [
+            72.90503,
+            19.05361
+          ],
+          [
+            72.90753,
+            19.05517
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_072",
+        "road_name": "N Ward Sector 72 Connector Road",
+        "ward": "N",
+        "road_type": "Collector Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 0.55,
+        "width_m": 15.0,
+        "elevation_m": 7.9,
+        "pavement_condition_index": 66
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.89962,
+            19.08929
+          ],
+          [
+            72.89889,
+            19.09235
+          ],
+          [
+            72.89754,
+            19.09382
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_073",
+        "road_name": "H/W Ward Sector 73 Connector Road",
+        "ward": "H/W",
+        "road_type": "Collector Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 1.07,
+        "width_m": 18.0,
+        "elevation_m": 6.1,
+        "pavement_condition_index": 48
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.83905,
+            19.0797
+          ],
+          [
+            72.83585,
+            19.07676
+          ],
+          [
+            72.83158,
+            19.07361
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_074",
+        "road_name": "R/N Ward Sector 74 Connector Road",
+        "ward": "R/N",
+        "road_type": "Local Ward Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 0.92,
+        "width_m": 15.0,
+        "elevation_m": 6.0,
+        "pavement_condition_index": 90
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.84915,
+            19.24821
+          ],
+          [
+            72.84763,
+            19.25091
+          ],
+          [
+            72.84923,
+            19.25648
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_075",
+        "road_name": "R/S Ward Sector 75 Connector Road",
+        "ward": "R/S",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 4,
+        "length_km": 1.85,
+        "width_m": 12.0,
+        "elevation_m": 4.9,
+        "pavement_condition_index": 66
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.86562,
+            19.22137
+          ],
+          [
+            72.8624,
+            19.23012
+          ],
+          [
+            72.8561,
+            19.235
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_076",
+        "road_name": "B Ward Sector 76 Connector Road",
+        "ward": "B",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 1.5,
+        "width_m": 18.0,
+        "elevation_m": 3.8,
+        "pavement_condition_index": 62
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.82922,
+            18.95415
+          ],
+          [
+            72.83591,
+            18.95576
+          ],
+          [
+            72.84147,
+            18.95985
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_077",
+        "road_name": "N Ward Sector 77 Connector Road",
+        "ward": "N",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 1.34,
+        "width_m": 15.0,
+        "elevation_m": 8.6,
+        "pavement_condition_index": 89
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.90249,
+            19.07245
+          ],
+          [
+            72.89732,
+            19.07514
+          ],
+          [
+            72.89056,
+            19.07434
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_078",
+        "road_name": "M/E Ward Sector 78 Connector Road",
+        "ward": "M/E",
+        "road_type": "Local Ward Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 2.27,
+        "width_m": 18.0,
+        "elevation_m": 2.5,
+        "pavement_condition_index": 94
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.92827,
+            19.05584
+          ],
+          [
+            72.93543,
+            19.04759
+          ],
+          [
+            72.94319,
+            19.04179
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_079",
+        "road_name": "P/N Ward Sector 79 Connector Road",
+        "ward": "P/N",
+        "road_type": "Collector Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 2,
+        "length_km": 1.64,
+        "width_m": 12.0,
+        "elevation_m": 6.2,
+        "pavement_condition_index": 85
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8379,
+            19.19037
+          ],
+          [
+            72.83286,
+            19.18596
+          ],
+          [
+            72.82883,
+            19.17874
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_080",
+        "road_name": "N Ward Sector 80 Connector Road",
+        "ward": "N",
+        "road_type": "Collector Road",
+        "surface_type": "Cement Concrete",
+        "lanes": 4,
+        "length_km": 1.54,
+        "width_m": 12.0,
+        "elevation_m": 8.6,
+        "pavement_condition_index": 94
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.91249,
+            19.07806
+          ],
+          [
+            72.90712,
+            19.07626
+          ],
+          [
+            72.89869,
+            19.07708
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_081",
+        "road_name": "C Ward Sector 81 Connector Road",
+        "ward": "C",
+        "road_type": "Collector Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 4,
+        "length_km": 2.28,
+        "width_m": 12.0,
+        "elevation_m": 5.1,
+        "pavement_condition_index": 44
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.82561,
+            18.93947
+          ],
+          [
+            72.83262,
+            18.94584
+          ],
+          [
+            72.8397,
+            18.95444
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_082",
+        "road_name": "C Ward Sector 82 Connector Road",
+        "ward": "C",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.23,
+        "width_m": 18.0,
+        "elevation_m": 5.1,
+        "pavement_condition_index": 41
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.81494,
+            18.9303
+          ],
+          [
+            72.81066,
+            18.93499
+          ],
+          [
+            72.80543,
+            18.9359
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_083",
+        "road_name": "R/C Ward Sector 83 Connector Road",
+        "ward": "R/C",
+        "road_type": "Collector Road",
+        "surface_type": "Mastic Asphalt",
+        "lanes": 2,
+        "length_km": 1.95,
+        "width_m": 15.0,
+        "elevation_m": 8.2,
+        "pavement_condition_index": 70
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.85277,
+            19.21065
+          ],
+          [
+            72.84544,
+            19.20388
+          ],
+          [
+            72.8413,
+            19.19732
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_084",
+        "road_name": "P/N Ward Sector 84 Connector Road",
+        "ward": "P/N",
+        "road_type": "Collector Road",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 1.36,
+        "width_m": 12.0,
+        "elevation_m": 6.7,
+        "pavement_condition_index": 42
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.85189,
+            19.17838
+          ],
+          [
+            72.85421,
+            19.1841
+          ],
+          [
+            72.85307,
+            19.19057
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "RD_LOC_085",
+        "road_name": "P/N Ward Sector 85 Connector Road",
+        "ward": "P/N",
+        "road_type": "Sub-Arterial",
+        "surface_type": "Bituminous Asphalt",
+        "lanes": 2,
+        "length_km": 0.81,
+        "width_m": 12.0,
+        "elevation_m": 4.8,
+        "pavement_condition_index": 46
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.83615,
+            19.17337
+          ],
+          [
+            72.83533,
+            19.17192
+          ],
+          [
+            72.83206,
+            19.1673
+          ]
+        ]
+      }
+    }
+  ]
+}

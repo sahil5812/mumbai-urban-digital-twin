@@ -2,13 +2,14 @@
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import DeckGL from "@deck.gl/react";
-import { ScatterplotLayer, ArcLayer, PathLayer, TextLayer } from "@deck.gl/layers";
+import { ScatterplotLayer, ArcLayer, PathLayer, TextLayer, GeoJsonLayer } from "@deck.gl/layers";
 import Map, { NavigationControl } from "react-map-gl/maplibre";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { ComponentTelemetry, SafeRouteResponse, DEMGridResponse } from "../lib/types";
-import { fetchSafeRoute, fetchDEMGrid, fetchRecentCitizenReports, CitizenReportRecord } from "../lib/api";
-import { Layers, Rotate3d, Route, Waves, Radio, Play, Pause, Compass, Sun, Moon, Satellite, Zap, AlertTriangle, Navigation, ShieldCheck, Clock, ArrowRight, X } from "lucide-react";
+import { fetchSafeRoute, fetchDEMGrid, fetchRecentCitizenReports, fetchRoadNetworkGeoJSON, fetchWardZonesGeoJSON, CitizenReportRecord } from "../lib/api";
+import { Layers, Rotate3d, Route, Waves, Radio, Play, Pause, Compass, Sun, Moon, Satellite, Zap, AlertTriangle, Navigation, ShieldCheck, ShieldAlert, Clock, ArrowRight, X } from "lucide-react";
+
 
 const MUMBAI_ROADS = [
   { id: "WEH", name: "Western Express Highway", path: [[72.8450, 19.0550], [72.8520, 19.0900], [72.8580, 19.1300], [72.8650, 19.1800], [72.8600, 19.2400]], width: 35, color: [59, 130, 246, 250] },
@@ -24,9 +25,15 @@ const MUMBAI_ROADS = [
 
 const MUMBAI_DRAINS = [
   { id: "MITHI", name: "Mithi River Main Channel", path: [[72.8950, 19.1200], [72.8800, 19.0900], [72.8680, 19.0700], [72.8550, 19.0550], [72.8350, 19.0450], [72.8250, 19.0400]], width: 55, color: [30, 144, 255, 250] },
-  { id: "VAKOLA", name: "Vakola Nallah", path: [[72.8650, 19.0900], [72.8600, 19.0780], [72.8550, 19.0650]], width: 28, color: [0, 191, 255, 250] },
-  { id: "IRLA", name: "Irla Nallah", path: [[72.8420, 19.1250], [72.8350, 19.1100], [72.8280, 19.1000]], width: 24, color: [72, 209, 204, 250] },
-  { id: "GAZDAR", name: "Gazdarband Nallah", path: [[72.8400, 19.0880], [72.8320, 19.0820], [72.8240, 19.0800]], width: 24, color: [127, 255, 212, 250] },
+  { id: "VAKOLA", name: "Vakola Nallah (Santacruz to BKC)", path: [[72.8650, 19.0900], [72.8600, 19.0780], [72.8550, 19.0650]], width: 28, color: [0, 191, 255, 250] },
+  { id: "POISAR", name: "Poisar River (Kandivali to Marve)", path: [[72.8650, 19.2050], [72.8520, 19.2080], [72.8380, 19.2150], [72.8220, 19.2220]], width: 35, color: [14, 165, 233, 250] },
+  { id: "OSHIWARA", name: "Oshiwara River (Goregaon to Malad)", path: [[72.8680, 19.1550], [72.8550, 19.1520], [72.8410, 19.1480], [72.8250, 19.1500]], width: 32, color: [6, 182, 212, 250] },
+  { id: "DAHISAR", name: "Dahisar River (National Park to Gorai)", path: [[72.8750, 19.2450], [72.8600, 19.2520], [72.8450, 19.2580], [72.8350, 19.2520]], width: 28, color: [56, 189, 248, 250] },
+  { id: "IRLA", name: "Irla Nallah (Andheri to Juhu Outfall)", path: [[72.8420, 19.1250], [72.8350, 19.1100], [72.8280, 19.1000]], width: 24, color: [72, 209, 204, 250] },
+  { id: "GAZDAR", name: "Gazdarband Nallah (Khar Danda)", path: [[72.8400, 19.0880], [72.8320, 19.0820], [72.8240, 19.0800]], width: 24, color: [127, 255, 212, 250] },
+  { id: "HND_CONDUIT", name: "Hindmata Storm Conduit to Britannia", path: [[72.8432, 19.0125], [72.8400, 19.0050], [72.8350, 18.9980], [72.8445, 18.9920]], width: 26, color: [168, 85, 247, 250] },
+  { id: "CHUNABHATTI", name: "Chunabhatti-Kurla Lowline SWD", path: [[72.8750, 19.0550], [72.8680, 19.0600], [72.8580, 19.0620]], width: 24, color: [99, 102, 241, 250] },
+  { id: "MAHUL_SWD", name: "Mahul Creek SWD Outfall", path: [[72.8950, 19.0300], [72.9050, 19.0150], [72.9150, 18.9950]], width: 42, color: [30, 64, 175, 250] },
   { id: "MBR_CREEK", name: "Mumbra Creek & Reti Bunder Outfall", path: [[73.0300, 19.1850], [73.0229, 19.1906], [73.0180, 19.1960], [73.0165, 19.1995]], width: 38, color: [16, 185, 129, 250] },
   { id: "PARSIK_NAL", name: "Parsik Hill Cascade Storm Nallah", path: [[73.0350, 19.2050], [73.0280, 19.1980], [73.0229, 19.1906]], width: 26, color: [52, 211, 153, 250] },
 ];
@@ -90,6 +97,34 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   // Citizen Ground Reports State
   const [citizenReports, setCitizenReports] = useState<CitizenReportRecord[]>([]);
   const [showCitizenReports, setShowCitizenReports] = useState<boolean>(true);
+
+  // 120-Segment High-Resolution Road Network & Ward Zones GeoJSON
+  const [roadGeoJson, setRoadGeoJson] = useState<any>(null);
+  const [wardGeoJson, setWardGeoJson] = useState<any>(null);
+  const [showWardZones, setShowWardZones] = useState<boolean>(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchRoadNetworkGeoJSON()
+      .then((data) => {
+        if (isMounted && data && data.features?.length > 0) {
+          setRoadGeoJson(data);
+        }
+      })
+      .catch((err) => console.warn("Failed to load road network GeoJSON:", err));
+
+    fetchWardZonesGeoJSON()
+      .then((data) => {
+        if (isMounted && data && data.features?.length > 0) {
+          setWardGeoJson(data);
+        }
+      })
+      .catch((err) => console.warn("Failed to load ward zones GeoJSON:", err));
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -521,9 +556,80 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     });
   }, [components, selectedComponentId, showMarkers, rainfall_mm_hr]);
 
-  // 5. Arterial Roads
+  // 5. 120-Segment High-Resolution Arterial Road Network (GeoJsonLayer with Dynamic Inundation Heatmap)
   const roadsLayer = useMemo(() => {
     if (!showRoads) return null;
+
+    if (roadGeoJson && roadGeoJson.features && roadGeoJson.features.length > 0) {
+      return new GeoJsonLayer({
+        id: "mumbai-120-roads-geojson",
+        data: roadGeoJson,
+        pickable: true,
+        stroked: true,
+        filled: false,
+        lineWidthUnits: "pixels",
+        lineWidthMinPixels: 2.5,
+        lineWidthMaxPixels: 9,
+        getLineWidth: (f: any) => {
+          const rId = f.properties?.road_id;
+          if (rId === selectedComponentId) return 7.5;
+          const comp = components.find((c) => c.component_id === rId);
+          const depth = comp ? comp.water_depth_cm : (f.properties?.current_water_depth_cm ?? 0);
+          return depth >= 35 ? 6 : (depth >= 15 ? 4.5 : 3);
+        },
+        getLineColor: (f: any) => {
+          const rId = f.properties?.road_id;
+          if (rId === selectedComponentId) return [255, 255, 255, 255];
+          const comp = components.find((c) => c.component_id === rId);
+          const depth = comp ? comp.water_depth_cm : (f.properties?.current_water_depth_cm ?? 0);
+
+          if (depth >= 40) return [239, 68, 68, 250]; // Crimson Red (Submerged)
+          if (depth >= 15) return [249, 115, 22, 235]; // Amber Orange (Waterlogged)
+          if (depth >= 5) return [234, 179, 8, 210];  // Caution Yellow (Slow)
+          return [56, 189, 248, 160]; // Flood-Free Sky Blue
+        },
+        onClick: (info: any) => {
+          if (info.object && info.object.properties?.road_id) {
+            const rId = info.object.properties.road_id;
+            const comp = components.find((c) => c.component_id === rId);
+            if (comp) {
+              onSelectComponent(comp);
+            } else {
+              const depth = info.object.properties.current_water_depth_cm ?? 0;
+              const speed = info.object.properties.current_speed_kmh ?? 45;
+              onSelectComponent({
+                component_id: rId,
+                component_type: "ROAD",
+                name: info.object.properties.road_name || rId,
+                ward: info.object.properties.ward || "H/E",
+                health_score: 85.0,
+                failure_risk_score: Math.min(100, Math.round((depth / 50.0) * 100)),
+                status: depth >= 40 ? "CRITICAL" : (depth >= 15 ? "WARNING" : "SAFE"),
+                latitude: info.coordinate ? info.coordinate[1] : 19.07,
+                longitude: info.coordinate ? info.coordinate[0] : 72.85,
+                elevation_m: info.object.properties.elevation_m || 4.5,
+                water_depth_cm: depth,
+                pothole_probability: 0.15,
+                traffic_speed_kmh: speed,
+                traffic_congestion_pct: Math.min(100, (depth / 60) * 100),
+                drain_discharge_capacity_cumecs: 0,
+                drain_siltation_pct: 35,
+                tidal_backflow_blocked: false,
+                recommended_action: depth > 20 ? `Deploy dewatering pumps & traffic diversion at ${info.object.properties.road_name}.` : "Standard monitoring.",
+                cascading_impact_summary: `Inundation: ${depth} cm | Traffic Speed: ${speed} km/h`,
+                metrics: {}
+              });
+            }
+          }
+        },
+        updateTriggers: {
+          getLineColor: [rainfall_mm_hr, components, selectedComponentId],
+          getLineWidth: [rainfall_mm_hr, components, selectedComponentId],
+        }
+      });
+    }
+
+    // High-contrast fallback
     return new PathLayer({
       id: "mumbai-roads",
       data: MUMBAI_ROADS,
@@ -536,7 +642,30 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       jointRounded: true,
       pickable: true,
     });
-  }, [showRoads]);
+  }, [showRoads, roadGeoJson, components, selectedComponentId, rainfall_mm_hr, onSelectComponent]);
+
+  // Ward Inundation Zones (24 Municipal Ward Polygons)
+  const wardZonesLayer = useMemo(() => {
+    if (!showWardZones || !wardGeoJson || !wardGeoJson.features?.length) return null;
+    return new GeoJsonLayer({
+      id: "mumbai-ward-zones",
+      data: wardGeoJson,
+      pickable: true,
+      stroked: true,
+      filled: true,
+      lineWidthUnits: "pixels",
+      lineWidthMinPixels: 1.5,
+      getLineColor: [168, 85, 247, 180],
+      getFillColor: (f: any) => {
+        const cat = f.properties?.risk_category;
+        if (cat === "Critical") return [239, 68, 68, 50]; // Translucent red
+        if (cat === "High") return [249, 115, 22, 42]; // Translucent amber
+        if (cat === "Moderate") return [56, 189, 248, 30]; // Translucent cyan
+        return [16, 185, 129, 25]; // Translucent emerald
+      },
+    });
+  }, [showWardZones, wardGeoJson]);
+
 
   // 6. Drainage Network
   const drainsLayer = useMemo(() => {
@@ -729,6 +858,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   }, [showCitizenReports, citizenReports]);
 
   const layers = [
+    wardZonesLayer,
     demGridLayer,
     roadsLayer, 
     drainsLayer, 
@@ -754,9 +884,11 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         onError={() => {}}
         getTooltip={({ object }: any) => {
           if (!object) return null;
+
+          // 1. Citizen Grievance Marker
           if (object.reporter_name) {
             return {
-              html: `<div style="padding: 8px 12px; background: rgba(15,23,42,0.92); backdrop-filter: blur(8px); border: 1px solid rgba(244,63,94,0.4); border-radius: 12px; color: #fff; font-family: monospace; font-size: 11px; max-width: 260px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+              html: `<div style="padding: 8px 12px; background: rgba(15,23,42,0.95); backdrop-filter: blur(8px); border: 1px solid rgba(244,63,94,0.5); border-radius: 12px; color: #fff; font-family: monospace; font-size: 11px; max-width: 260px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);">
                 <div style="color: #fb7185; font-weight: bold; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
                   📢 CITIZEN REPORT #${object.id || "NEW"}
                 </div>
@@ -767,6 +899,68 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
               </div>`,
             };
           }
+
+          // 2. High-Resolution 120 Arterial Road LineString
+          if (object.properties?.road_id) {
+            const rId = object.properties.road_id;
+            const comp = components.find((c) => c.component_id === rId);
+            const depth = comp ? comp.water_depth_cm : (object.properties.current_water_depth_cm ?? 0);
+            const status = comp ? comp.status : (depth >= 40 ? 'CRITICAL' : depth >= 15 ? 'WARNING' : 'SAFE');
+            const speed = comp ? comp.traffic_speed_kmh : Math.max(8, Math.round(45 * (1 - depth / 85)));
+            const statusColor = status === 'CRITICAL' ? '#f87171' : status === 'WARNING' ? '#fbbf24' : '#38bdf8';
+            return {
+              html: `<div style="padding: 9px 13px; background: rgba(15,23,42,0.96); backdrop-filter: blur(10px); border: 1px solid ${statusColor}; border-radius: 12px; color: #fff; font-family: monospace; font-size: 11px; max-width: 280px; box-shadow: 0 12px 28px rgba(0,0,0,0.7);">
+                <div style="color: #38bdf8; font-weight: bold; margin-bottom: 2px;">🛣️ ${object.properties.road_name || rId}</div>
+                <div style="color: #94a3b8; font-size: 10px;">ID: ${rId} | Ward: ${object.properties.ward || "General"} | ${object.properties.road_type || "Arterial"}</div>
+                <div style="margin-top: 5px; display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 4px;">
+                  <span>Water Depth: <b style="color: ${statusColor}">${depth} cm</b></span>
+                  <span style="color: ${statusColor}">[${status}]</span>
+                </div>
+                <div style="margin-top: 3px; color: #cbd5e1; font-size: 10px;">Traffic Speed: <b>${speed} km/h</b> | Lanes: ${object.properties.lanes || 6}</div>
+                <div style="margin-top: 3px; color: #94a3b8; font-size: 9px; font-style: italic;">Click to inspect road details</div>
+              </div>`,
+            };
+          }
+
+          // 3. Administrative Ward Inundation Polygon
+          if (object.properties?.ward_id) {
+            return {
+              html: `<div style="padding: 8px 12px; background: rgba(15,23,42,0.95); backdrop-filter: blur(8px); border: 1px solid rgba(168,85,247,0.5); border-radius: 12px; color: #fff; font-family: monospace; font-size: 11px; max-width: 260px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);">
+                <div style="color: #c084fc; font-weight: bold;">🏛️ Ward ${object.properties.ward_id}: ${object.properties.ward_name}</div>
+                <div style="color: #cbd5e1; font-size: 10px; margin-top: 3px;">Vulnerability Score: <b>${object.properties.vulnerability_score}/100</b> (${object.properties.risk_category})</div>
+                <div style="color: #94a3b8; font-size: 10px; margin-top: 2px;">Chronic Flood Spots: ${object.properties.chronic_flood_spots} | Avg Depth: ${object.properties.avg_flood_depth_m}m</div>
+              </div>`,
+            };
+          }
+
+          // 4. Drainage Channel
+          if (object.name && object.path) {
+            return {
+              html: `<div style="padding: 8px 12px; background: rgba(15,23,42,0.95); backdrop-filter: blur(8px); border: 1px solid rgba(6,182,212,0.5); border-radius: 12px; color: #fff; font-family: monospace; font-size: 11px; max-width: 260px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);">
+                <div style="color: #22d3ee; font-weight: bold;">🌊 ${object.name}</div>
+                <div style="color: #94a3b8; font-size: 10px; margin-top: 2px;">Hydraulic Channel Width: ${object.width}m</div>
+              </div>`,
+            };
+          }
+
+          // 5. Hotspot / Pumping Station Component
+          if (object.name && object.type) {
+            const depth = object.water_depth_cm ?? 0;
+            const status = object.status ?? "SAFE";
+            const statusColor = status === 'CRITICAL' ? '#f87171' : status === 'WARNING' ? '#fbbf24' : '#38bdf8';
+            return {
+              html: `<div style="padding: 8px 12px; background: rgba(15,23,42,0.95); backdrop-filter: blur(8px); border: 1px solid ${statusColor}; border-radius: 12px; color: #fff; font-family: monospace; font-size: 11px; max-width: 280px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);">
+                <div style="color: ${statusColor}; font-weight: bold;">📍 ${object.name}</div>
+                <div style="color: #94a3b8; font-size: 10px;">ID: ${object.id} | Ward: ${object.ward || "F/S"} | Type: ${object.type}</div>
+                <div style="margin-top: 4px; display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px;">
+                  <span>Water Depth: <b style="color: ${statusColor}">${depth} cm</b></span>
+                  <span style="color: ${statusColor}">[${status}]</span>
+                </div>
+                <div style="margin-top: 2px; color: #cbd5e1; font-size: 10px;">Failure Risk: <b>${object.failure_risk_score ?? 0}%</b> | Elev: ${object.elevation_m ?? 2.0}m</div>
+              </div>`,
+            };
+          }
+
           if (object.component_name) {
             return {
               html: `<div style="padding: 8px 12px; background: rgba(15,23,42,0.92); backdrop-filter: blur(8px); border: 1px solid rgba(6,182,212,0.4); border-radius: 12px; color: #fff; font-family: monospace; font-size: 11px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
@@ -778,6 +972,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           }
           return null;
         }}
+
       >
         <Map
           mapLib={maplibregl as any}
@@ -868,9 +1063,10 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
               ? "bg-blue-600/35 border-blue-400/60 text-blue-200 shadow-[0_0_12px_rgba(59,130,246,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
+          title="Toggle 120 Arterial Road GIS LineStrings"
         >
           <Route className="w-3.5 h-3.5 text-blue-400 drop-shadow-sm" />
-          <span>Roads</span>
+          <span>Roads ({roadGeoJson?.features?.length || 120})</span>
         </button>
 
         <button
@@ -881,9 +1077,10 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
               ? "bg-cyan-600/35 border-cyan-400/60 text-cyan-200 shadow-[0_0_12px_rgba(6,182,212,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
               : "glass-button text-slate-300 hover:text-white font-medium"
           }`}
+          title="Toggle 12 Major Drainage & River Channels"
         >
           <Waves className="w-3.5 h-3.5 text-cyan-400 drop-shadow-sm" />
-          <span>Drains</span>
+          <span>Drains ({MUMBAI_DRAINS.length})</span>
         </button>
 
         {/* Flood-Safe Emergency Navigation Route Toggle */}
@@ -916,6 +1113,21 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           <span>DEM Grid</span>
         </button>
 
+        {/* 24 Administrative Ward Inundation Zones Toggle */}
+        <button
+          type="button"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowWardZones(!showWardZones); }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+            showWardZones
+              ? "bg-purple-600/35 border-purple-400/60 text-purple-200 shadow-[0_0_12px_rgba(168,85,247,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] font-bold"
+              : "glass-button text-slate-300 hover:text-white font-medium"
+          }`}
+          title="Toggle 24 Administrative Ward Inundation Zones"
+        >
+          <ShieldAlert className="w-3.5 h-3.5 text-purple-400 drop-shadow-sm" />
+          <span>Wards ({wardGeoJson?.features?.length || 24})</span>
+        </button>
+
         {/* Citizen Reports Overlay Toggle */}
         <button
           type="button"
@@ -930,6 +1142,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           <AlertTriangle className="w-3.5 h-3.5 text-rose-400 drop-shadow-sm" />
           <span>Citizen ({citizenReports.length})</span>
         </button>
+
 
         <div className="h-5 w-px bg-white/15 mx-0.5" />
 

@@ -227,3 +227,35 @@ def run_simulation(req: SimulationRequest):
 @router.get("/dem-surface-grid")
 def get_dem_surface_grid(rainfall_mm_hr: float = 45.0, tide_level_m: float = 2.8):
     return dem_engine.route_2d_surface_rainfall(rainfall_mm_hr, tide_level_m)
+
+@router.get("/road-network-geojson")
+def get_road_network_geojson(rainfall_mm_hr: float = 0.0, tide_level_m: float = 3.5, siltation_pct: float = 35.0):
+    import json
+    geojson_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "dataset", "03_road_network", "mumbai_road_network.geojson"))
+    if not os.path.exists(geojson_path):
+        return {"type": "FeatureCollection", "features": []}
+    with open(geojson_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    
+    # If simulated conditions are active, annotate features with real-time inundation
+    if rainfall_mm_hr > 0 and "features" in data:
+        for feature in data["features"]:
+            props = feature.get("properties", {})
+            elev = float(props.get("elevation_m", 4.5))
+            name = str(props.get("road_name", ""))
+            f_res = flood_model.calculate_inundation_depth(
+                rainfall_mm_hr=rainfall_mm_hr,
+                tide_level_m=tide_level_m,
+                elevation_m=elev,
+                siltation_pct=siltation_pct,
+                component_type="ROAD",
+                name=name,
+                historical_avg_depth=35.0
+            )
+            depth = f_res.get("water_depth_cm", 0.0)
+            speed = max(4.0, 45.0 * (1.0 - (depth / 85.0)))
+            props["current_water_depth_cm"] = depth
+            props["current_status"] = f_res.get("status", "SAFE")
+            props["current_speed_kmh"] = round(speed, 1)
+    return data
+
