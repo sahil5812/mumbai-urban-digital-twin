@@ -1260,41 +1260,6 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           )}
         </div>
       )}
-
-      {/* Floating Tactical Doppler Radar Status Pill */}
-      <div className="absolute bottom-6 left-6 z-20 flex items-center gap-3 glass-panel px-4 py-2.5 rounded-2xl border border-white/15 shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] text-xs backdrop-blur-xl">
-        <div className={`w-3 h-3 rounded-full flex items-center justify-center ${
-          rainfall_mm_hr === 0
-            ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"
-            : rainfall_mm_hr >= 50
-            ? "bg-red-500 animate-ping shadow-[0_0_10px_rgba(239,68,68,0.9)]"
-            : "bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,0.8)]"
-        }`} />
-
-        <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 font-bold tracking-wide">
-            {rainfall_mm_hr === 0 ? (
-              <span className="text-emerald-400 font-mono text-[11px]">IMD DOPPLER RADAR: STANDBY</span>
-            ) : rainfall_mm_hr >= 50 ? (
-              <span className="text-red-400 flex items-center gap-1 font-mono text-[11px]">
-                <AlertTriangle className="w-3 h-3 text-red-400" />
-                RADAR: CRITICAL FLOOD INUNDATION ({rainfall_mm_hr} mm/h)
-              </span>
-            ) : (
-              <span className="text-cyan-300 font-mono text-[11px]">
-                RADAR: NORMAL PRECIPITATION ({rainfall_mm_hr} mm/h)
-              </span>
-            )}
-          </div>
-          <span className="text-[10px] text-slate-300">
-            {rainfall_mm_hr === 0
-              ? "Clear conditions • Pumping stations & arterial corridors static & standby"
-              : rainfall_mm_hr >= 50
-              ? `🚨 ${activeRainHotspots.length} critical flood subways marked with dangerous shockwaves`
-              : `🌧️ ${activeRainHotspots.length} chronic subways actively taking rain with normal moving markers`}
-          </span>
-        </div>
-      </div>
     </div>
   );
 };

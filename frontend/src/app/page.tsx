@@ -13,7 +13,7 @@ import { PriorityMatrix } from "../components/PriorityMatrix";
 import { CitizenReportModal } from "../components/CitizenReportModal";
 import { runSimulation, fetchCascadingGraph, fetchLiveTelemetry, LiveTelemetry } from "../lib/api";
 import { SimulationRequest, SimulationResponse, ComponentTelemetry, CascadingGraphResponse } from "../lib/types";
-import { GitBranch, Trophy, Sliders, X, Minimize2 } from "lucide-react";
+import { GitBranch, Trophy, Sliders, X, Minimize2, MapPin, AlertTriangle } from "lucide-react";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -22,6 +22,7 @@ export default function Home() {
   const [isPriorityModalOpen, setIsPriorityModalOpen] = useState(false);
   const [isCitizenModalOpen, setIsCitizenModalOpen] = useState(false);
   const [isScenarioControlsOpen, setIsScenarioControlsOpen] = useState(true);
+  const [leftDockTab, setLeftDockTab] = useState<"SANDBOX" | "HOTSPOTS">("SANDBOX");
   const [isLoading, setIsLoading] = useState(false);
 
   // Sub-Navbar Active Tab State
@@ -148,6 +149,14 @@ export default function Home() {
     return simResult?.components || [];
   }, [simResult, selectedTimelineIndex]);
 
+  // Derived Top High-Risk Inundation Hotspots for Left Command Dock
+  const topHotspots = useMemo(() => {
+    return [...displayedComponents]
+      .filter((c) => c.component_type === "HOTSPOT" || (c.water_depth_cm || 0) > 5.0 || (c.failure_risk_score || 0) > 25.0)
+      .sort((a, b) => (b.failure_risk_score || 0) - (a.failure_risk_score || 0))
+      .slice(0, 4);
+  }, [displayedComponents]);
+
   if (!mounted) {
     return (
       <div className="h-screen w-screen bg-slate-950 flex items-center justify-center text-slate-400 font-mono text-xs select-none">
@@ -158,7 +167,7 @@ export default function Home() {
 
   return (
     <main className="h-screen w-screen bg-transparent text-slate-100 flex flex-col font-sans overflow-hidden">
-      {/* Top Tactical Command Header */}
+      {/* Top Tactical Command Header (Unified 56px Single Bar) */}
       <Navbar
         viewMode={viewMode}
         onToggleViewMode={() => setViewMode(viewMode === "2D" ? "3D" : "2D")}
@@ -170,26 +179,8 @@ export default function Home() {
         isLiveMode={isLiveMode}
         onToggleLiveMode={handleToggleLiveMode}
         liveTelemetry={liveTelemetry}
-      />
-
-      {/* Weather / Nowcasting Sub-Navbar matching Reference Design */}
-      <SubNavbar
-        activeTab={activeSubNavTab}
-        onTabChange={(tab) => {
-          setActiveSubNavTab(tab);
-          if (tab === "RADAR") {
-            setPortalViewMode("MAP");
-            setIsScenarioControlsOpen(true);
-          } else if (tab === "HOURLY" || tab === "10-DAY" || tab === "TODAY" || tab === "MINUTECAST") {
-            setPortalViewMode("PORTAL");
-          }
-        }}
-        onOpenPriorityModal={() => setIsPriorityModalOpen(true)}
-        onOpenGraphModal={() => setIsGraphModalOpen(true)}
-        onToggleScenarioControls={() => setIsScenarioControlsOpen((prev) => !prev)}
-        isLiveMode={isLiveMode}
-        viewModeType={portalViewMode}
-        onToggleViewModeType={() => {
+        portalViewMode={portalViewMode}
+        onTogglePortalViewMode={() => {
           setPortalViewMode((prev) => {
             const nextMode = prev === "PORTAL" ? "MAP" : "PORTAL";
             setActiveSubNavTab(nextMode === "MAP" ? "RADAR" : "TODAY");
@@ -198,16 +189,30 @@ export default function Home() {
         }}
       />
 
-      {/* 30-Minute Predictive Radar Early Warning Banner - ONLY on RADAR Panel */}
-      {activeSubNavTab === "RADAR" && (
-        <EarlyWarningBanner
-          telemetry={liveTelemetry}
-          components={displayedComponents}
-          currentRainfallMmHr={simParams.rainfall_mm_hr}
-          onSimulateRainfall={(rain) => handleApplyPreset("Incoming Storm (+30m Nowcast)", rain, 4.1, 45)}
-          onSelectComponent={(c) => {
-            setPortalViewMode("MAP");
-            setSelectedComponent(c);
+      {/* Weather / Nowcasting Sub-Navbar - ONLY rendered when in Weather Portal mode! */}
+      {portalViewMode === "PORTAL" && (
+        <SubNavbar
+          activeTab={activeSubNavTab}
+          onTabChange={(tab) => {
+            setActiveSubNavTab(tab);
+            if (tab === "RADAR") {
+              setPortalViewMode("MAP");
+              setIsScenarioControlsOpen(true);
+            } else if (tab === "HOURLY" || tab === "10-DAY" || tab === "TODAY" || tab === "MINUTECAST") {
+              setPortalViewMode("PORTAL");
+            }
+          }}
+          onOpenPriorityModal={() => setIsPriorityModalOpen(true)}
+          onOpenGraphModal={() => setIsGraphModalOpen(true)}
+          onToggleScenarioControls={() => setIsScenarioControlsOpen((prev) => !prev)}
+          isLiveMode={isLiveMode}
+          viewModeType={portalViewMode}
+          onToggleViewModeType={() => {
+            setPortalViewMode((prev) => {
+              const nextMode = prev === "PORTAL" ? "MAP" : "PORTAL";
+              setActiveSubNavTab(nextMode === "MAP" ? "RADAR" : "TODAY");
+              return nextMode;
+            });
           }}
         />
       )}
@@ -232,7 +237,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="flex-1 relative w-full overflow-hidden">
-          {/* Full-Screen Background Deck.gl 3D Digital Twin Map */}
+          {/* Full-Screen Background Deck.gl 3D Digital Twin Map (~90% Unobstructed Viewport) */}
           <DeckGLMapView
             components={displayedComponents}
             selectedComponentId={selectedComponent?.component_id || null}
@@ -242,27 +247,98 @@ export default function Home() {
             tide_level_m={simParams.tide_level_m}
           />
 
-          {/* Floating Left: Scenario Sandbox Deck with 0-3h Timeline Scrubber */}
+          {/* Unified Left Slide-out Command Deck (Sandbox + High-Risk Hotspots) */}
           <div className="absolute top-4 left-4 z-20 flex flex-col items-start gap-2">
             {isScenarioControlsOpen ? (
-              <div className="w-80 relative">
-                <ScenarioControls
-                  params={simParams}
-                  onChange={handleParamChange}
-                  isLoading={isLoading}
-                  onApplyPreset={handleApplyPreset}
-                  timelineForecast={simResult?.timeline_forecast || []}
-                  selectedTimelineIndex={selectedTimelineIndex}
-                  onSelectTimelineStep={(idx) => setSelectedTimelineIndex(idx)}
-                />
-                <button
-                  type="button"
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsScenarioControlsOpen(false); }}
-                  className="absolute top-3 right-3 p-1.5 rounded-xl glass-button text-slate-300 hover:text-white"
-                  title="Minimize Sandbox"
-                >
-                  <Minimize2 className="w-3.5 h-3.5" />
-                </button>
+              <div className="w-88 max-h-[calc(100vh-140px)] flex flex-col glass-panel rounded-3xl border border-white/15 shadow-[0_24px_50px_rgba(0,0,0,0.7)] backdrop-blur-2xl overflow-hidden animate-fadeIn">
+                {/* Header with Segmented Tab */}
+                <div className="flex items-center justify-between p-2.5 border-b border-white/10 bg-white/[0.02]">
+                  <div className="flex items-center gap-1 bg-white/[0.06] p-1 rounded-xl border border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setLeftDockTab("SANDBOX")}
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                        leftDockTab === "SANDBOX"
+                          ? "bg-amber-600/80 text-white shadow-md border border-amber-400/50"
+                          : "text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      <Sliders className="w-3.5 h-3.5 text-amber-300" />
+                      <span>Sandbox</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLeftDockTab("HOTSPOTS")}
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                        leftDockTab === "HOTSPOTS"
+                          ? "bg-red-600/80 text-white shadow-md border border-red-400/50"
+                          : "text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      <AlertTriangle className="w-3.5 h-3.5 text-red-300" />
+                      <span>Hotspots ({topHotspots.length})</span>
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsScenarioControlsOpen(false); }}
+                    className="p-1.5 rounded-xl glass-button text-slate-300 hover:text-white"
+                    title="Minimize Command Dock"
+                  >
+                    <Minimize2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* Content Body */}
+                <div className="p-3 overflow-y-auto max-h-[calc(100vh-210px)] custom-scrollbar">
+                  {leftDockTab === "SANDBOX" ? (
+                    <ScenarioControls
+                      params={simParams}
+                      onChange={handleParamChange}
+                      isLoading={isLoading}
+                      onApplyPreset={handleApplyPreset}
+                      timelineForecast={simResult?.timeline_forecast || []}
+                      selectedTimelineIndex={selectedTimelineIndex}
+                      onSelectTimelineStep={(idx) => setSelectedTimelineIndex(idx)}
+                    />
+                  ) : (
+                    <div className="flex flex-col gap-2.5">
+                      <div className="text-[11px] text-slate-400 font-mono mb-1">
+                        High-Risk Subways & Chronic Inundation Nodes:
+                      </div>
+                      {topHotspots.map((zone) => (
+                        <div
+                          key={zone.component_id}
+                          onClick={() => setSelectedComponent(zone)}
+                          className={`glass-panel-subtle p-3 rounded-2xl border transition-all cursor-pointer hover:scale-[1.02] ${
+                            selectedComponent?.component_id === zone.component_id
+                              ? "border-cyan-400/80 shadow-[0_0_15px_rgba(6,182,212,0.4)]"
+                              : "border-white/10 hover:border-amber-400/50"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-bold text-white text-xs flex items-center gap-1.5 truncate">
+                              <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                              {zone.name}
+                            </span>
+                            <span className={`text-[10px] font-mono px-2 py-0.5 rounded-lg border font-bold ${
+                              zone.status === "CRITICAL"
+                                ? "bg-red-500/20 text-red-300 border-red-400/40"
+                                : "bg-amber-500/20 text-amber-300 border-amber-400/40"
+                            }`}>
+                              {zone.failure_risk_score}% RISK
+                            </span>
+                          </div>
+                          <div className="text-[10px] text-slate-400">Ward {zone.ward} • Elev: +{zone.elevation_m}m</div>
+                          <div className="flex items-center justify-between text-[10px] mt-2 font-mono text-cyan-300 border-t border-white/10 pt-1.5">
+                            <span>Depth: <b className="text-white">{zone.water_depth_cm} cm</b></span>
+                            <span>Speed: <b className="text-white">{zone.traffic_speed_kmh} km/h</b></span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             ) : (
               <button
@@ -271,7 +347,7 @@ export default function Home() {
                 className="glass-button flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-amber-300 shadow-[0_16px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:border-amber-400/50 hover:text-amber-200 transition-all hover:scale-105"
               >
                 <Sliders className="w-4 h-4 text-amber-400" />
-                <span>Scenario Sandbox</span>
+                <span>Command Deck & Hotspots ({topHotspots.length})</span>
               </button>
             )}
           </div>
@@ -286,9 +362,8 @@ export default function Home() {
             </div>
           )}
 
-          {/* Floating Bottom Command Bar: Action Buttons */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 glass-panel p-2 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.2)] border border-white/15">
-            {/* Cascading Graph Modal Trigger */}
+          {/* Floating Action Bar: Cascading Failure Graph */}
+          <div className="absolute bottom-11 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 glass-panel p-2 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.2)] border border-white/15">
             <button
               type="button"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsGraphModalOpen(true); }}
@@ -300,6 +375,19 @@ export default function Home() {
                 {graphData?.total_impacted_nodes || 4}
               </span>
             </button>
+          </div>
+
+          {/* Bottom Live Radar Telemetry Ticker (Idea 3: Slim Bloomberg Ticker) */}
+          <div className="absolute bottom-0 left-0 right-0 z-20">
+            <EarlyWarningBanner
+              telemetry={liveTelemetry}
+              components={displayedComponents}
+              currentRainfallMmHr={simParams.rainfall_mm_hr}
+              onSimulateRainfall={(rain) => handleApplyPreset("Incoming Storm (+30m Nowcast)", rain, 4.1, 45)}
+              onSelectComponent={(c) => {
+                setSelectedComponent(c);
+              }}
+            />
           </div>
         </div>
       )}
