@@ -3,6 +3,7 @@
 import React from "react";
 import { TopPriorityHotspot } from "../lib/types";
 import { Trophy, Wrench, Clock, DollarSign, ArrowUpRight } from "lucide-react";
+import { useLanguage } from "../lib/i18n/LanguageContext";
 
 interface PriorityMatrixProps {
   priorities: TopPriorityHotspot[];
@@ -11,6 +12,8 @@ interface PriorityMatrixProps {
 }
 
 export const PriorityMatrix: React.FC<PriorityMatrixProps> = ({ priorities, onSelectComponent, onSelectHotspot }) => {
+  const { t } = useLanguage();
+
   const handleSelect = (id: string) => {
     if (onSelectComponent) onSelectComponent(id);
     if (onSelectHotspot) onSelectHotspot(id);
@@ -23,11 +26,11 @@ export const PriorityMatrix: React.FC<PriorityMatrixProps> = ({ priorities, onSe
         <div className="flex items-center gap-2">
           <Trophy className="w-4 h-4 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
           <h2 className="text-xs font-bold uppercase tracking-wider text-white glass-text-glow">
-            SIH Multi-Criteria Priority Dispatch Queue
+            {t("priorityQueueTitle", "SIH Multi-Criteria Priority Dispatch Queue")}
           </h2>
         </div>
         <span className="text-[10px] text-slate-400 font-mono bg-white/[0.04] border border-white/10 px-2.5 py-1 rounded-lg backdrop-blur-md">
-          Formula: P(Fail) × Impact × PopExp × TrafficExp × Cost × Urgency
+          {t("priorityFormula", "Formula: P(Fail) × Impact × PopExp × TrafficExp × Cost × Urgency")}
         </span>
       </div>
 
@@ -36,13 +39,13 @@ export const PriorityMatrix: React.FC<PriorityMatrixProps> = ({ priorities, onSe
         <table className="w-full text-left text-xs border-collapse">
           <thead>
             <tr className="border-b border-white/10 text-slate-400 text-[11px] font-semibold uppercase tracking-wider">
-              <th className="py-2.5 px-3">RANK</th>
-              <th className="py-2.5 px-3">LOCATION / ASSET</th>
-              <th className="py-2.5 px-3">WARD</th>
-              <th className="py-2.5 px-3">PRIORITY SCORE</th>
-              <th className="py-2.5 px-3">RECOMMENDED ACTION</th>
-              <th className="py-2.5 px-3">EST. COST</th>
-              <th className="py-2.5 px-3 text-right">ACTION</th>
+              <th className="py-2.5 px-3">{t("tableRank", "RANK")}</th>
+              <th className="py-2.5 px-3">{t("tableLocation", "LOCATION / ASSET")}</th>
+              <th className="py-2.5 px-3">{t("tableWard", "WARD")}</th>
+              <th className="py-2.5 px-3">{t("tablePriorityScore", "PRIORITY SCORE")}</th>
+              <th className="py-2.5 px-3">{t("tableAction", "RECOMMENDED ACTION")}</th>
+              <th className="py-2.5 px-3">{t("tableCost", "EST. COST")}</th>
+              <th className="py-2.5 px-3 text-right">{t("viewToggle", "ACTION")}</th>
             </tr>
           </thead>
           <tbody>
@@ -82,7 +85,7 @@ export const PriorityMatrix: React.FC<PriorityMatrixProps> = ({ priorities, onSe
                     onClick={() => handleSelect(p.component_id)}
                     className="glass-button inline-flex items-center gap-1.5 px-3 py-1.5 text-cyan-300 hover:text-white rounded-xl text-[11px] font-semibold transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
                   >
-                    <span>Inspect</span>
+                    <span>{t("inspectBtn", "Inspect")}</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </button>
                 </td>

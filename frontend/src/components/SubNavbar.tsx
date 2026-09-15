@@ -15,8 +15,10 @@ import {
   Waves,
   X,
   MapPin,
-  CloudSun
+  CloudSun,
+  Languages
 } from "lucide-react";
+import { useLanguage, Language } from "../lib/i18n/LanguageContext";
 
 export type SubNavTab = 
   | "TODAY" 
@@ -47,14 +49,15 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
   onToggleViewModeType,
 }) => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const { language, setLanguage, t } = useLanguage();
 
-  // Tabs matching reference design (MONTHLY & HEALTH & ACTIVITIES removed per user request)
+  // Tabs matching reference design with dynamic multi-language labels
   const TABS: { id: SubNavTab; label: string; badge?: string }[] = [
-    { id: "TODAY", label: "TODAY" },
-    { id: "HOURLY", label: "HOURLY", badge: "0-3h" },
-    { id: "10-DAY", label: "10-DAY" },
-    { id: "RADAR", label: "RADAR", badge: "LIVE" },
-    { id: "MINUTECAST", label: "MINUTECAST®", badge: "120m" },
+    { id: "TODAY", label: t("tabToday", "TODAY") },
+    { id: "HOURLY", label: t("tabHourly", "HOURLY"), badge: t("badgeHourly", "0-3h") },
+    { id: "10-DAY", label: t("tab10Day", "10-DAY") },
+    { id: "RADAR", label: t("tabRadar", "RADAR"), badge: t("badgeLive", "LIVE") },
+    { id: "MINUTECAST", label: t("tabMinuteCast", "MINUTECAST®"), badge: t("badge120m", "120m") },
   ];
 
   const handleTabClick = (tabId: SubNavTab) => {
@@ -65,6 +68,12 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
     }
     setActiveModal(null);
   };
+
+  const LANGUAGES: { code: Language; label: string }[] = [
+    { code: "en", label: "English" },
+    { code: "hi", label: "हिंदी" },
+    { code: "mr", label: "मराठी" },
+  ];
 
   return (
     <>
@@ -88,7 +97,7 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
                   <span className="glass-text-title">{tab.label}</span>
                   {tab.badge && (
                     <span className={`text-[9px] px-1.5 py-0.2 rounded-md font-mono font-bold backdrop-blur-md ${
-                      tab.badge === "LIVE" 
+                      tab.badge === "LIVE" || tab.badge === "थेट" || tab.badge === "लाइव"
                         ? "bg-red-500/20 text-red-300 border border-red-400/40 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.4)]" 
                         : "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-[0_0_8px_rgba(6,182,212,0.3)]"
                     }`}>
@@ -104,33 +113,28 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
             })}
           </div>
 
-          {/* Right Action: Mode Switcher & Status Indicator */}
-          <div className="flex items-center gap-3 border-l border-white/10 pl-3 shrink-0">
-            {onToggleViewModeType && (
-              <button
-                type="button"
-                onClick={onToggleViewModeType}
-                className="glass-button flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-cyan-300 hover:text-cyan-100 text-[11px] font-semibold"
-              >
-                {viewModeType === "PORTAL" ? (
-                  <>
-                    <MapPin className="w-3.5 h-3.5 text-cyan-400" />
-                    <span className="hidden sm:inline">Switch to</span>
-                    <span>3D Twin Map</span>
-                  </>
-                ) : (
-                  <>
-                    <CloudSun className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="hidden sm:inline">Switch to</span>
-                    <span>Weather Portal</span>
-                  </>
-                )}
-              </button>
-            )}
-
-            <div className="hidden xl:flex items-center gap-2 text-[11px] font-mono text-slate-300 bg-white/[0.04] backdrop-blur-xl px-2.5 py-1 rounded-xl border border-white/10">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span>MUMBAI-THANE METRO RADAR</span>
+          {/* Right Action: Language Switcher Buttons (English | हिंदी | मराठी) */}
+          <div className="flex items-center gap-2 border-l border-white/10 pl-3 shrink-0">
+            <div className="flex items-center p-1 bg-white/[0.06] rounded-xl border border-white/10 backdrop-blur-md shadow-inner gap-1">
+              <Languages className="w-3.5 h-3.5 text-slate-400 ml-1.5 mr-0.5 hidden sm:inline shrink-0" />
+              {LANGUAGES.map((lang) => {
+                const isSelected = language === lang.code;
+                return (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => setLanguage(lang.code)}
+                    className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                      isSelected
+                        ? "bg-cyan-600/90 text-white shadow-[0_0_12px_rgba(6,182,212,0.45),inset_0_1px_0_rgba(255,255,255,0.25)] border border-cyan-400/60"
+                        : "text-slate-400 hover:text-slate-100 hover:bg-white/[0.05]"
+                    }`}
+                    title={`Switch language to ${lang.label}`}
+                  >
+                    <span>{lang.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

@@ -22,6 +22,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { LiveTelemetry } from "../lib/api";
+import { useLanguage } from "../lib/i18n/LanguageContext";
 
 interface MinuteCastViewProps {
   currentRainfallMmHr?: number;
@@ -81,6 +82,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
   onSimulateScenario,
   onOpenMap,
 }) => {
+  const { t } = useLanguage();
   // Scenario selector state: 'LIVE' | 'DRY' | 'INCOMING_18M' | 'NORMAL' | 'HEAVY'
   const [activeScenario, setActiveScenario] = useState<"LIVE" | "DRY" | "INCOMING_18M" | "NORMAL" | "HEAVY">(() => {
     if (liveTelemetry?.status === "LIVE_SYNCHRONIZED") return "LIVE";
@@ -428,7 +430,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
           <div className="flex items-center gap-2 pl-2">
             <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
             <span className="font-bold text-slate-200 uppercase tracking-wider font-mono text-[11px]">
-              MINUTECAST® PREDICTION ENGINE
+              {t("minuteCastTitle", "MINUTECAST® PRECIPITATION NOWCASTING")}
             </span>
           </div>
 
@@ -443,7 +445,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
               }`}
               title="Live Open-Meteo Minutely Nowcasting"
             >
-              🛰️ Live 5-Zone Radar ({liveTelemetry?.citywide_max_rain_mm_hr ?? liveTelemetry?.rainfall_mm_hr ?? 0} mm/h)
+              🛰️ {t("realtimeBadge", "LIVE")} ({liveTelemetry?.citywide_max_rain_mm_hr ?? liveTelemetry?.rainfall_mm_hr ?? 0} mm/h)
             </button>
 
             <button
@@ -458,7 +460,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                   : "glass-button text-slate-300 hover:text-white"
               }`}
             >
-              ☀️ Dry 0mm
+              ☀️ {t("condClear", "Dry")} 0mm
             </button>
 
             <button
@@ -474,7 +476,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
               }`}
               title="Rain starts at 10:55 AM (Reference Screenshots)"
             >
-              ⚡ Rain in 18m (10:55 AM)
+              ⚡ {t("rainStartsIn", "Rain in")} 18m (10:55 AM)
             </button>
 
             <button
@@ -489,7 +491,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                   : "glass-button text-slate-300 hover:text-white"
               }`}
             >
-              🌧️ Normal Rain (35 mm/h)
+              🌧️ {t("condModerateRain", "Normal Rain")} (35 mm/h)
             </button>
 
             <button
@@ -504,7 +506,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                   : "glass-button text-slate-300 hover:text-white"
               }`}
             >
-              🚨 Heavy (95 mm/h)
+              🚨 {t("condHeavyRain", "Heavy")} (95 mm/h)
             </button>
           </div>
         </div>
@@ -633,7 +635,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
             <div className="flex items-center gap-2">
               <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
               <span className="text-xs font-mono uppercase tracking-widest text-white font-bold glass-text-title">
-                MUMBAI WEATHER RADAR
+                {t("minuteCastTitle", "MUMBAI WEATHER RADAR")}
               </span>
             </div>
 
@@ -643,7 +645,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
               className="glass-button px-3 py-1 rounded-xl text-xs font-bold text-cyan-300 flex items-center gap-1.5 hover:text-white transition-all"
               title="Open in full 3D Digital Twin Map"
             >
-              <span>Full 3D Twin</span>
+              <span>{t("twinMap", "Full 3D Twin")}</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -856,7 +858,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3 mb-2">
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
-                MINUTE-BY-MINUTE PRECIPITATION FEED (WITH PRECISE LOCATIONS)
+                {t("precipitationTimeline", "MINUTE-BY-MINUTE PRECIPITATION FEED (WITH PRECISE LOCATIONS)")}
               </span>
             </div>
 
@@ -870,21 +872,21 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                     : "glass-button text-slate-300 hover:text-white"
                 }`}
               >
-                {filterRainOnly ? "Show All Minutes" : "Rain Only"}
+                {filterRainOnly ? t("filterAllMinutes", "Show All Minutes") : t("filterRainyMinutes", "Rain Only")}
               </button>
               <button
                 type="button"
                 onClick={expandAll}
                 className="glass-button px-2.5 py-1 rounded-xl text-slate-300 hover:text-white"
               >
-                Expand All
+                {t("showAllIntervals", "Expand All")}
               </button>
               <button
                 type="button"
                 onClick={collapseAll}
                 className="glass-button px-2.5 py-1 rounded-xl text-slate-300 hover:text-white"
               >
-                Collapse All
+                {t("hideAllIntervals", "Collapse All")}
               </button>
             </div>
           </div>
@@ -893,7 +895,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
           <div className="flex flex-wrap items-center gap-2 pt-1 pb-2">
             <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1">
               <Filter className="w-3 h-3 text-cyan-400" />
-              Corridor:
+              {t("corridorQuickSelect", "Corridor")}:
             </span>
             <button
               type="button"
@@ -904,7 +906,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                   : "glass-button text-slate-400 hover:text-white"
               }`}
             >
-              All Mumbai & Thane MMR
+              {t("corridorAllMmr", "All Mumbai & Thane MMR")}
               {liveTelemetry?.citywide_max_rain_mm_hr ? ` (${liveTelemetry.citywide_max_rain_mm_hr} mm/h)` : ""}
             </button>
             <button
@@ -916,7 +918,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                   : "glass-button text-slate-400 hover:text-white"
               }`}
             >
-              <span>📍 Thane, Mumbra & Shilphata</span>
+              <span>📍 {t("corridorThane", "Thane, Mumbra & Shilphata")}</span>
               {(liveTelemetry?.regional_zones?.ZONE_THANE_MUMBRA?.rainfall_mm_hr || 0) > 0 && (
                 <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-red-500/30 text-red-200 border border-red-400/50 animate-pulse font-mono">
                   {liveTelemetry?.regional_zones?.ZONE_THANE_MUMBRA?.rainfall_mm_hr} mm/h
@@ -932,7 +934,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                   : "glass-button text-slate-400 hover:text-white"
               }`}
             >
-              <span>📍 Western Suburbs (Milan / Andheri / Borivali)</span>
+              <span>📍 {t("corridorWestern", "Western Suburbs")} (Milan / Andheri / Borivali)</span>
               {(liveTelemetry?.regional_zones?.ZONE_WEST_CENTRAL?.rainfall_mm_hr || 0) > 0 && (
                 <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-red-500/30 text-red-200 border border-red-400/50 animate-pulse font-mono">
                   {liveTelemetry?.regional_zones?.ZONE_WEST_CENTRAL?.rainfall_mm_hr} mm/h
@@ -948,7 +950,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                   : "glass-button text-slate-400 hover:text-white"
               }`}
             >
-              <span>📍 Central & Island City (Hindmata / Kurla / Dadar)</span>
+              <span>📍 {t("corridorCentral", "Central & Island City")} (Hindmata / Kurla / Dadar)</span>
               {(liveTelemetry?.regional_zones?.ZONE_CENTRAL_HARBOUR?.rainfall_mm_hr || 0) > 0 && (
                 <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-red-500/30 text-red-200 border border-red-400/50 animate-pulse font-mono">
                   {liveTelemetry?.regional_zones?.ZONE_CENTRAL_HARBOUR?.rainfall_mm_hr} mm/h

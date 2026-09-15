@@ -3,6 +3,7 @@
 import React from "react";
 import { ComponentTelemetry } from "../lib/types";
 import { X, Activity, AlertOctagon, Car, Droplets, Wrench, ShieldCheck, MapPin, Gauge, GitBranch, AlertTriangle, Hospital, Navigation } from "lucide-react";
+import { useLanguage } from "../lib/i18n/LanguageContext";
 
 interface ComponentInspectorProps {
   component: ComponentTelemetry | null;
@@ -23,50 +24,39 @@ function getSurroundingImpacts(component: ComponentTelemetry) {
       ],
       publicDisruption: "KEM & Tata Memorial Hospital emergency ambulance corridors delayed by ~30 mins. Dadar TT market access waterlogged.",
       drainageImpact: "Hindmata underground holding tank reaching 95% capacity; secondary street gullies experiencing backwater surcharge.",
-      commutersAffected: "~185,000 daily commuters",
+      commutersAffected: "~250,000 daily commuters",
     };
-  } else if (component.component_id.includes("MLN") || component.name.includes("Milan")) {
+  } else if (component.component_id.includes("AND") || component.name.includes("Andheri") || component.name.includes("Milan")) {
     return {
       surroundingRoads: [
-        { name: "Swami Vivekanand (SV) Road", impact: "Traffic Halted at Subway Entry", delay: "+50 mins", status: "CRITICAL" },
-        { name: "Western Express Highway (Santacruz)", impact: "Heavy Spillover onto WEH Flyover", delay: "+40 mins", status: "WARNING" },
-        { name: "Linking Road (Khar-Santacruz)", impact: "Severe Arterial Congestion", delay: "+30 mins", status: "WARNING" },
+        { name: "SV Road (Andheri to Santacruz)", impact: "Heavy Crawl (Speed < 8 km/h)", delay: "+40 mins", status: "CRITICAL" },
+        { name: "Western Express Highway (Milan Flyover)", impact: "Severe Bottle-necking", delay: "+30 mins", status: "WARNING" },
+        { name: "Andheri-Kurla Link Road", impact: "Choked East-West Transit", delay: "+35 mins", status: "CRITICAL" },
       ],
-      publicDisruption: "Santacruz East-West connectivity completely cut off. Nanavati Hospital route diverted via WEH.",
-      drainageImpact: "Gazdarband Nallah discharge constrained; Arabian Sea tidal backflow prevents gravity draining.",
-      commutersAffected: "~140,000 daily commuters",
-    };
-  } else if (component.component_id.includes("AND") || component.name.includes("Andheri")) {
-    return {
-      surroundingRoads: [
-        { name: "SV Road (Andheri West)", impact: "Traffic Gridlock at Station Jn", delay: "+55 mins", status: "CRITICAL" },
-        { name: "Gokhale Bridge East-West Corridor", impact: "Heavy Congestion Spillover", delay: "+35 mins", status: "WARNING" },
-        { name: "Andheri-Kurla Road", impact: "Sluggish Commercial Freight Flow", delay: "+25 mins", status: "WARNING" },
-      ],
-      publicDisruption: "Andheri Railway Station West entry flooded; Cooper Hospital emergency vehicle transit diverted.",
-      drainageImpact: "Irla Nallah capacity overwhelmed; pumps operating at 100% duty cycle.",
-      commutersAffected: "~210,000 daily commuters",
+      publicDisruption: "Subway submerged; suburban bus routes diverted. Access to Andheri West commercial hubs severely delayed.",
+      drainageImpact: "Mogra Nullah tidal lockout active; storm pumps running at 100% duty cycle.",
+      commutersAffected: "~320,000 daily commuters",
     };
   } else if (component.component_id.includes("KRL") || component.name.includes("Kurla")) {
     return {
       surroundingRoads: [
-        { name: "LBS Marg (Kurla Kamani Section)", impact: "Submerged & Impassable", delay: "+60 mins", status: "CRITICAL" },
-        { name: "Santacruz-Chembur Link Road (SCLR)", impact: "Massive East-West Bottleneck", delay: "+45 mins", status: "CRITICAL" },
-        { name: "Eastern Express Highway (Amar Mahal)", impact: "Vehicle Queue Stretches to Ghatkopar", delay: "+30 mins", status: "WARNING" },
+        { name: "LBS Marg (Kurla-Bhandup)", impact: "Inundated at Sheetal Cinema", delay: "+50 mins", status: "CRITICAL" },
+        { name: "BKC Connector (East-bound)", impact: "Traffic Queued up to 2.1 km", delay: "+25 mins", status: "WARNING" },
+        { name: "Santacruz-Chembur Link Road", impact: "Crawl near Kurla Railway Yard", delay: "+30 mins", status: "WARNING" },
       ],
-      publicDisruption: "Kurla West market & bus depot submerged. Central Railway slow line access hindered.",
-      drainageImpact: "Mithi River water levels touching bridge soffits; Mahim Bay tidal flap gates locked.",
-      commutersAffected: "~230,000 daily commuters",
+      publicDisruption: "Central Railway Kurla yard tracks threatened; CST-Thane local transit slowed down.",
+      drainageImpact: "Mithi River water surface elevation exceeds 3.2m MSL; outfall back-pressure observed.",
+      commutersAffected: "~410,000 daily commuters",
     };
-  } else if (component.component_id.includes("SION") || component.name.includes("Sion")) {
+  } else if (component.component_id.includes("THN") || component.component_id.includes("MBR") || component.name.includes("Mumbra") || component.name.includes("Thane")) {
     return {
       surroundingRoads: [
-        { name: "Eastern Express Highway (Sion Circle)", impact: "Arterial Bottleneck", delay: "+45 mins", status: "CRITICAL" },
-        { name: "Gandhi Market Lowline Road", impact: "Water Depth > 30cm (Buses Diverted)", delay: "+40 mins", status: "CRITICAL" },
-        { name: "Sion-Bandra Link Road", impact: "Severe Sluggish Flow towards BKC", delay: "+25 mins", status: "WARNING" },
+        { name: "Old Mumbai-Pune Highway (NH 48)", impact: "Slow Moving Traffic near Bypass", delay: "+30 mins", status: "WARNING" },
+        { name: "Kalyan-Shilphata Road", impact: "Heavy Commercial Truck Jam", delay: "+45 mins", status: "CRITICAL" },
+        { name: "Thane Belapur Road", impact: "Water Puddling near Airoli Bridge", delay: "+20 mins", status: "WARNING" },
       ],
-      publicDisruption: "Sion Hospital trauma center approach waterlogged; BEST bus routes 22, 25, 40 diverted.",
-      drainageImpact: "Sion storm nallah overloaded; water spilling onto highway carriageways.",
+      publicDisruption: "Mumbra station railway underpass submerged; commuters forced onto flyover bypass.",
+      drainageImpact: "Parsik Hill natural stormwater cascade overflowing local collector drains.",
       commutersAffected: "~175,000 daily commuters",
     };
   } else {
@@ -83,6 +73,7 @@ function getSurroundingImpacts(component: ComponentTelemetry) {
 }
 
 export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ component, onClose }) => {
+  const { t, language } = useLanguage();
   if (!component) return null;
 
   const surrounding = getSurroundingImpacts(component);
@@ -103,7 +94,7 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
             }`}>
               {component.component_type}
             </span>
-            <span className="text-[10px] text-slate-400 font-mono">Ward {component.ward}</span>
+            <span className="text-[10px] text-slate-400 font-mono">{t("wardLabel", "Ward")} {component.ward}</span>
           </div>
           <h3 className="text-sm font-bold text-white mt-1 leading-tight glass-text-glow">{component.name}</h3>
         </div>
@@ -118,7 +109,7 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
       {/* Dual Gauges: Health Score & Failure Risk */}
       <div className="grid grid-cols-2 gap-2">
         <div className="glass-panel-subtle p-3 rounded-2xl flex flex-col items-center text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-          <span className="text-[10px] text-slate-400 font-medium tracking-wide">Health Score</span>
+          <span className="text-[10px] text-slate-400 font-medium tracking-wide">{t("healthScoreLabel", "Health Score")}</span>
           <span className={`text-2xl font-mono font-extrabold my-1 drop-shadow-md ${
             component.health_score >= 70 ? "text-emerald-400" :
             component.health_score >= 40 ? "text-amber-400" : "text-rose-400"
@@ -137,7 +128,7 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
         </div>
 
         <div className="glass-panel-subtle p-3 rounded-2xl flex flex-col items-center text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-          <span className="text-[10px] text-slate-400 font-medium tracking-wide">Failure Risk</span>
+          <span className="text-[10px] text-slate-400 font-medium tracking-wide">{t("failureRiskLabel", "Failure Risk")}</span>
           <span className={`text-2xl font-mono font-extrabold my-1 drop-shadow-md ${
             component.failure_risk_score >= 60 ? "text-rose-400" :
             component.failure_risk_score >= 30 ? "text-amber-400" : "text-emerald-400"
@@ -161,7 +152,7 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1.5 text-slate-400">
             <Droplets className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Water Depth:</span>
+            <span>{t("waterDepthLabel", "Water Depth")}:</span>
           </span>
           <span className={`font-mono font-bold ${component.water_depth_cm > 15 ? "text-rose-400" : "text-slate-200"}`}>
             {component.water_depth_cm} cm
@@ -172,7 +163,7 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-slate-400">
               <Car className="w-3.5 h-3.5 text-blue-400" />
-              <span>Speed / Congestion:</span>
+              <span>{language === 'hi' ? 'गति / भीड़' : language === 'mr' ? 'वेग / वाहतूक कोंडी' : 'Speed / Congestion'}:</span>
             </span>
             <span className="font-mono font-bold text-slate-200">
               {component.traffic_speed_kmh} km/h ({component.traffic_congestion_pct}%)
@@ -184,7 +175,7 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-slate-400">
               <AlertOctagon className="w-3.5 h-3.5 text-amber-400" />
-              <span>Pothole Probability:</span>
+              <span>{language === 'hi' ? 'गड्ढे की संभावना' : language === 'mr' ? 'खड्ड्यांची शक्यता' : 'Pothole Probability'}:</span>
             </span>
             <span className="font-mono font-bold text-amber-400">
               {(component.pothole_probability * 100).toFixed(0)}%
@@ -195,7 +186,7 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1.5 text-slate-400">
             <MapPin className="w-3.5 h-3.5 text-slate-400" />
-            <span>Ground Elevation:</span>
+            <span>{language === 'hi' ? 'जमीनी ऊंचाई' : language === 'mr' ? 'जमिनीची उंची' : 'Ground Elevation'}:</span>
           </span>
           <span className="font-mono text-slate-200">
             +{component.elevation_m} m THD
@@ -208,7 +199,7 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
         <div className="flex items-center justify-between border-b border-rose-500/20 pb-2">
           <div className="flex items-center gap-1.5 text-rose-400 text-[11px] font-bold uppercase tracking-wider">
             <GitBranch className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
-            <span>Surrounding Impact & Spillover</span>
+            <span>{language === 'hi' ? 'आसपास प्रभाव और फैलाव' : language === 'mr' ? 'परिसरावर होणारा परिणाम' : 'Surrounding Impact & Spillover'}</span>
           </div>
           <span className="text-[10px] text-amber-300 font-mono font-bold bg-amber-500/20 px-2 py-0.5 rounded-md border border-amber-500/30">
             {surrounding.commutersAffected}
@@ -217,7 +208,7 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
 
         {/* Impacted Nearby Roads List */}
         <div className="flex flex-col gap-1.5 mt-0.5">
-          <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Nearby Roads & Arteries Impacted:</span>
+          <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{language === 'hi' ? 'प्रभावित नजदीकी मुख्य सड़कें:' : language === 'mr' ? 'प्रभावित लगतचे प्रमुख रस्ते:' : 'Nearby Roads & Arteries Impacted:'}</span>
           {surrounding.surroundingRoads.map((r, idx) => (
             <div key={idx} className="bg-white/[0.04] p-2 rounded-xl border border-white/10 flex items-center justify-between text-[11px] backdrop-blur-md">
               <div className="flex flex-col">
@@ -234,13 +225,13 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
         {/* Public Disruption & Hospitals */}
         <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/10 flex items-start gap-2 text-[10px] text-slate-200 backdrop-blur-md">
           <Hospital className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
-          <span><strong className="text-white">Emergency & Public Disruption:</strong> {surrounding.publicDisruption}</span>
+          <span><strong className="text-white">{language === 'hi' ? 'आपातकालीन एवं सार्वजनिक व्यवधान:' : language === 'mr' ? 'आपत्कालीन आणि सार्वजनिक व्यत्यय:' : 'Emergency & Public Disruption:'}</strong> {surrounding.publicDisruption}</span>
         </div>
 
         {/* Drainage Network Surcharge */}
         <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/10 flex items-start gap-2 text-[10px] text-cyan-200 backdrop-blur-md">
           <Droplets className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-          <span><strong className="text-cyan-300">Drainage Network Status:</strong> {surrounding.drainageImpact}</span>
+          <span><strong className="text-cyan-300">{language === 'hi' ? 'ड्रेनेज नेटवर्क स्थिति:' : language === 'mr' ? 'नाल्यांची स्थिती:' : 'Drainage Network Status:'}</strong> {surrounding.drainageImpact}</span>
         </div>
       </div>
 
@@ -248,7 +239,7 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
       <div className="bg-gradient-to-r from-blue-950/40 to-indigo-950/40 border border-blue-500/25 backdrop-blur-xl p-3 rounded-2xl flex flex-col gap-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
         <div className="flex items-center gap-1.5 text-cyan-300 text-[11px] font-bold uppercase tracking-wider">
           <Wrench className="w-3.5 h-3.5" />
-          <span>Automated BMC Work Order:</span>
+          <span>{t("workOrderTitle", "Automated BMC Work Order")}:</span>
         </div>
         <p className="text-xs text-slate-200 leading-relaxed">
           {component.recommended_action}

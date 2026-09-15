@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { SimulationRequest, TimelineForecastStep } from "../lib/types";
 import { Sliders, CloudRain, Waves, Trash2, Zap, Clock, ShieldAlert, Sparkles, Play, Pause, RotateCcw } from "lucide-react";
+import { useLanguage } from "../lib/i18n/LanguageContext";
 
 interface ScenarioControlsProps {
   params: SimulationRequest;
@@ -23,6 +24,7 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
   selectedTimelineIndex = 0,
   onSelectTimelineStep,
 }) => {
+  const { t } = useLanguage();
   const [isPlayingTimeline, setIsPlayingTimeline] = useState<boolean>(false);
 
   useEffect(() => {
@@ -39,10 +41,10 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
   }, [isPlayingTimeline, selectedTimelineIndex, timelineForecast.length, onSelectTimelineStep]);
 
   const presets = [
-    { name: "Clear Sky Baseline", rain: 0, tide: 2.4, silt: 20, label: "Clear 0mm", icon: "☀️", desc: "0mm/h • 2.4m" },
-    { name: "Normal Monsoon", rain: 35, tide: 2.5, silt: 25, label: "Normal 35mm", icon: "🌤️", desc: "35mm/h • 2.5m" },
-    { name: "Heavy Downpour (150mm)", rain: 150, tide: 4.2, silt: 50, label: "Heavy 150mm", icon: "🌧️", desc: "150mm/h • 4.2m" },
-    { name: "26/7 Cloudburst Surge", rain: 260, tide: 4.8, silt: 80, label: "26/7 Surge", icon: "⚡", desc: "260mm/h • 4.8m" },
+    { name: "Clear Sky Baseline", rain: 0, tide: 2.4, silt: 20, label: t("condClear", "Clear Sky"), icon: "☀️", desc: "0mm/h • 2.4m" },
+    { name: "Normal Monsoon", rain: 35, tide: 2.5, silt: 25, label: t("presetNormal", "Normal Monsoon"), icon: "🌤️", desc: "35mm/h • 2.5m" },
+    { name: "Heavy Downpour (150mm)", rain: 150, tide: 4.2, silt: 50, label: t("presetHighTide", "High Tide (150mm)"), icon: "🌧️", desc: "150mm/h • 4.2m" },
+    { name: "26/7 Cloudburst Surge", rain: 260, tide: 4.8, silt: 80, label: t("presetCloudburst", "26/7 Surge"), icon: "⚡", desc: "260mm/h • 4.8m" },
   ];
 
   return (
@@ -52,13 +54,13 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
         <div className="flex items-center gap-2">
           <Sliders className="w-4 h-4 text-amber-300 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
           <h2 className="text-xs font-bold uppercase tracking-wider text-white glass-text-title">
-            Scenario Sandbox & What-If
+            {t("whatIfSandboxTitle", "Scenario Sandbox & What-If")}
           </h2>
         </div>
         {isLoading && (
           <span className="text-[10px] font-mono text-cyan-300 flex items-center gap-1.5 bg-white/[0.05] px-2 py-0.5 rounded-lg border border-white/10">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-            Computing ML...
+            {t("computingMl", "Computing ML...")}
           </span>
         )}
       </div>
@@ -69,7 +71,7 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
           <div className="flex items-center justify-between text-[10px] font-bold text-cyan-300">
             <span className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-cyan-400" />
-              0-3 HOUR NOWCAST TIMELINE:
+              {t("nowcastTimeline03h", "0-3 HOUR NOWCAST TIMELINE:")}
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -84,10 +86,10 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
                     ? "bg-amber-500/30 border-amber-400/60 text-amber-200 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.5)]"
                     : "glass-button text-cyan-300 hover:text-white"
                 }`}
-                title={isPlayingTimeline ? "Pause automated timeline playback" : "Autoplay 0-3h storm progression"}
+                title={isPlayingTimeline ? t("pauseBtn", "Pause") : t("playBtn", "Play")}
               >
                 {isPlayingTimeline ? <Pause className="w-3 h-3 text-amber-400" /> : <Play className="w-3 h-3 text-cyan-400" />}
-                <span>{isPlayingTimeline ? "Pause" : "Play"}</span>
+                <span>{isPlayingTimeline ? t("pauseBtn", "Pause") : t("playBtn", "Play")}</span>
               </button>
 
               <span className="font-mono text-white font-extrabold glass-text-glow">
@@ -120,9 +122,9 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
           </div>
 
           <div className="flex items-center justify-between text-[9px] font-mono text-slate-300 pt-0.5">
-            <span>Rain: <strong className="text-cyan-300 font-bold">{timelineForecast[selectedTimelineIndex]?.predicted_rainfall_mm_hr} mm/h</strong></span>
-            <span>Peak Depth: <strong className="text-cyan-300 font-bold">{timelineForecast[selectedTimelineIndex]?.city_max_depth_cm}cm</strong></span>
-            <span>Critical: <strong className="text-red-300 font-bold">{timelineForecast[selectedTimelineIndex]?.critical_hotspots_count}</strong></span>
+            <span>{t("rainfallRate", "Rain")}: <strong className="text-cyan-300 font-bold">{timelineForecast[selectedTimelineIndex]?.predicted_rainfall_mm_hr} mm/h</strong></span>
+            <span>{t("waterDepthLabel", "Peak Depth")}: <strong className="text-cyan-300 font-bold">{timelineForecast[selectedTimelineIndex]?.city_max_depth_cm}cm</strong></span>
+            <span>{t("criticalSpotsCount", "Critical")}: <strong className="text-red-300 font-bold">{timelineForecast[selectedTimelineIndex]?.critical_hotspots_count}</strong></span>
           </div>
         </div>
       )}
@@ -130,7 +132,7 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
       {/* Scenario Presets */}
       <div className="flex flex-col gap-1.5">
         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300 glass-text-title">
-          Monsoon Stress-Test Presets:
+          {t("stressTestPresets", "Monsoon Stress-Test Presets:")}
         </span>
         <div className="grid grid-cols-3 gap-2">
           {presets.map((preset) => {
@@ -168,7 +170,7 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
           <div className="flex items-center justify-between text-[11px]">
             <span className="flex items-center gap-1.5 text-slate-200 font-medium">
               <CloudRain className="w-3.5 h-3.5 text-blue-400" />
-              Rainfall Rate:
+              {t("rainfallSlider", "Rainfall Rate")}:
             </span>
             <span className="font-mono font-bold text-blue-300 glass-text-glow">{params.rainfall_mm_hr} mm/h</span>
           </div>
@@ -188,7 +190,7 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
           <div className="flex items-center justify-between text-[11px]">
             <span className="flex items-center gap-1.5 text-slate-200 font-medium">
               <Waves className="w-3.5 h-3.5 text-cyan-400" />
-              Arabian Sea Tide:
+              {t("tideSlider", "Arabian Sea Tide")}:
             </span>
             <span className="font-mono font-bold text-cyan-300 glass-text-glow">{params.tide_level_m} m</span>
           </div>
@@ -208,7 +210,7 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
           <div className="flex items-center justify-between text-[11px]">
             <span className="flex items-center gap-1.5 text-slate-200 font-medium">
               <Trash2 className="w-3.5 h-3.5 text-amber-400" />
-              Drain Siltation:
+              {t("siltationSlider", "Drain Siltation")}:
             </span>
             <span className="font-mono font-bold text-amber-300 glass-text-glow">{params.siltation_pct}%</span>
           </div>

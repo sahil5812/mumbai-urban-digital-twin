@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { LiveTelemetry } from "../lib/api";
 import { MinuteCastView } from "./MinuteCastView";
+import { useLanguage } from "../lib/i18n/LanguageContext";
 
 interface WeatherPortalViewProps {
   currentRainfallMmHr: number;
@@ -51,6 +52,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
   onOpenMap,
   onOpenPriorityModal,
 }) => {
+  const { t, language } = useLanguage();
   // If activeTab is MINUTECAST, render the full AccuWeather-style MinuteCast interface
   if (activeTab === "MINUTECAST") {
     return (
@@ -932,7 +934,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         <div className="glass-panel rounded-3xl p-5 sm:p-6 scroll-reveal">
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
-              TONIGHT'S WEATHER & HYDROLOGY ALERT
+              {t("tonightAlertTitle", "TONIGHT'S WEATHER & HYDROLOGY ALERT")}
             </span>
             <span className="text-[11px] font-mono text-cyan-300 bg-cyan-950/40 px-3 py-0.5 rounded-full border border-cyan-400/40 shadow-sm backdrop-blur-md">
               SUN, SEP 6 • IST
@@ -943,14 +945,14 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
             <div className="flex items-start gap-2.5">
               <span className="text-base sm:text-lg shrink-0">⛈️</span>
               <p>
-                <strong className="text-white font-semibold">Tonight:</strong> Partly cloudy with localized thunderstorm cells developing over Kurla, Hindmata & Thane Mumbra late.&nbsp;
+                <strong className="text-white font-semibold">{t("tonightLabel", "Tonight:")}</strong> Partly cloudy with localized thunderstorm cells developing over Kurla, Hindmata & Thane Mumbra late.&nbsp;
                 <span className="text-cyan-300 font-mono font-bold glass-text-glow">Lo: 26°C</span>
               </p>
             </div>
             <div className="flex items-start gap-2.5">
               <span className="text-base sm:text-lg shrink-0">🌤️</span>
               <p>
-                <strong className="text-white font-semibold">Tomorrow:</strong> Sun breaking through clouds at times with stray thunderstorms in the afternoon coinciding with&nbsp;
+                <strong className="text-white font-semibold">{t("tomorrowLabel", "Tomorrow:")}</strong> Sun breaking through clouds at times with stray thunderstorms in the afternoon coinciding with&nbsp;
                 <span className="text-amber-300 font-mono font-bold">14:15 IST High Tide (4.2m)</span>.&nbsp;
                 <span className="text-cyan-300 font-mono font-bold glass-text-glow">Hi: 32°C</span>
               </p>
@@ -962,7 +964,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
         <div className="glass-panel rounded-3xl p-5 sm:p-6 scroll-reveal">
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
-              CURRENT WEATHER & TELEMETRY
+              {t("currentTelemetryTitle", "CURRENT WEATHER & TELEMETRY")}
             </span>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
@@ -1003,7 +1005,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
               <div className="glass-panel-subtle p-3.5 rounded-2xl">
                 <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                   <Wind className="w-3.5 h-3.5 text-indigo-300" />
-                  <span className="text-[11px] font-semibold text-slate-300">WIND</span>
+                  <span className="text-[11px] font-semibold text-slate-300">{t("windLabel", "WIND")}</span>
                 </div>
                 <div className="text-white font-bold text-sm">
                   WSW {Math.round(windKmh)} km/h
@@ -1014,7 +1016,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
               <div className="glass-panel-subtle p-3.5 rounded-2xl">
                 <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                   <Waves className="w-3.5 h-3.5 text-cyan-300" />
-                  <span className="text-[11px] font-semibold text-slate-300">ARABIAN SEA TIDE</span>
+                  <span className="text-[11px] font-semibold text-slate-300">{t("tideSeaLabel", "ARABIAN SEA TIDE")}</span>
                 </div>
                 <div className={`font-bold text-sm ${tideM >= 3.8 ? "text-amber-300" : "text-cyan-300"}`}>
                   {tideM.toFixed(2)} m
@@ -1027,7 +1029,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
               <div className="glass-panel-subtle p-3.5 rounded-2xl">
                 <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                   <Droplets className="w-3.5 h-3.5 text-blue-300" />
-                  <span className="text-[11px] font-semibold text-slate-300">CATCHMENT RUNOFF</span>
+                  <span className="text-[11px] font-semibold text-slate-300">{t("catchmentRunoffLabel", "CATCHMENT RUNOFF")}</span>
                 </div>
                 <div className="text-white font-bold text-sm">
                   {Math.max(5.2, (rainMmHr * 0.45 + 5.2)).toFixed(1)} m³/s
@@ -1038,7 +1040,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
               <div className="glass-panel-subtle p-3.5 rounded-2xl">
                 <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                   <Gauge className="w-3.5 h-3.5 text-emerald-300" />
-                  <span className="text-[11px] font-semibold text-slate-300">DEWATERING PUMPS</span>
+                  <span className="text-[11px] font-semibold text-slate-300">{t("dewateringPumpsLabel", "DEWATERING PUMPS")}</span>
                 </div>
                 <div className="text-emerald-300 font-bold text-sm">
                   9 SPS Active
@@ -1057,7 +1059,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
             </div>
             <div>
               <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 font-bold glass-text-title">
-                LOOKING AHEAD • HYDROLOGICAL ADVISORY
+                {t("lookingAheadTitle", "LOOKING AHEAD • HYDROLOGICAL ADVISORY")}
               </span>
               <p className="text-xs text-slate-200 mt-0.5 leading-relaxed">
                 Thunderstorm cells expected late Sunday night with high tide surge coincidence (+4.1m). Lowline subways (Milan, Andheri, Hindmata, Reti Bunder) under automated sensor surveillance.
@@ -1069,7 +1071,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
             onClick={onOpenPriorityModal}
             className="glass-button shrink-0 px-3.5 py-2 text-amber-200 rounded-2xl text-xs font-semibold font-mono flex items-center gap-1.5"
           >
-            <span>Priority Queue</span>
+            <span>{t("priorityQueueTitle", "Priority Queue")}</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -1079,7 +1081,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
-                MUMBAI & THANE METRO DOPPLER RADAR
+                {t("minuteCastTitle", "MUMBAI & THANE METRO DOPPLER RADAR")}
               </span>
               <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950/40 px-2 py-0.5 rounded-md border border-cyan-400/40">
                 100 KM RANGE
@@ -1087,7 +1089,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
             </div>
             <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span>RADAR ONLINE</span>
+              <span>{t("radarOnline", "RADAR ONLINE")}</span>
             </div>
           </div>
 
@@ -1115,14 +1117,14 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
               onClick={onOpenMap}
               className="relative z-10 glass-button-primary px-5 py-2.5 rounded-2xl text-white font-bold text-xs flex items-center gap-2 transition-all hover:scale-105 shadow-xl cursor-pointer"
             >
-              <span>Open in Full 3D Twin Map</span>
+              <span>{t("openInTwinMap", "Open in Full 3D Twin Map")}</span>
               <ArrowUpRight className="w-4 h-4" />
             </button>
           </div>
 
           <div className="flex items-center justify-between mt-4">
             <span className="text-xs text-slate-400 font-mono">
-              Active Layer: <strong className="text-cyan-300">{radarLayer.toUpperCase()}</strong>
+              {t("activeLayer", "Active Layer:")} <strong className="text-cyan-300">{radarLayer.toUpperCase()}</strong>
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -1135,7 +1137,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
                 }`}
               >
                 <Activity className="w-3.5 h-3.5" />
-                <span>Precipitation</span>
+                <span>{t("layerPrecipitation", "Precipitation")}</span>
               </button>
 
               <button
@@ -1148,7 +1150,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
                 }`}
               >
                 <Layers className="w-3.5 h-3.5" />
-                <span>Clouds</span>
+                <span>{t("layerClouds", "Clouds")}</span>
               </button>
 
               <button
@@ -1161,7 +1163,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
                 }`}
               >
                 <Waves className="w-3.5 h-3.5" />
-                <span>Flood Depths</span>
+                <span>{t("layerFloodDepths", "Flood Depths")}</span>
               </button>
             </div>
           </div>
@@ -1179,12 +1181,12 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
               <h2 className="text-xs font-bold uppercase tracking-wider text-white glass-text-title">
-                HOURLY FORECAST & HYDROLOGY SIMULATION
+                {t("hours24Forecast", "HOURLY FORECAST & HYDROLOGY SIMULATION")}
               </h2>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-mono text-slate-300 bg-white/[0.06] px-2.5 py-1 rounded-xl border border-white/10">
-                16-Hour Detailed Outlook • Click any hour to expand
+                {t("clickHourExpand", "16-Hour Detailed Outlook • Click any hour to expand")}
               </span>
             </div>
           </div>
@@ -1195,11 +1197,11 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
               <div className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4 text-cyan-400" />
                 <span className="text-xs font-bold text-white tracking-wide uppercase">
-                  16-Hour Hyetograph (Precipitation & Risk Distribution)
+                  {t("hyetographTitle", "16-Hour Hyetograph (Precipitation & Risk Distribution)")}
                 </span>
               </div>
               <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950/40 px-2.5 py-0.5 rounded-full border border-cyan-500/30">
-                Peak Rain: {Math.max(...HOURLY_DETAILS.map((h) => h.rainMm))} mm/hr
+                {t("peakRainMmHr", "Peak Rain")}: {Math.max(...HOURLY_DETAILS.map((h) => h.rainMm))} mm/hr
               </span>
             </div>
 
@@ -1481,7 +1483,7 @@ export const WeatherPortalView: React.FC<WeatherPortalViewProps> = ({
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
               <h2 className="text-xs font-bold uppercase tracking-wider text-white glass-text-title">
-                10-DAY FORECAST • SEPTEMBER 7 – SEPTEMBER 21
+                {t("days10Forecast", "10-DAY EXTENDED FORECAST")}
               </h2>
             </div>
             <span className="text-[11px] font-mono text-cyan-300 bg-white/[0.06] px-2.5 py-1 rounded-xl border border-white/10">

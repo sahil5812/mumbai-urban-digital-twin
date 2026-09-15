@@ -13,9 +13,11 @@ import { PriorityMatrix } from "../components/PriorityMatrix";
 import { CitizenReportModal } from "../components/CitizenReportModal";
 import { runSimulation, fetchCascadingGraph, fetchLiveTelemetry, LiveTelemetry } from "../lib/api";
 import { SimulationRequest, SimulationResponse, ComponentTelemetry, CascadingGraphResponse } from "../lib/types";
+import { useLanguage } from "../lib/i18n/LanguageContext";
 import { GitBranch, Trophy, Sliders, X, Minimize2, MapPin, AlertTriangle } from "lucide-react";
 
 export default function Home() {
+  const { t, language } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [viewMode, setViewMode] = useState<"2D" | "3D">("3D");
   const [isGraphModalOpen, setIsGraphModalOpen] = useState(false);
@@ -330,7 +332,7 @@ export default function Home() {
                       style={{ color: "black" }}
                     >
                       <Sliders className="w-3.5 h-3.5 text-black" style={{ color: "black" }} />
-                      <span style={{ color: "black" }}>Sandbox</span>
+                      <span style={{ color: "black" }}>{t("tabSandbox", "Sandbox")}</span>
                     </button>
                     <button
                       type="button"
@@ -343,7 +345,7 @@ export default function Home() {
                       style={{ color: "black" }}
                     >
                       <AlertTriangle className="w-3.5 h-3.5 text-black" style={{ color: "black" }} />
-                      <span style={{ color: "black" }}>Hotspots ({topHotspots.length})</span>
+                      <span style={{ color: "black" }}>{t("tabHotspots", "Hotspots")} ({topHotspots.length})</span>
                     </button>
                   </div>
                   <button
@@ -371,7 +373,7 @@ export default function Home() {
                   ) : (
                     <div className="flex flex-col gap-2.5">
                       <div className="text-[11px] text-slate-400 font-mono mb-1">
-                        High-Risk Subways & Chronic Inundation Nodes:
+                        {language === 'hi' ? 'उच्च जोखिम वाले सबवे एवं जलभराव स्थल:' : language === 'mr' ? 'अतिधोकादायक सबवे व पाणी साचण्याची ठिकाणे:' : 'High-Risk Subways & Chronic Inundation Nodes:'}
                       </div>
                       {topHotspots.map((zone) => (
                         <div
@@ -393,13 +395,13 @@ export default function Home() {
                                 ? "bg-red-500/20 text-red-300 border-red-400/40"
                                 : "bg-amber-500/20 text-amber-300 border-amber-400/40"
                             }`}>
-                              {zone.failure_risk_score}% RISK
+                              {zone.failure_risk_score}% {language === 'hi' ? 'जोखिम' : language === 'mr' ? 'धोका' : 'RISK'}
                             </span>
                           </div>
-                          <div className="text-[10px] text-slate-400">Ward {zone.ward} • Elev: +{zone.elevation_m}m</div>
+                          <div className="text-[10px] text-slate-400">{t("wardLabel", "Ward")} {zone.ward} • Elev: +{zone.elevation_m}m</div>
                           <div className="flex items-center justify-between text-[10px] mt-2 font-mono text-cyan-300 border-t border-white/10 pt-1.5">
-                            <span>Depth: <b className="text-white">{zone.water_depth_cm} cm</b></span>
-                            <span>Speed: <b className="text-white">{zone.traffic_speed_kmh} km/h</b></span>
+                            <span>{language === 'hi' ? 'गहराई' : language === 'mr' ? 'खोली' : 'Depth'}: <b className="text-white">{zone.water_depth_cm} cm</b></span>
+                            <span>{language === 'hi' ? 'गति' : language === 'mr' ? 'वेग' : 'Speed'}: <b className="text-white">{zone.traffic_speed_kmh} km/h</b></span>
                           </div>
                         </div>
                       ))}
@@ -415,7 +417,7 @@ export default function Home() {
                 style={{ position: "relative", bottom: "50px", color: "black" }}
               >
                 <Sliders className="w-4 h-4 text-black" style={{ color: "black" }} />
-                <span style={{ color: "black" }}>Command Deck & Hotspots ({topHotspots.length})</span>
+                <span style={{ color: "black" }}>{t("commandDeckTitle", "Command Deck & Hotspots")} ({topHotspots.length})</span>
               </button>
             )}
           </div>
@@ -441,7 +443,7 @@ export default function Home() {
               className="glass-button flex items-center gap-2.5 px-4 py-2 rounded-xl text-xs font-bold text-purple-200 shadow-[0_0_16px_rgba(168,85,247,0.25),inset_0_1px_0_rgba(255,255,255,0.18)] border border-purple-500/40 hover:scale-105 transition-all"
             >
               <GitBranch className="w-4 h-4 text-purple-400" />
-              <span>Cascading Failure Graph</span>
+              <span>{language === 'hi' ? 'कैस्केडिंग विफलता ग्राफ' : language === 'mr' ? 'कॅस्केडिंग फॉल्ट आलेख' : 'Cascading Failure Graph'}</span>
               <span className="px-2 py-0.5 rounded-full bg-purple-500/25 text-purple-200 font-mono text-[10px] font-bold border border-purple-400/30">
                 {graphData?.total_impacted_nodes || 4}
               </span>

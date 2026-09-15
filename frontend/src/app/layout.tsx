@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import OceanSkyBackground from "@/components/OceanSkyBackground";
 import { ScrollRevealInit } from "@/components/ScrollRevealInit";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -37,7 +38,9 @@ export default function RootLayout({
         {/* Full-Body Fixed Interactive Procedural WebGL Ocean & Sky Shader Background */}
         <OceanSkyBackground />
 
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
