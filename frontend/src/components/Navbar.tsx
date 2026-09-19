@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ShieldAlert, Activity, Clock, Waves, Compass, AlertTriangle, Radio, CloudRain, Droplets, Wind, CloudSun, MapPin, Languages } from "lucide-react";
+import { ShieldAlert, Activity, Clock, Waves, Compass, AlertTriangle, Radio, CloudRain, Droplets, Wind, CloudSun, MapPin, Languages, Zap } from "lucide-react";
 import { LiveTelemetry } from "../lib/api";
 import { useLanguage, Language } from "../lib/i18n/LanguageContext";
+import { usePerformanceMode } from "../lib/performance";
 
 interface NavbarProps {
   viewMode: "2D" | "3D";
@@ -38,6 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [time, setTime] = useState<string>("");
   const { language, setLanguage, t } = useLanguage();
+  const { isLite, toggleMode } = usePerformanceMode();
 
   useEffect(() => {
     const update = () => {
@@ -196,6 +198,20 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </div>
         )}
+
+        <button
+          type="button"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleMode(); }}
+          className={`glass-button flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+            isLite
+              ? "bg-amber-500/20 text-amber-300 border-amber-400/50 shadow-[0_0_10px_rgba(245,158,11,0.25)]"
+              : "text-slate-300 hover:text-white"
+          }`}
+          title={isLite ? "⚡ Lite Mode Active (Optimized for Low-End Hardware). Click to switch to High Fidelity." : "⚡ Fidelity Mode Active. Click to switch to Lite Mode for maximum performance."}
+        >
+          <Zap className={`w-3.5 h-3.5 ${isLite ? "text-amber-400 fill-amber-400" : "text-slate-400"}`} />
+          <span className="hidden sm:inline font-mono text-[11px]">{isLite ? "LITE" : "FIDELITY"}</span>
+        </button>
 
         <button
           type="button"

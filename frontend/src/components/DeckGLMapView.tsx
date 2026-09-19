@@ -9,6 +9,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { ComponentTelemetry, SafeRouteResponse, DEMGridResponse } from "../lib/types";
 import { fetchSafeRoute, fetchDEMGrid, fetchRecentCitizenReports, fetchRoadNetworkGeoJSON, fetchWardZonesGeoJSON, CitizenReportRecord } from "../lib/api";
 import { Layers, Rotate3d, Route, Waves, Radio, Play, Pause, Compass, Sun, Moon, Satellite, Zap, AlertTriangle, Navigation, ShieldCheck, ShieldAlert, Clock, ArrowRight, X } from "lucide-react";
+import { usePerformanceMode } from "../lib/performance";
 
 
 const MUMBAI_ROADS = [
@@ -80,6 +81,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
   rainfall_mm_hr = 0,
   tide_level_m = 2.4,
 }) => {
+  const { isLite } = usePerformanceMode();
   const [showMarkers, setShowMarkers] = useState<boolean>(true);
   const [showRoads, setShowRoads] = useState<boolean>(true);
   const [showDrains, setShowDrains] = useState<boolean>(true);
@@ -204,18 +206,31 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     return cells;
   }, [showDEMGrid, demGridData]);
 
-  // Continuous animation phase for Live Moving Radar Markers (0 to 1 loop, 60fps)
+  // Sonar radar wave animation phase (runs only when active rain is present, throttled to 30fps)
   const [pulsePhase, setPulsePhase] = useState<number>(0);
 
   useEffect(() => {
+    // Completely pause animation loop if dry weather, radar scan disabled, or in Lite mode
+    if (rainfall_mm_hr <= 0 || !showRadarScan || isLite) {
+      setPulsePhase(0.5);
+      return;
+    }
+
     let animId: number;
-    const animate = () => {
-      setPulsePhase((prev) => (prev + 0.016) % 1);
+    let lastTime = performance.now();
+
+    const animate = (now: number) => {
+      // Throttle to ~30 FPS (33ms) to save CPU/GPU cycles on low-end hardware
+      if (now - lastTime >= 33) {
+        lastTime = now;
+        setPulsePhase((prev) => (prev + 0.02) % 1);
+      }
       animId = requestAnimationFrame(animate);
     };
+
     animId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animId);
-  }, []);
+  }, [rainfall_mm_hr, showRadarScan, isLite]);
 
   // Basemap Theme: 'DARK' | 'SATELLITE' | 'STREET'
   const [mapTheme, setMapTheme] = useState<"DARK" | "SATELLITE" | "STREET">("STREET");
@@ -881,6 +896,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         onViewStateChange={(e: any) => setViewState(e.viewState)}
         controller={{ dragRotate: true, touchRotate: true, inertia: true }}
         layers={layers}
+        useDevicePixels={isLite ? 1 : Math.min(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1, 1.25)}
         onError={() => {}}
         getTooltip={({ object }: any) => {
           if (!object) return null;

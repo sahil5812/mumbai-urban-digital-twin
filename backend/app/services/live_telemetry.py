@@ -147,12 +147,31 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
                     wind_val = float(curr.get("wind_speed_10m", 20.0))
                     code_val = int(curr.get("weather_code", 2))
 
+                    # Weather-code-based rain floor for India/monsoon regions
+                    # Open-Meteo NWP models (ECMWF/GFS) severely underestimate
+                    # localized convective monsoon rainfall (no radar in India).
+                    # WMO Weather Codes: 51=light drizzle, 53=moderate drizzle,
+                    # 55=dense drizzle, 61=slight rain, 63=moderate rain,
+                    # 65=heavy rain, 67=freezing rain, 80=slight showers,
+                    # 81=moderate showers, 82=violent showers, 95/96/99=thunderstorms
+                    _RAIN_CODE_FLOOR = {
+                        51: 0.5, 53: 1.5, 55: 3.0,
+                        61: 2.5, 63: 7.0, 65: 15.0, 67: 10.0,
+                        80: 4.0, 81: 10.0, 82: 30.0,
+                        95: 12.0, 96: 20.0, 99: 35.0,
+                    }
+                    if code_val in _RAIN_CODE_FLOOR and rain_val < _RAIN_CODE_FLOOR[code_val]:
+                        rain_val = _RAIN_CODE_FLOOR[code_val]
+
                     minut_data = s_data.get("minutely_15", {})
                     p_list = minut_data.get("precipitation", [])
                     st_minutely = []
                     for m_idx, p in enumerate(p_list[:6]):
                         offset = (m_idx + 1) * 15
                         p_fl = float(p)
+                        # Apply same rain floor to minutely slots when weather code indicates rain
+                        if code_val in _RAIN_CODE_FLOOR and p_fl < _RAIN_CODE_FLOOR[code_val] * 0.3:
+                            p_fl = max(p_fl, _RAIN_CODE_FLOOR[code_val] * 0.5)
                         st_minutely.append({
                             "time_offset": f"+{offset}m",
                             "rain_mm_hr": round(p_fl, 1),
@@ -352,7 +371,7 @@ async def live_telemetry_background_loop():
                 _TELEMETRY_CACHE["fetch_count"] += 1
         except Exception as e:
             logger.error(f"Error in live telemetry loop: {e}")
-        await asyncio.sleep(900)
+        await asyncio.sleep(300)  # Refresh every 5 minutes for monsoon responsiveness
 
 
 def get_cached_telemetry() -> Dict[str, Any]:

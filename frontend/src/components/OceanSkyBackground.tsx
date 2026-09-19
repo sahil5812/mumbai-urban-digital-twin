@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { usePerformanceMode } from "../lib/performance";
 
 const VS_SOURCE = `
 attribute vec2 a;
@@ -616,7 +617,16 @@ const SCENE_DESCS = [
   "The sun descends in copper and ember. Long reflections stretch across darkening water.",
   "Waves amplify. The sky thickens. Multi-branch lightning across the western ocean.",
   "Stars emerge. The moon leaves a silver path on the swells.",
-  "The last stars hold. A red-orange ember glows at the edge of the world."
+];
+
+// Lightweight procedural CSS gradients matching exact scene atmosphere for low-end hardware
+const LITE_ATMOSPHERE_GRADIENTS = [
+  "linear-gradient(180deg, #091222 0%, #152238 35%, #543d2b 75%, #a66a38 100%)", // DAWN
+  "linear-gradient(180deg, #0a2540 0%, #103b60 40%, #185a88 70%, #207ba8 100%)", // MIDDAY
+  "linear-gradient(180deg, #120e24 0%, #2b1836 40%, #6a3036 70%, #ad5238 100%)", // DUSK
+  "linear-gradient(180deg, #0a0d14 0%, #141a24 40%, #1e2634 70%, #16202c 100%)", // STORM
+  "linear-gradient(180deg, #03060d 0%, #060d1a 40%, #0b1528 70%, #0f1c34 100%)", // NIGHT
+  "linear-gradient(180deg, #080a14 0%, #121222 40%, #221c32 70%, #3a2a44 100%)", // PRE-DAWN
 ];
 
 // Scene text color palette from original implementation
@@ -656,14 +666,23 @@ const applySceneColor = (s: number) => {
 };
 
 export const OceanSkyBackground: React.FC = () => {
+  const { isLite } = usePerformanceMode();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [currentSceneIdx, setCurrentSceneIdx] = useState<number>(0);
   const [progressPct, setProgressPct] = useState<number>(0);
   const [isCinematic, setIsCinematic] = useState<boolean>(false);
 
+  // Direct DOM references to eliminate 60 FPS React re-renders
+  const hudPctRef = useRef<HTMLSpanElement | null>(null);
+  const progFillRef = useRef<HTMLDivElement | null>(null);
+  const sceneNameRef = useRef<HTMLSpanElement | null>(null);
+
   // Smooth interpolation target
   const targetSmoothRef = useRef<number>(0);
   const currentSmoothRef = useRef<number>(0);
+  const lastColorSRef = useRef<number>(-1);
+  const lastPRef = useRef<number>(-1);
+  const lastIdxRef = useRef<number>(0);
 
   useEffect(() => {
     if (typeof document !== "undefined") {
@@ -693,7 +712,143 @@ export const OceanSkyBackground: React.FC = () => {
     }
   }, []);
 
+  // ── High-Performance Atmosphere Engine ─────────────────────────────────────
   useEffect(() => {
+    let animId: number;
+    const t0 = performance.now();
+    let lastTime = t0;
+    let isTabVisible = true;
+
+    const handleVisibility = () => {
+      isTabVisible = !document.hidden;
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    // Cached scroll container reference to avoid querying DOM on every scroll tick
+    let cachedContainers: HTMLElement[] | null = null;
+    let lastQueryTime = 0;
+
+    const getScrollContainers = (): HTMLElement[] => {
+      const now = performance.now();
+      if (!cachedContainers || now - lastQueryTime > 1500) {
+        cachedContainers = Array.from(document.querySelectorAll<HTMLElement>(".overflow-y-auto, .overflow-auto"));
+        lastQueryTime = now;
+      }
+      return cachedContainers;
+    };
+
+    // ── Unified Scroll & Wheel Observers ────────────────────────────────────
+    const handleScroll = (e?: Event) => {
+      let scrollRatio = -1;
+      const target = e?.target as HTMLElement | Document | Window | null;
+
+      if (target && target instanceof HTMLElement && target.scrollHeight > target.clientHeight + 10) {
+        scrollRatio = target.scrollTop / (target.scrollHeight - target.clientHeight);
+      } else {
+        const containers = getScrollContainers();
+        for (let i = 0; i < containers.length; i++) {
+          const c = containers[i];
+          if (c.scrollHeight > c.clientHeight + 10 && c.clientHeight > 150) {
+            scrollRatio = c.scrollTop / (c.scrollHeight - c.clientHeight);
+            break;
+          }
+        }
+        if (scrollRatio < 0) {
+          const winMax = document.documentElement.scrollHeight - window.innerHeight;
+          if (winMax > 10) {
+            scrollRatio = (window.scrollY || document.documentElement.scrollTop) / winMax;
+          }
+        }
+      }
+
+      if (scrollRatio >= 0) {
+        targetSmoothRef.current = Math.max(0, Math.min(1, scrollRatio));
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) return;
+
+      const target = e.target as HTMLElement | null;
+      if (target && target.tagName.toLowerCase() === "canvas" && target.id !== "webgl_canvas") {
+        if (!e.shiftKey && !e.altKey) return;
+      }
+
+      let el = target;
+      let scrollContainer: HTMLElement | null = null;
+      while (el && el !== document.body && el !== document.documentElement) {
+        const style = window.getComputedStyle(el);
+        if (
+          (style.overflowY === "auto" || style.overflowY === "scroll") &&
+          el.scrollHeight > el.clientHeight + 10
+        ) {
+          scrollContainer = el;
+          break;
+        }
+        el = el.parentElement;
+      }
+
+      if (scrollContainer) return;
+
+      const delta = e.deltaY;
+      const sensitivity = 0.0006;
+      const next = targetSmoothRef.current + delta * sensitivity;
+      targetSmoothRef.current = Math.max(0.0, Math.min(1.0, next));
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: true });
+
+    // ── LITE MODE: Ultra-Lightweight CSS Gradient Loop (0% GPU Shader Load) ──
+    if (isLite) {
+      let lastLiteTime = performance.now();
+      const liteLoop = (now: number) => {
+        animId = requestAnimationFrame(liteLoop);
+        if (!isTabVisible) return;
+
+        const dt = Math.min((now - lastLiteTime) / 1000, 0.05);
+        lastLiteTime = now;
+
+        currentSmoothRef.current +=
+          (targetSmoothRef.current - currentSmoothRef.current) *
+          (1 - Math.exp(-dt * 6.0));
+
+        const s = Math.max(0, Math.min(1, currentSmoothRef.current));
+        const n = SCENE_NAMES.length;
+        const raw = s * (n - 1);
+        const nextIdx = Math.min(n - 1, Math.round(raw));
+        const p = Math.round(s * 100);
+
+        if (p !== lastPRef.current) {
+          lastPRef.current = p;
+          setProgressPct(p);
+          if (hudPctRef.current) hudPctRef.current.textContent = `${String(p).padStart(3, "0")}%`;
+          if (progFillRef.current) progFillRef.current.style.width = `${p}%`;
+        }
+        if (nextIdx !== lastIdxRef.current) {
+          lastIdxRef.current = nextIdx;
+          setCurrentSceneIdx(nextIdx);
+          if (sceneNameRef.current) sceneNameRef.current.textContent = SCENE_NAMES[nextIdx];
+        }
+
+        if (Math.abs(s - lastColorSRef.current) > 0.02) {
+          lastColorSRef.current = s;
+          applySceneColor(s);
+        }
+      };
+
+      animId = requestAnimationFrame(liteLoop);
+
+      return () => {
+        cancelAnimationFrame(animId);
+        document.removeEventListener("visibilitychange", handleVisibility);
+        window.removeEventListener("scroll", handleScroll, { capture: true } as any);
+        window.removeEventListener("wheel", handleWheel);
+      };
+    }
+
+    // ── FIDELITY MODE: Optimized WebGL Shader ────────────────────────────────
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -711,14 +866,12 @@ export const OceanSkyBackground: React.FC = () => {
       return;
     }
 
-    // Compile helper
     const compileShader = (type: number, src: string) => {
       const s = gl.createShader(type);
       if (!s) return null;
       gl.shaderSource(s, src);
       gl.compileShader(s);
       if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-        console.error("Shader compile error:", gl.getShaderInfoLog(s));
         gl.deleteShader(s);
         return null;
       }
@@ -736,7 +889,6 @@ export const OceanSkyBackground: React.FC = () => {
     gl.linkProgram(prog);
 
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-      console.error("Program link error:", gl.getProgramInfoLog(prog));
       return;
     }
 
@@ -764,7 +916,6 @@ export const OceanSkyBackground: React.FC = () => {
     const uScLoc = gl.getUniformLocation(prog, "uSc");
     const uBlLoc = gl.getUniformLocation(prog, "uBl");
 
-    // Responsive resize with DPR cap for 60fps performance
     const handleResize = () => {
       if (!canvas) return;
       const w = window.innerWidth;
@@ -786,92 +937,13 @@ export const OceanSkyBackground: React.FC = () => {
     handleResize();
     window.addEventListener("resize", handleResize, { passive: true });
 
-    // ── Unified Scroll & Wheel Observers ──────────────────────────────────────
-    // 1. Capture scroll on window, document, and ANY scrollable sub-container (e.g. WeatherPortalView)
-    const handleScroll = (e?: Event) => {
-      let scrollRatio = -1;
-      const target = e?.target as HTMLElement | Document | Window | null;
-
-      if (target && target instanceof HTMLElement && target.scrollHeight > target.clientHeight + 10) {
-        scrollRatio = target.scrollTop / (target.scrollHeight - target.clientHeight);
-      } else {
-        // Fallback: check any visible scroll container
-        const containers = document.querySelectorAll<HTMLElement>(".overflow-y-auto, .overflow-auto");
-        for (let i = 0; i < containers.length; i++) {
-          const c = containers[i];
-          if (c.scrollHeight > c.clientHeight + 10 && c.clientHeight > 150) {
-            scrollRatio = c.scrollTop / (c.scrollHeight - c.clientHeight);
-            break;
-          }
-        }
-        if (scrollRatio < 0) {
-          const winMax = document.documentElement.scrollHeight - window.innerHeight;
-          if (winMax > 10) {
-            scrollRatio = (window.scrollY || document.documentElement.scrollTop) / winMax;
-          }
-        }
-      }
-
-      if (scrollRatio >= 0) {
-        targetSmoothRef.current = Math.max(0, Math.min(1, scrollRatio));
-      }
-    };
-
-    // Use capture: true so scroll events from internal div.overflow-y-auto containers are caught!
-    window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
-
-    // 2. Wheel Listener: Scrolling mouse wheel or touchpad shifts atmosphere smoothly without abrupt wrap-around
-    const handleWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || e.metaKey) return;
-
-      const target = e.target as HTMLElement | null;
-      // If hovering directly over deck.gl 3D map canvas, let DeckGL handle zooming unless user holds Shift or Alt
-      if (target && target.tagName.toLowerCase() === "canvas" && target.id !== "webgl_canvas") {
-        if (!e.shiftKey && !e.altKey) {
-          return;
-        }
-      }
-
-      // Check if user is scrolling inside an inner scrollable container (e.g. WeatherPortalView)
-      let el = target;
-      let scrollContainer: HTMLElement | null = null;
-      while (el && el !== document.body && el !== document.documentElement) {
-        const style = window.getComputedStyle(el);
-        if (
-          (style.overflowY === "auto" || style.overflowY === "scroll") &&
-          el.scrollHeight > el.clientHeight + 10
-        ) {
-          scrollContainer = el;
-          break;
-        }
-        el = el.parentElement;
-      }
-
-      if (scrollContainer) {
-        // Let the container scroll naturally; handleScroll captures and updates targetSmoothRef smoothly
-        return;
-      }
-
-      // If NOT inside an active scroll container (e.g. 3D Map mode, background, nav),
-      // smoothly advance or reverse without ANY hard jumps between DAWN and PRE-DAWN:
-      const delta = e.deltaY;
-      const sensitivity = 0.0006;
-      const next = targetSmoothRef.current + delta * sensitivity;
-      targetSmoothRef.current = Math.max(0.0, Math.min(1.0, next));
-    };
-
-    window.addEventListener("wheel", handleWheel, { passive: true });
-
-    let animId: number;
-    const t0 = performance.now();
-    let lastTime = t0;
-
     const renderLoop = (now: number) => {
       animId = requestAnimationFrame(renderLoop);
+      if (!isTabVisible) return;
+
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      // Smoothly approach target scene (SMOOTH_SPEED = 8.0)
       const speed = 8.0;
       currentSmoothRef.current +=
         (targetSmoothRef.current - currentSmoothRef.current) *
@@ -884,9 +956,25 @@ export const OceanSkyBackground: React.FC = () => {
       const bl = raw - si;
 
       const p = Math.round(s * 100);
-      setProgressPct(p);
-      setCurrentSceneIdx(Math.min(n - 1, Math.round(raw)));
-      applySceneColor(s);
+      const nextIdx = Math.min(n - 1, Math.round(raw));
+
+      // Direct DOM updates: eliminates 60 React re-renders per second!
+      if (p !== lastPRef.current) {
+        lastPRef.current = p;
+        if (hudPctRef.current) hudPctRef.current.textContent = `${String(p).padStart(3, "0")}%`;
+        if (progFillRef.current) progFillRef.current.style.width = `${p}%`;
+      }
+      if (nextIdx !== lastIdxRef.current) {
+        lastIdxRef.current = nextIdx;
+        setCurrentSceneIdx(nextIdx);
+        if (sceneNameRef.current) sceneNameRef.current.textContent = SCENE_NAMES[nextIdx];
+      }
+
+      // Throttle root CSS variable updates
+      if (Math.abs(s - lastColorSRef.current) > 0.015) {
+        lastColorSRef.current = s;
+        applySceneColor(s);
+      }
 
       gl.uniform1f(uTLoc, (now - t0) / 1000);
       gl.uniform1f(uSLoc, s);
@@ -900,6 +988,7 @@ export const OceanSkyBackground: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animId);
+      document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll, { capture: true } as any);
       window.removeEventListener("wheel", handleWheel);
@@ -908,16 +997,33 @@ export const OceanSkyBackground: React.FC = () => {
       gl.deleteShader(frag);
       gl.deleteBuffer(buf);
     };
-  }, []);
+  }, [isLite]);
 
   return (
     <>
-      {/* Fullscreen High-Performance Procedural WebGL Canvas */}
-      <canvas
-        ref={canvasRef}
-        id="webgl_canvas"
-        className="fixed inset-0 w-full h-full object-cover block -z-30 select-none pointer-events-none"
-      />
+      {/* Background Layer: Either Lightweight CSS Gradient (Lite Mode) OR WebGL Canvas (Fidelity Mode) */}
+      {isLite ? (
+        <div
+          className="fixed inset-0 w-full h-full -z-30 select-none pointer-events-none transition-colors duration-700"
+          style={{
+            background: LITE_ATMOSPHERE_GRADIENTS[currentSceneIdx] || LITE_ATMOSPHERE_GRADIENTS[0],
+          }}
+        >
+          {/* Subtle ambient coastal water glow */}
+          <div
+            className="absolute inset-0 opacity-20 pointer-events-none"
+            style={{
+              backgroundImage: "radial-gradient(ellipse at bottom, rgba(255,255,255,0.12) 0%, transparent 60%)",
+            }}
+          />
+        </div>
+      ) : (
+        <canvas
+          ref={canvasRef}
+          id="webgl_canvas"
+          className="fixed inset-0 w-full h-full object-cover block -z-30 select-none pointer-events-none"
+        />
+      )}
 
       {/* ── Authentic Transparent Bottom Scrim Overlay ─────────── */}
       <div
@@ -936,6 +1042,7 @@ export const OceanSkyBackground: React.FC = () => {
         <div id="hud-top" className="flex items-start justify-between w-full">
           <div>
             <span
+              ref={sceneNameRef}
               id="scene_name"
               className="font-space-mono text-[11px] sm:text-[13px] tracking-[0.25em] uppercase text-[var(--fg-hud)] drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)] font-bold transition-colors duration-1000 select-none block"
             >
@@ -954,6 +1061,7 @@ export const OceanSkyBackground: React.FC = () => {
                 {isCinematic ? "✦ TWIN DASHBOARD" : "✦ FULL OCEAN VIEW"}
               </button>
               <span
+                ref={hudPctRef}
                 id="hud_pct"
                 className="font-space-mono text-[11px] sm:text-[13px] tracking-[0.12em] text-[var(--fg-hud)] opacity-70 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)] transition-colors duration-1000"
               >
@@ -972,6 +1080,7 @@ export const OceanSkyBackground: React.FC = () => {
               title="Click or drag to scrub atmosphere"
             >
               <div
+                ref={progFillRef}
                 id="prog_fill"
                 style={{ width: `${progressPct}%` }}
                 className="absolute left-0 top-0 bottom-0 bg-[var(--fg-hud)] opacity-80 transition-all duration-75"
@@ -1012,7 +1121,6 @@ export const OceanSkyBackground: React.FC = () => {
           );
         })}
       </div>
-      {/* Bottom typography overlay removed per user request to prevent card overlap */}
     </>
   );
 };
