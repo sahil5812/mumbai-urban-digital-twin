@@ -132,8 +132,17 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
   // Filter: 'ALL' or 'RAIN_ONLY'
   const [filterRainOnly, setFilterRainOnly] = useState<boolean>(false);
 
-  // Radar Animation Loop State (CSS keyframe driven for 0% CPU overhead)
+  // Radar Animation Loop State
   const [isRadarPlaying, setIsRadarPlaying] = useState<boolean>(true);
+  const [radarPlaybackFrame, setRadarPlaybackFrame] = useState<number>(45); // 0 to 100%
+
+  useEffect(() => {
+    if (!isRadarPlaying) return;
+    const interval = setInterval(() => {
+      setRadarPlaybackFrame((prev) => (prev + 1.2) % 100);
+    }, 100);
+    return () => clearInterval(interval);
+  }, [isRadarPlaying]);
 
   // Interactive Graph Scrubber (0 to 120 minutes)
   const [scrubberMinute, setScrubberMinute] = useState<number>(18);
@@ -656,9 +665,7 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: "conic-gradient(from 0deg at 50% 50%, rgba(6,182,212,0.3) 0deg, rgba(6,182,212,0) 50deg)",
-                animation: "radarSweep 4s linear infinite",
-                animationPlayState: isRadarPlaying ? "running" : "paused",
+                background: `conic-gradient(from ${radarPlaybackFrame * 3.6}deg at 50% 50%, rgba(6,182,212,0.3) 0deg, rgba(6,182,212,0) 50deg)`,
               }}
             />
 
@@ -707,11 +714,8 @@ export const MinuteCastView: React.FC<MinuteCastViewProps> = ({
                 <span className="text-[10px] font-mono text-slate-300 whitespace-nowrap">8:05 AM</span>
                 <div className="flex-1 relative h-2 bg-black/40 rounded-full overflow-hidden border border-white/10">
                   <div
-                    style={{
-                      animation: "radarProgress 10s linear infinite",
-                      animationPlayState: isRadarPlaying ? "running" : "paused",
-                    }}
-                    className="h-full bg-gradient-to-r from-cyan-500 via-sky-400 to-blue-500 rounded-full"
+                    style={{ width: `${radarPlaybackFrame}%` }}
+                    className="h-full bg-gradient-to-r from-cyan-500 via-sky-400 to-blue-500 rounded-full transition-all"
                   />
                 </div>
                 <span className="text-[10px] font-mono text-cyan-300 font-bold whitespace-nowrap">11:45 AM IST</span>

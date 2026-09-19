@@ -1,44 +1,17 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import dynamic from "next/dynamic";
 import { Navbar } from "../components/Navbar";
 import { SubNavbar, SubNavTab } from "../components/SubNavbar";
 import { WeatherPortalView } from "../components/WeatherPortalView";
 import { EarlyWarningBanner } from "../components/EarlyWarningBanner";
 import { ScenarioControls } from "../components/ScenarioControls";
+import { DeckGLMapView } from "../components/DeckGLMapView";
 import { ComponentInspector } from "../components/ComponentInspector";
+import { CascadingGraphView } from "../components/CascadingGraphView";
+import { PriorityMatrix } from "../components/PriorityMatrix";
+import { CitizenReportModal } from "../components/CitizenReportModal";
 import { runSimulation, fetchCascadingGraph, fetchLiveTelemetry, LiveTelemetry } from "../lib/api";
-
-const DeckGLMapView = dynamic(
-  () => import("../components/DeckGLMapView").then((mod) => mod.DeckGLMapView),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-full w-full bg-slate-950/80 flex items-center justify-center text-cyan-400 font-mono text-xs select-none">
-        <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-          <span>INITIALIZING 3D DIGITAL TWIN MAP ENGINE...</span>
-        </div>
-      </div>
-    ),
-  }
-);
-
-const CascadingGraphView = dynamic(
-  () => import("../components/CascadingGraphView").then((mod) => mod.CascadingGraphView),
-  { ssr: false }
-);
-
-const PriorityMatrix = dynamic(
-  () => import("../components/PriorityMatrix").then((mod) => mod.PriorityMatrix),
-  { ssr: false }
-);
-
-const CitizenReportModal = dynamic(
-  () => import("../components/CitizenReportModal").then((mod) => mod.CitizenReportModal),
-  { ssr: false }
-);
 import { SimulationRequest, SimulationResponse, ComponentTelemetry, CascadingGraphResponse } from "../lib/types";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import { GitBranch, Trophy, Sliders, X, Minimize2, MapPin, AlertTriangle } from "lucide-react";
@@ -105,29 +78,7 @@ export default function Home() {
     if (!mounted) return;
     triggerSimulation(simParams);
     fetchCascadingGraph().then(setGraphData).catch(console.error);
-    fetchLiveTelemetry().then((live) => {
-      if (live) {
-        setLiveTelemetry(live);
-        // Auto-enable live mode when backend returns active live data
-        if (live.status === "LIVE_SYNCHRONIZED") {
-          setIsLiveMode(true);
-          const peakRain = live.citywide_max_rain_mm_hr ?? live.rainfall_mm_hr ?? 0;
-          if (peakRain > 0) {
-            const activeScenarioName = live.primary_active_zone
-              ? `Live Weather (${live.primary_active_zone.zone_name})`
-              : "Real-Time Live Weather";
-            const liveParams: SimulationRequest = {
-              rainfall_mm_hr: peakRain,
-              tide_level_m: live.tide_level_m || 2.8,
-              siltation_pct: simParams.siltation_pct,
-              active_scenario_name: activeScenarioName,
-            };
-            setSimParams(liveParams);
-            triggerSimulation(liveParams);
-          }
-        }
-      }
-    }).catch(console.error);
+    fetchLiveTelemetry().then(setLiveTelemetry).catch(console.error);
   }, [mounted]);
 
   // Live Telemetry Polling (Every 60s when LIVE ON)

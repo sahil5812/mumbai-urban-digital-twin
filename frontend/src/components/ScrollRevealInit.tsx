@@ -12,11 +12,8 @@ export const ScrollRevealInit: React.FC = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // In Lite Mode or reduced-motion, instantly reveal all elements and skip observers
-    const isLiteMode = document.documentElement.classList.contains("lite-mode") ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (isLiteMode || !("IntersectionObserver" in window)) {
+    // Graceful fallback for environments without IntersectionObserver
+    if (!("IntersectionObserver" in window)) {
       document.querySelectorAll(".scroll-reveal").forEach((el) => {
         el.classList.add("is-revealed");
       });
@@ -25,12 +22,12 @@ export const ScrollRevealInit: React.FC = () => {
 
     let batchQueue: HTMLElement[] = [];
     let batchTimeout: ReturnType<typeof setTimeout> | null = null;
-    let mutationTimeout: ReturnType<typeof setTimeout> | null = null;
 
     // Flush intersecting elements in a batch with staggered delay
     const flushBatch = () => {
       batchQueue.forEach((el, index) => {
-        const staggerDelay = Math.min(index * 60, 240);
+        // Natural stagger delay between 0ms and 350ms
+        const staggerDelay = Math.min(index * 70, 350);
         el.style.transitionDelay = `${staggerDelay}ms`;
         el.classList.add("is-revealed");
       });
@@ -48,19 +45,21 @@ export const ScrollRevealInit: React.FC = () => {
               batchQueue.push(el);
               hasNew = true;
             }
+            // Once revealed, unobserve so it stays revealed and never replays unnecessarily
             observer.unobserve(el);
           }
         });
 
         if (hasNew) {
           if (batchTimeout) clearTimeout(batchTimeout);
+          // Group sibling cards entering viewport in the same frame
           batchTimeout = setTimeout(flushBatch, 30);
         }
       },
       {
-        root: null,
-        rootMargin: "0px 0px -40px 0px",
-        threshold: 0.08,
+        root: null, // Viewport
+        rootMargin: "0px 0px -40px 0px", // Trigger when slightly inside bottom edge
+        threshold: 0.08, // Trigger as soon as 8% of the card enters
       }
     );
 
@@ -69,12 +68,12 @@ export const ScrollRevealInit: React.FC = () => {
       targets.forEach((el) => observer.observe(el));
     };
 
+    // Initial pass on mount
     observeElements();
 
-    // Debounced MutationObserver (150ms) to avoid CPU spikes during rapid state changes
+    // Re-observe when dynamic tabs or routes mount new elements
     const mutationObserver = new MutationObserver(() => {
-      if (mutationTimeout) clearTimeout(mutationTimeout);
-      mutationTimeout = setTimeout(observeElements, 150);
+      observeElements();
     });
 
     mutationObserver.observe(document.body, {
@@ -84,7 +83,6 @@ export const ScrollRevealInit: React.FC = () => {
 
     return () => {
       if (batchTimeout) clearTimeout(batchTimeout);
-      if (mutationTimeout) clearTimeout(mutationTimeout);
       observer.disconnect();
       mutationObserver.disconnect();
     };
