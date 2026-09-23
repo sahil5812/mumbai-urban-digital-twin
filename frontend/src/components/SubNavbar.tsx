@@ -38,7 +38,7 @@ interface SubNavbarProps {
   onToggleViewModeType?: () => void;
 }
 
-export const SubNavbar: React.FC<SubNavbarProps> = ({
+const SubNavbarComponent: React.FC<SubNavbarProps> = ({
   activeTab,
   onTabChange,
   onOpenPriorityModal,
@@ -235,3 +235,6 @@ export const SubNavbar: React.FC<SubNavbarProps> = ({
     </>
   );
 };
+
+export const SubNavbar = React.memo(SubNavbarComponent);
+

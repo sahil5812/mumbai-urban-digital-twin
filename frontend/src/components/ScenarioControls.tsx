@@ -15,7 +15,7 @@ interface ScenarioControlsProps {
   onSelectTimelineStep?: (index: number) => void;
 }
 
-export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
+const ScenarioControlsComponent: React.FC<ScenarioControlsProps> = ({
   params,
   onChange,
   isLoading,
@@ -228,3 +228,6 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
     </div>
   );
 };
+
+export const ScenarioControls = React.memo(ScenarioControlsComponent);
+

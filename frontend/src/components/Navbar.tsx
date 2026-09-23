@@ -21,7 +21,7 @@ interface NavbarProps {
   isVisible?: boolean;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({
+const NavbarComponent: React.FC<NavbarProps> = ({
   viewMode,
   onToggleViewMode,
   disruptionSeverity,
@@ -223,3 +223,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+
+export const Navbar = React.memo(NavbarComponent);
+

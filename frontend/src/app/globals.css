@@ -71,6 +71,26 @@ body.cinematic-mode nav {
   }
 }
 
+/* Zero-CPU Compositor-driven Radar Progress Animation */
+@keyframes radarProgress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* Zero-CPU Compositor-driven Radar Conic Sweep Animation */
+@keyframes radarSweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;

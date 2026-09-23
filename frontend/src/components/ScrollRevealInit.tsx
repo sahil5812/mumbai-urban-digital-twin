@@ -71,9 +71,13 @@ export const ScrollRevealInit: React.FC = () => {
     // Initial pass on mount
     observeElements();
 
-    // Re-observe when dynamic tabs or routes mount new elements
+    // Re-observe when dynamic tabs or routes mount new elements (debounced by 150ms)
+    let mutationDebounceTimer: ReturnType<typeof setTimeout> | null = null;
     const mutationObserver = new MutationObserver(() => {
-      observeElements();
+      if (mutationDebounceTimer) clearTimeout(mutationDebounceTimer);
+      mutationDebounceTimer = setTimeout(() => {
+        observeElements();
+      }, 150);
     });
 
     mutationObserver.observe(document.body, {
@@ -83,6 +87,7 @@ export const ScrollRevealInit: React.FC = () => {
 
     return () => {
       if (batchTimeout) clearTimeout(batchTimeout);
+      if (mutationDebounceTimer) clearTimeout(mutationDebounceTimer);
       observer.disconnect();
       mutationObserver.disconnect();
     };

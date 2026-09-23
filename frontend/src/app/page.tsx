@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import dynamic from "next/dynamic";
 import { Navbar } from "../components/Navbar";
 import { SubNavbar, SubNavTab } from "../components/SubNavbar";
 import { WeatherPortalView } from "../components/WeatherPortalView";
@@ -8,13 +9,24 @@ import { EarlyWarningBanner } from "../components/EarlyWarningBanner";
 import { ScenarioControls } from "../components/ScenarioControls";
 import { DeckGLMapView } from "../components/DeckGLMapView";
 import { ComponentInspector } from "../components/ComponentInspector";
-import { CascadingGraphView } from "../components/CascadingGraphView";
-import { PriorityMatrix } from "../components/PriorityMatrix";
-import { CitizenReportModal } from "../components/CitizenReportModal";
 import { runSimulation, fetchCascadingGraph, fetchLiveTelemetry, LiveTelemetry } from "../lib/api";
 import { SimulationRequest, SimulationResponse, ComponentTelemetry, CascadingGraphResponse } from "../lib/types";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import { GitBranch, Trophy, Sliders, X, Minimize2, MapPin, AlertTriangle } from "lucide-react";
+
+// Dynamic code-splitting for heavy modals to reduce initial JS bundle size and parse time
+const CascadingGraphView = dynamic(
+  () => import("../components/CascadingGraphView").then((mod) => mod.CascadingGraphView),
+  { ssr: false }
+);
+const PriorityMatrix = dynamic(
+  () => import("../components/PriorityMatrix").then((mod) => mod.PriorityMatrix),
+  { ssr: false }
+);
+const CitizenReportModal = dynamic(
+  () => import("../components/CitizenReportModal").then((mod) => mod.CitizenReportModal),
+  { ssr: false }
+);
 
 export default function Home() {
   const { t, language } = useLanguage();
@@ -119,16 +131,32 @@ export default function Home() {
     };
   }, [mounted, isLiveMode]);
 
-  const handleToggleLiveMode = () => {
+  const simTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (simTimeoutRef.current) clearTimeout(simTimeoutRef.current);
+    };
+  }, []);
+
+  const handleToggleLiveMode = useCallback(() => {
     setIsLiveMode((prev) => !prev);
-  };
+  }, []);
 
-  const handleParamChange = (newParams: SimulationRequest) => {
+  const handleParamChange = useCallback((newParams: SimulationRequest) => {
     setSimParams(newParams);
-    triggerSimulation(newParams);
-  };
+    if (simTimeoutRef.current) {
+      clearTimeout(simTimeoutRef.current);
+    }
+    simTimeoutRef.current = setTimeout(() => {
+      triggerSimulation(newParams);
+    }, 150);
+  }, [triggerSimulation]);
 
-  const handleApplyPreset = (presetName: string, rain: number, tide: number, silt: number) => {
+  const handleApplyPreset = useCallback((presetName: string, rain: number, tide: number, silt: number) => {
+    if (simTimeoutRef.current) {
+      clearTimeout(simTimeoutRef.current);
+    }
     const newP: SimulationRequest = {
       rainfall_mm_hr: rain,
       tide_level_m: tide,
@@ -137,15 +165,86 @@ export default function Home() {
     };
     setSimParams(newP);
     triggerSimulation(newP);
-  };
+  }, [triggerSimulation]);
 
-  const handleSelectComponentById = (id: string) => {
+  const handleSelectComponentById = useCallback((id: string) => {
     if (!simResult) return;
     const found = simResult.components.find((c) => c.component_id === id);
     if (found) {
       setSelectedComponent(found);
     }
-  };
+  }, [simResult]);
+
+  const handleToggleViewMode = useCallback(() => {
+    setViewMode((prev) => (prev === "2D" ? "3D" : "2D"));
+  }, []);
+
+  const handleOpenCitizenModal = useCallback(() => {
+    setIsCitizenModalOpen(true);
+  }, []);
+
+  const handleCloseCitizenModal = useCallback(() => {
+    setIsCitizenModalOpen(false);
+  }, []);
+
+  const handleOpenPriorityModal = useCallback(() => {
+    setIsPriorityModalOpen(true);
+  }, []);
+
+  const handleClosePriorityModal = useCallback(() => {
+    setIsPriorityModalOpen(false);
+  }, []);
+
+  const handleOpenGraphModal = useCallback(() => {
+    setIsGraphModalOpen(true);
+  }, []);
+
+  const handleCloseGraphModal = useCallback(() => {
+    setIsGraphModalOpen(false);
+  }, []);
+
+  const handleResetSimulation = useCallback(() => {
+    handleApplyPreset("Normal Monsoon", 35, 2.5, 20);
+  }, [handleApplyPreset]);
+
+  const handleTogglePortalViewMode = useCallback(() => {
+    setPortalViewMode((prev) => {
+      const nextMode = prev === "PORTAL" ? "MAP" : "PORTAL";
+      setActiveSubNavTab(nextMode === "MAP" ? "RADAR" : "TODAY");
+      return nextMode;
+    });
+  }, []);
+
+  const handleSubNavTabChange = useCallback((tab: SubNavTab) => {
+    setActiveSubNavTab(tab);
+    if (tab === "RADAR") {
+      setPortalViewMode("MAP");
+      setIsScenarioControlsOpen(true);
+    } else if (tab === "HOURLY" || tab === "10-DAY" || tab === "TODAY" || tab === "MINUTECAST") {
+      setPortalViewMode("PORTAL");
+    }
+  }, []);
+
+  const handleToggleScenarioControls = useCallback(() => {
+    setIsScenarioControlsOpen((prev) => !prev);
+  }, []);
+
+  const handleOpenMapFromPortal = useCallback(() => {
+    setPortalViewMode("MAP");
+    setActiveSubNavTab("RADAR");
+  }, []);
+
+  const handleSelectComponent = useCallback((c: ComponentTelemetry) => {
+    setSelectedComponent(c);
+  }, []);
+
+  const handleCloseComponentInspector = useCallback(() => {
+    setSelectedComponent(null);
+  }, []);
+
+  const handleSelectTimelineStep = useCallback((idx: number) => {
+    setSelectedTimelineIndex(idx);
+  }, []);
 
   // Active Components to render on 3D Map (respects 0-3h timeline scrubber)
   const displayedComponents = useMemo(() => {
@@ -233,51 +332,31 @@ export default function Home() {
       {/* Top Tactical Command Header (Unified 56px Single Bar) */}
       <Navbar
         viewMode={viewMode}
-        onToggleViewMode={() => setViewMode(viewMode === "2D" ? "3D" : "2D")}
+        onToggleViewMode={handleToggleViewMode}
         disruptionSeverity={simResult?.city_summary.disruption_severity || "NORMAL"}
         overallHealth={simResult?.city_summary.overall_infrastructure_health || 85}
         highTideWarning={simResult?.city_summary.high_tide_warning || false}
-        onOpenCitizenModal={() => setIsCitizenModalOpen(true)}
-        onResetSimulation={() => handleApplyPreset("Normal Monsoon", 35, 2.5, 20)}
+        onOpenCitizenModal={handleOpenCitizenModal}
+        onResetSimulation={handleResetSimulation}
         isLiveMode={isLiveMode}
         onToggleLiveMode={handleToggleLiveMode}
         liveTelemetry={liveTelemetry}
         portalViewMode={portalViewMode}
         isVisible={portalViewMode === "MAP" ? true : isNavbarVisible}
-        onTogglePortalViewMode={() => {
-          setPortalViewMode((prev) => {
-            const nextMode = prev === "PORTAL" ? "MAP" : "PORTAL";
-            setActiveSubNavTab(nextMode === "MAP" ? "RADAR" : "TODAY");
-            return nextMode;
-          });
-        }}
+        onTogglePortalViewMode={handleTogglePortalViewMode}
       />
 
       {/* Weather / Nowcasting Sub-Navbar - ONLY rendered when in Weather Portal mode! */}
       {portalViewMode === "PORTAL" && (
         <SubNavbar
           activeTab={activeSubNavTab}
-          onTabChange={(tab) => {
-            setActiveSubNavTab(tab);
-            if (tab === "RADAR") {
-              setPortalViewMode("MAP");
-              setIsScenarioControlsOpen(true);
-            } else if (tab === "HOURLY" || tab === "10-DAY" || tab === "TODAY" || tab === "MINUTECAST") {
-              setPortalViewMode("PORTAL");
-            }
-          }}
-          onOpenPriorityModal={() => setIsPriorityModalOpen(true)}
-          onOpenGraphModal={() => setIsGraphModalOpen(true)}
-          onToggleScenarioControls={() => setIsScenarioControlsOpen((prev) => !prev)}
+          onTabChange={handleSubNavTabChange}
+          onOpenPriorityModal={handleOpenPriorityModal}
+          onOpenGraphModal={handleOpenGraphModal}
+          onToggleScenarioControls={handleToggleScenarioControls}
           isLiveMode={isLiveMode}
           viewModeType={portalViewMode}
-          onToggleViewModeType={() => {
-            setPortalViewMode((prev) => {
-              const nextMode = prev === "PORTAL" ? "MAP" : "PORTAL";
-              setActiveSubNavTab(nextMode === "MAP" ? "RADAR" : "TODAY");
-              return nextMode;
-            });
-          }}
+          onToggleViewModeType={handleTogglePortalViewMode}
         />
       )}
 
@@ -289,14 +368,9 @@ export default function Home() {
             currentTideLevelM={simParams.tide_level_m}
             liveTelemetry={liveTelemetry}
             activeTab={activeSubNavTab}
-            onSimulateScenario={(scenarioName, rain, tide, silt) => {
-              handleApplyPreset(scenarioName, rain, tide, silt);
-            }}
-            onOpenMap={() => {
-              setPortalViewMode("MAP");
-              setActiveSubNavTab("RADAR");
-            }}
-            onOpenPriorityModal={() => setIsPriorityModalOpen(true)}
+            onSimulateScenario={handleApplyPreset}
+            onOpenMap={handleOpenMapFromPortal}
+            onOpenPriorityModal={handleOpenPriorityModal}
           />
         </div>
       ) : (
@@ -305,7 +379,7 @@ export default function Home() {
           <DeckGLMapView
             components={displayedComponents}
             selectedComponentId={selectedComponent?.component_id || null}
-            onSelectComponent={(c) => setSelectedComponent(c)}
+            onSelectComponent={handleSelectComponent}
             viewMode={viewMode}
             rainfall_mm_hr={simParams.rainfall_mm_hr}
             tide_level_m={simParams.tide_level_m}
@@ -368,7 +442,7 @@ export default function Home() {
                       onApplyPreset={handleApplyPreset}
                       timelineForecast={simResult?.timeline_forecast || []}
                       selectedTimelineIndex={selectedTimelineIndex}
-                      onSelectTimelineStep={(idx) => setSelectedTimelineIndex(idx)}
+                      onSelectTimelineStep={handleSelectTimelineStep}
                     />
                   ) : (
                     <div className="flex flex-col gap-2.5">
@@ -430,7 +504,7 @@ export default function Home() {
             >
               <ComponentInspector
                 component={selectedComponent}
-                onClose={() => setSelectedComponent(null)}
+                onClose={handleCloseComponentInspector}
               />
             </div>
           )}
@@ -439,7 +513,7 @@ export default function Home() {
           <div className="absolute bottom-11 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 glass-panel p-2 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.2)] border border-white/15">
             <button
               type="button"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsGraphModalOpen(true); }}
+              onClick={handleOpenGraphModal}
               className="glass-button flex items-center gap-2.5 px-4 py-2 rounded-xl text-xs font-bold text-purple-200 shadow-[0_0_16px_rgba(168,85,247,0.25),inset_0_1px_0_rgba(255,255,255,0.18)] border border-purple-500/40 hover:scale-105 transition-all"
             >
               <GitBranch className="w-4 h-4 text-purple-400" />
@@ -457,9 +531,7 @@ export default function Home() {
               components={displayedComponents}
               currentRainfallMmHr={simParams.rainfall_mm_hr}
               onSimulateRainfall={(rain) => handleApplyPreset("Incoming Storm (+30m Nowcast)", rain, 4.1, 45)}
-              onSelectComponent={(c) => {
-                setSelectedComponent(c);
-              }}
+              onSelectComponent={handleSelectComponent}
             />
           </div>
         </div>
@@ -478,7 +550,7 @@ export default function Home() {
               </div>
               <button
                 type="button"
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsGraphModalOpen(false); }}
+                onClick={handleCloseGraphModal}
                 className="glass-button p-1.5 rounded-xl text-slate-300 hover:text-white"
               >
                 <X className="w-5 h-5" />
@@ -491,14 +563,10 @@ export default function Home() {
                 selectedNodeId={selectedComponent?.component_id || null}
                 rainfallMmHr={simParams.rainfall_mm_hr}
                 siltationPct={simParams.siltation_pct}
-                onSelectNode={(id) => {
-                  const found = displayedComponents.find((c) => c.component_id === id);
-                  if (found) setSelectedComponent(found);
-                }}
+                onSelectNode={handleSelectComponentById}
                 onCloseAndFocus={(id) => {
-                  const found = displayedComponents.find((c) => c.component_id === id);
-                  if (found) setSelectedComponent(found);
-                  setIsGraphModalOpen(false);
+                  handleSelectComponentById(id);
+                  handleCloseGraphModal();
                 }}
               />
             </div>
@@ -519,7 +587,7 @@ export default function Home() {
               </div>
               <button
                 type="button"
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsPriorityModalOpen(false); }}
+                onClick={handleClosePriorityModal}
                 className="glass-button p-1.5 rounded-xl text-slate-300 hover:text-white"
               >
                 <X className="w-5 h-5" />
@@ -530,7 +598,7 @@ export default function Home() {
                 priorities={simResult.top_priorities}
                 onSelectHotspot={(id) => {
                   handleSelectComponentById(id);
-                  setIsPriorityModalOpen(false);
+                  handleClosePriorityModal();
                 }}
               />
             </div>
@@ -541,7 +609,7 @@ export default function Home() {
       {/* Citizen Grievance Reporting Modal */}
       <CitizenReportModal
         isOpen={isCitizenModalOpen}
-        onClose={() => setIsCitizenModalOpen(false)}
+        onClose={handleCloseCitizenModal}
       />
     </main>
   );

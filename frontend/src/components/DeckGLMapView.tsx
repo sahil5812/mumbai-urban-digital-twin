@@ -3,12 +3,15 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import DeckGL from "@deck.gl/react";
 import { ScatterplotLayer, ArcLayer, PathLayer, TextLayer, GeoJsonLayer } from "@deck.gl/layers";
-import Map, { NavigationControl } from "react-map-gl/maplibre";
+import MapGL, { NavigationControl } from "react-map-gl/maplibre";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { ComponentTelemetry, SafeRouteResponse, DEMGridResponse } from "../lib/types";
 import { fetchSafeRoute, fetchDEMGrid, fetchRecentCitizenReports, fetchRoadNetworkGeoJSON, fetchWardZonesGeoJSON, CitizenReportRecord } from "../lib/api";
 import { Layers, Rotate3d, Route, Waves, Radio, Play, Pause, Compass, Sun, Moon, Satellite, Zap, AlertTriangle, Navigation, ShieldCheck, ShieldAlert, Clock, ArrowRight, X } from "lucide-react";
+import { useAdaptiveQuality } from "../lib/performance";
+
+const DECK_CONTROLLER = { dragRotate: true, touchRotate: true, inertia: true };
 
 
 const MUMBAI_ROADS = [
@@ -72,7 +75,7 @@ interface DeckGLMapViewProps {
   tide_level_m?: number;
 }
 
-export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
+const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
   components = [],
   selectedComponentId,
   onSelectComponent,
@@ -204,18 +207,37 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     return cells;
   }, [showDEMGrid, demGridData]);
 
-  // Continuous animation phase for Live Moving Radar Markers (0 to 1 loop, 60fps)
+  const { effectiveDpr, radarPulseFps, isTabVisible } = useAdaptiveQuality();
+
+  // O(1) hash map for ultra-fast component telemetry lookups across road segments
+  const componentMap = useMemo(() => {
+    const map = new Map<string, ComponentTelemetry>();
+    for (let i = 0; i < components.length; i++) {
+      map.set(components[i].component_id, components[i]);
+    }
+    return map;
+  }, [components]);
+
+  // Continuous animation phase for Live Moving Radar Markers (budgeted to radarPulseFps, paused when 0 rain or tab hidden)
   const [pulsePhase, setPulsePhase] = useState<number>(0);
 
   useEffect(() => {
+    if (rainfall_mm_hr <= 0 || !isTabVisible) return;
+
+    const intervalMs = Math.round(1000 / radarPulseFps);
+    let lastTime = performance.now();
     let animId: number;
-    const animate = () => {
-      setPulsePhase((prev) => (prev + 0.016) % 1);
+
+    const animate = (now: number) => {
       animId = requestAnimationFrame(animate);
+      if (now - lastTime >= intervalMs) {
+        lastTime = now;
+        setPulsePhase((prev) => (prev + 0.02) % 1);
+      }
     };
     animId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animId);
-  }, []);
+  }, [rainfall_mm_hr, isTabVisible, radarPulseFps]);
 
   // Basemap Theme: 'DARK' | 'SATELLITE' | 'STREET'
   const [mapTheme, setMapTheme] = useState<"DARK" | "SATELLITE" | "STREET">("STREET");
@@ -573,14 +595,14 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         getLineWidth: (f: any) => {
           const rId = f.properties?.road_id;
           if (rId === selectedComponentId) return 7.5;
-          const comp = components.find((c) => c.component_id === rId);
+          const comp = componentMap.get(rId);
           const depth = comp ? comp.water_depth_cm : (f.properties?.current_water_depth_cm ?? 0);
           return depth >= 35 ? 6 : (depth >= 15 ? 4.5 : 3);
         },
         getLineColor: (f: any) => {
           const rId = f.properties?.road_id;
           if (rId === selectedComponentId) return [255, 255, 255, 255];
-          const comp = components.find((c) => c.component_id === rId);
+          const comp = componentMap.get(rId);
           const depth = comp ? comp.water_depth_cm : (f.properties?.current_water_depth_cm ?? 0);
 
           if (depth >= 40) return [239, 68, 68, 250]; // Crimson Red (Submerged)
@@ -591,7 +613,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         onClick: (info: any) => {
           if (info.object && info.object.properties?.road_id) {
             const rId = info.object.properties.road_id;
-            const comp = components.find((c) => c.component_id === rId);
+            const comp = componentMap.get(rId);
             if (comp) {
               onSelectComponent(comp);
             } else {
@@ -623,8 +645,8 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
           }
         },
         updateTriggers: {
-          getLineColor: [rainfall_mm_hr, components, selectedComponentId],
-          getLineWidth: [rainfall_mm_hr, components, selectedComponentId],
+          getLineColor: [rainfall_mm_hr, components.length, selectedComponentId],
+          getLineWidth: [rainfall_mm_hr, components.length, selectedComponentId],
         }
       });
     }
@@ -642,7 +664,7 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
       jointRounded: true,
       pickable: true,
     });
-  }, [showRoads, roadGeoJson, components, selectedComponentId, rainfall_mm_hr, onSelectComponent]);
+  }, [showRoads, roadGeoJson, componentMap, selectedComponentId, rainfall_mm_hr, onSelectComponent, components.length]);
 
   // Ward Inundation Zones (24 Municipal Ward Polygons)
   const wardZonesLayer = useMemo(() => {
@@ -857,30 +879,50 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     });
   }, [showCitizenReports, citizenReports]);
 
-  const layers = [
-    wardZonesLayer,
-    demGridLayer,
-    roadsLayer, 
-    drainsLayer, 
-    arcsLayer, 
-    safeRouteLayer,
-    safeRouteWaypointsLayer,
-    avoidedHazardsLayer,
-    citizenReportsHaloLayer,
-    citizenReportsLayer,
-    radarPulseWaveLayer, 
-    radarSecondaryPulseLayer, 
-    stationMarkersLayer, 
-    textTagsLayer
-  ].filter(Boolean);
+  const layers = useMemo(
+    () =>
+      [
+        wardZonesLayer,
+        demGridLayer,
+        roadsLayer,
+        drainsLayer,
+        arcsLayer,
+        safeRouteLayer,
+        safeRouteWaypointsLayer,
+        avoidedHazardsLayer,
+        citizenReportsHaloLayer,
+        citizenReportsLayer,
+        radarPulseWaveLayer,
+        radarSecondaryPulseLayer,
+        stationMarkersLayer,
+        textTagsLayer,
+      ].filter(Boolean),
+    [
+      wardZonesLayer,
+      demGridLayer,
+      roadsLayer,
+      drainsLayer,
+      arcsLayer,
+      safeRouteLayer,
+      safeRouteWaypointsLayer,
+      avoidedHazardsLayer,
+      citizenReportsHaloLayer,
+      citizenReportsLayer,
+      radarPulseWaveLayer,
+      radarSecondaryPulseLayer,
+      stationMarkersLayer,
+      textTagsLayer,
+    ]
+  );
 
   return (
     <div className="relative w-full h-full bg-slate-950 overflow-hidden select-none">
       <DeckGL
         viewState={viewState}
         onViewStateChange={(e: any) => setViewState(e.viewState)}
-        controller={{ dragRotate: true, touchRotate: true, inertia: true }}
+        controller={DECK_CONTROLLER}
         layers={layers}
+        useDevicePixels={effectiveDpr}
         onError={() => {}}
         getTooltip={({ object }: any) => {
           if (!object) return null;
@@ -974,13 +1016,13 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
         }}
 
       >
-        <Map
+        <MapGL
           mapLib={maplibregl as any}
           mapStyle={mapStyle as any}
           attributionControl={false}
         >
           <NavigationControl position="bottom-right" showCompass={true} showZoom={true} />
-        </Map>
+        </MapGL>
       </DeckGL>
 
       {/* Floating Tactical Layer & Camera Bar */}
@@ -1264,3 +1306,5 @@ export const DeckGLMapView: React.FC<DeckGLMapViewProps> = ({
     </div>
   );
 };
+
+export const DeckGLMapView = React.memo(DeckGLMapViewComponent);

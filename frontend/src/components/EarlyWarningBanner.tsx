@@ -13,7 +13,7 @@ interface EarlyWarningBannerProps {
   onSelectComponent?: (comp: ComponentTelemetry) => void;
 }
 
-export const EarlyWarningBanner: React.FC<EarlyWarningBannerProps> = ({
+const EarlyWarningBannerComponent: React.FC<EarlyWarningBannerProps> = ({
   telemetry,
   components = [],
   currentRainfallMmHr = 0,
@@ -185,3 +185,6 @@ export const EarlyWarningBanner: React.FC<EarlyWarningBannerProps> = ({
     </div>
   );
 };
+
+export const EarlyWarningBanner = React.memo(EarlyWarningBannerComponent);
+

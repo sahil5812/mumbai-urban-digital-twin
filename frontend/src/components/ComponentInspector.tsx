@@ -72,7 +72,7 @@ function getSurroundingImpacts(component: ComponentTelemetry) {
   }
 }
 
-export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ component, onClose }) => {
+const ComponentInspectorComponent: React.FC<ComponentInspectorProps> = ({ component, onClose }) => {
   const { t, language } = useLanguage();
   if (!component) return null;
 
@@ -248,3 +248,6 @@ export const ComponentInspector: React.FC<ComponentInspectorProps> = ({ componen
     </div>
   );
 };
+
+export const ComponentInspector = React.memo(ComponentInspectorComponent);
+

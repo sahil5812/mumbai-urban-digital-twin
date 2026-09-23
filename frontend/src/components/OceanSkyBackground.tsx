@@ -658,8 +658,15 @@ const applySceneColor = (s: number) => {
 export const OceanSkyBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [currentSceneIdx, setCurrentSceneIdx] = useState<number>(0);
-  const [progressPct, setProgressPct] = useState<number>(0);
   const [isCinematic, setIsCinematic] = useState<boolean>(false);
+
+  // Direct DOM element refs to eliminate 60 FPS React root re-renders
+  const sceneNameRef = useRef<HTMLSpanElement | null>(null);
+  const hudPctRef = useRef<HTMLSpanElement | null>(null);
+  const progFillRef = useRef<HTMLDivElement | null>(null);
+  const lastPRef = useRef<number>(-1);
+  const lastIdxRef = useRef<number>(-1);
+  const lastColorSRef = useRef<number>(-1);
 
   // Smooth interpolation target
   const targetSmoothRef = useRef<number>(0);
@@ -788,18 +795,23 @@ export const OceanSkyBackground: React.FC = () => {
 
     // ── Unified Scroll & Wheel Observers ──────────────────────────────────────
     // 1. Capture scroll on window, document, and ANY scrollable sub-container (e.g. WeatherPortalView)
+    let cachedScrollEl: HTMLElement | null = null;
     const handleScroll = (e?: Event) => {
       let scrollRatio = -1;
       const target = e?.target as HTMLElement | Document | Window | null;
 
       if (target && target instanceof HTMLElement && target.scrollHeight > target.clientHeight + 10) {
+        cachedScrollEl = target;
         scrollRatio = target.scrollTop / (target.scrollHeight - target.clientHeight);
+      } else if (cachedScrollEl && cachedScrollEl.isConnected && cachedScrollEl.scrollHeight > cachedScrollEl.clientHeight + 10) {
+        scrollRatio = cachedScrollEl.scrollTop / (cachedScrollEl.scrollHeight - cachedScrollEl.clientHeight);
       } else {
         // Fallback: check any visible scroll container
         const containers = document.querySelectorAll<HTMLElement>(".overflow-y-auto, .overflow-auto");
         for (let i = 0; i < containers.length; i++) {
           const c = containers[i];
           if (c.scrollHeight > c.clientHeight + 10 && c.clientHeight > 150) {
+            cachedScrollEl = c;
             scrollRatio = c.scrollTop / (c.scrollHeight - c.clientHeight);
             break;
           }
@@ -862,12 +874,20 @@ export const OceanSkyBackground: React.FC = () => {
 
     window.addEventListener("wheel", handleWheel, { passive: true });
 
+    let isTabVisible = true;
+    const handleVisibility = () => {
+      isTabVisible = !document.hidden;
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
     let animId: number;
     const t0 = performance.now();
     let lastTime = t0;
 
     const renderLoop = (now: number) => {
       animId = requestAnimationFrame(renderLoop);
+      if (!isTabVisible) return;
+
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
@@ -884,9 +904,25 @@ export const OceanSkyBackground: React.FC = () => {
       const bl = raw - si;
 
       const p = Math.round(s * 100);
-      setProgressPct(p);
-      setCurrentSceneIdx(Math.min(n - 1, Math.round(raw)));
-      applySceneColor(s);
+      const nextIdx = Math.min(n - 1, Math.round(raw));
+
+      // Direct DOM updates: eliminates 60 React re-renders per second!
+      if (p !== lastPRef.current) {
+        lastPRef.current = p;
+        if (hudPctRef.current) hudPctRef.current.textContent = `${String(p).padStart(3, "0")}%`;
+        if (progFillRef.current) progFillRef.current.style.width = `${p}%`;
+      }
+      if (nextIdx !== lastIdxRef.current) {
+        lastIdxRef.current = nextIdx;
+        setCurrentSceneIdx(nextIdx);
+        if (sceneNameRef.current) sceneNameRef.current.textContent = SCENE_NAMES[nextIdx];
+      }
+
+      // Throttle root CSS variable updates
+      if (Math.abs(s - lastColorSRef.current) > 0.02) {
+        lastColorSRef.current = s;
+        applySceneColor(s);
+      }
 
       gl.uniform1f(uTLoc, (now - t0) / 1000);
       gl.uniform1f(uSLoc, s);
@@ -900,6 +936,7 @@ export const OceanSkyBackground: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animId);
+      document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll, { capture: true } as any);
       window.removeEventListener("wheel", handleWheel);
@@ -936,6 +973,7 @@ export const OceanSkyBackground: React.FC = () => {
         <div id="hud-top" className="flex items-start justify-between w-full">
           <div>
             <span
+              ref={sceneNameRef}
               id="scene_name"
               className="font-space-mono text-[11px] sm:text-[13px] tracking-[0.25em] uppercase text-[var(--fg-hud)] drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)] font-bold transition-colors duration-1000 select-none block"
             >
@@ -954,10 +992,11 @@ export const OceanSkyBackground: React.FC = () => {
                 {isCinematic ? "✦ TWIN DASHBOARD" : "✦ FULL OCEAN VIEW"}
               </button>
               <span
+                ref={hudPctRef}
                 id="hud_pct"
                 className="font-space-mono text-[11px] sm:text-[13px] tracking-[0.12em] text-[var(--fg-hud)] opacity-70 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)] transition-colors duration-1000"
               >
-                {String(progressPct).padStart(3, "0")}%
+                000%
               </span>
             </div>
 
@@ -972,8 +1011,9 @@ export const OceanSkyBackground: React.FC = () => {
               title="Click or drag to scrub atmosphere"
             >
               <div
+                ref={progFillRef}
                 id="prog_fill"
-                style={{ width: `${progressPct}%` }}
+                style={{ width: "0%" }}
                 className="absolute left-0 top-0 bottom-0 bg-[var(--fg-hud)] opacity-80 transition-all duration-75"
               />
             </div>
