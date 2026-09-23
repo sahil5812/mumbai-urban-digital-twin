@@ -79,31 +79,27 @@ _TELEMETRY_CACHE: Dict[str, Any] = {
     "status": "INITIALIZING",
     "rainfall_mm_hr": 0.0,
     "citywide_max_rain_mm_hr": 0.0,
-    "tide_level_m": 3.59,
-    "temperature_c": 28.8,
-    "humidity_pct": 76.0,
-    "wind_speed_kmh": 24.0,
-    "weather_code": 2,
+    "tide_level_m": None,
+    "temperature_c": None,
+    "humidity_pct": None,
+    "wind_speed_kmh": None,
+    "weather_code": None,
     "last_updated": None,
     "source": "Open-Meteo 5-Zone Spatial Radar Grid (Mumbai & Thane MMR)",
     "fetch_count": 0,
-    "early_warning_active": True,
-    "next_rain_eta_mins": 15,
+    "early_warning_active": False,
+    "next_rain_eta_mins": None,
     "target_rain_timestamp_ms": _INITIAL_TARGET_MS,
-    "predicted_rain_in_30m": 0.1,
-    "preemptive_action": "Monitoring 5-zone metropolitan radar mesh.",
-    "minutely_forecast": [
-        {"time_offset": "+15m", "rain_mm_hr": 0.1, "status": "LIGHT_DRIZZLE"},
-        {"time_offset": "+30m", "rain_mm_hr": 0.1, "status": "LIGHT_DRIZZLE"},
-        {"time_offset": "+45m", "rain_mm_hr": 0.0, "status": "CLEAR"},
-        {"time_offset": "+60m", "rain_mm_hr": 0.0, "status": "CLEAR"},
-    ],
+    "predicted_rain_in_30m": 0.0,
+    "preemptive_action": "Awaiting first data fetch from Open-Meteo.",
+    "minutely_forecast": [],
     "hourly_forecast": [],
     "daily_forecast": [],
     "regional_zones": {},
     "active_rain_zones": [],
     "primary_active_zone": None,
-    "regional_alert_headline": "All 5 Mumbai & Thane zones nominal.",
+    "regional_alert_headline": "Initializing — awaiting weather data.",
+    "tide_source": "NONE",
 }
 
 _CACHE_LOCK = asyncio.Lock()
@@ -112,11 +108,12 @@ _CACHE_LOCK = asyncio.Lock()
 async def fetch_live_mumbai_weather() -> Dict[str, Any]:
     global _TELEMETRY_CACHE
     rainfall = 0.0
-    temp = 28.8
-    humidity = 76.0
-    wind = 24.0
-    code = 2
-    tide = 3.59
+    temp = None
+    humidity = None
+    wind = None
+    code = None
+    tide = None
+    tide_source = "NONE"
     minutely_forecast = []
     hourly_forecast = []
     daily_forecast = []
@@ -128,6 +125,7 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
     regional_zones = {}
     active_rain_zones = []
     primary_active_zone = None
+    weather_ok = False
 
     async with httpx.AsyncClient(timeout=10.0) as client:
         try:
@@ -141,7 +139,9 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
                         "id": f"ZONE_{idx}", "name": "Zone", "landmarks": "", "corridor": "CITYWIDE", "lat": 19.07, "lon": 72.87
                     }
                     curr = s_data.get("current", {})
-                    rain_val = float(curr.get("precipitation", curr.get("rain", 0.0)))
+                    # Open-Meteo current.precipitation = mm in last 15min interval
+                    # Multiply by 4 to convert to mm/hr rate
+                    rain_val = float(curr.get("precipitation", curr.get("rain", 0.0))) * 4.0
                     temp_val = float(curr.get("temperature_2m", 28.5))
                     hum_val = float(curr.get("relative_humidity_2m", 75.0))
                     wind_val = float(curr.get("wind_speed_10m", 20.0))
@@ -152,10 +152,11 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
                     st_minutely = []
                     for m_idx, p in enumerate(p_list[:6]):
                         offset = (m_idx + 1) * 15
-                        p_fl = float(p)
+                        # minutely_15 precipitation = mm per 15min, multiply by 4 for mm/hr
+                        p_fl = round(float(p) * 4.0, 1)
                         st_minutely.append({
                             "time_offset": f"+{offset}m",
-                            "rain_mm_hr": round(p_fl, 1),
+                            "rain_mm_hr": p_fl,
                             "status": "HEAVY_DOWNPOUR" if p_fl >= 25 else ("MODERATE_RAIN" if p_fl >= 5 else ("LIGHT_DRIZZLE" if p_fl > 0 else "CLEAR"))
                         })
 
@@ -207,8 +208,9 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
                     minutely_forecast = [
                         {
                             "time_offset": f"+{(i + 1) * 15}m",
-                            "rain_mm_hr": round(float(p), 1),
-                            "status": "HEAVY_DOWNPOUR" if float(p) >= 25 else ("MODERATE_RAIN" if float(p) >= 5 else ("LIGHT_DRIZZLE" if float(p) > 0 else "CLEAR"))
+                            # minutely_15 = mm per 15min, ×4 for mm/hr
+                            "rain_mm_hr": round(float(p) * 4.0, 1),
+                            "status": "HEAVY_DOWNPOUR" if float(p) * 4.0 >= 25 else ("MODERATE_RAIN" if float(p) * 4.0 >= 5 else ("LIGHT_DRIZZLE" if float(p) > 0 else "CLEAR"))
                         }
                         for i, p in enumerate(p_list[:6])
                     ]
@@ -277,6 +279,8 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
                         "wind_speed_max_kmh": round(float(d_wind_max[i]), 1) if i < len(d_wind_max) else 20.0,
                     })
 
+                weather_ok = True
+
         except Exception as e:
             logger.warning(f"Weather API fetch warning: {e}")
 
@@ -291,35 +295,38 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
                 row = cursor.fetchone()
                 if row and row[0] is not None:
                     tide = round(float(row[0]), 2)
+                    tide_source = "HISTORICAL_TIDAL_DB"
                 conn.close()
         except Exception as e:
             logger.debug(f"DB tide lookup fallback: {e}")
 
         try:
             m_res = await client.get(MARINE_API_URL)
-            if m_res.status_code == 200 and tide == 3.59:
+            if m_res.status_code == 200 and tide is None:
                 m_current = m_res.json().get("current", {})
-                wave_height = float(m_current.get("wave_height", 1.42))
-                tide = round(2.6 + (wave_height * 0.7), 2)
+                wave_height = float(m_current.get("wave_height", 0))
+                # Mumbai mean tide ~2.8m + wave influence as estimate
+                tide = round(2.8 + (wave_height * 0.3), 2)
+                tide_source = "MARINE_API_ESTIMATE"
         except Exception as e:
             logger.warning(f"Marine Tide API fetch warning: {e}")
 
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S IST")
 
-    if not minutely_forecast:
-        minutely_forecast = [
-            {"time_offset": "+15m", "rain_mm_hr": 0.1, "status": "LIGHT_DRIZZLE"},
-            {"time_offset": "+30m", "rain_mm_hr": 0.1, "status": "LIGHT_DRIZZLE"},
-            {"time_offset": "+45m", "rain_mm_hr": 0.0, "status": "CLEAR"},
-            {"time_offset": "+60m", "rain_mm_hr": 0.0, "status": "CLEAR"},
-        ]
-        next_rain_eta = 15
+    # Honest status based on actual fetch result
+    if weather_ok:
+        status = "LIVE_SYNCHRONIZED"
+    elif _TELEMETRY_CACHE.get("fetch_count", 0) > 0:
+        status = "DEGRADED_CACHED"
+    else:
+        status = "OFFLINE_DEFAULTS"
 
     return {
-        "status": "LIVE_SYNCHRONIZED",
+        "status": status,
         "rainfall_mm_hr": rainfall,
         "citywide_max_rain_mm_hr": rainfall,
         "tide_level_m": tide,
+        "tide_source": tide_source,
         "temperature_c": temp,
         "humidity_pct": humidity,
         "wind_speed_kmh": wind,
@@ -327,7 +334,7 @@ async def fetch_live_mumbai_weather() -> Dict[str, Any]:
         "last_updated": now_str,
         "source": "Open-Meteo 5-Zone Spatial Radar Grid (Mumbai & Thane MMR)",
         "early_warning_active": early_warning,
-        "next_rain_eta_mins": next_rain_eta if next_rain_eta else 15,
+        "next_rain_eta_mins": next_rain_eta,
         "target_rain_timestamp_ms": target_ts_ms,
         "predicted_rain_in_30m": predicted_30m,
         "preemptive_action": action,

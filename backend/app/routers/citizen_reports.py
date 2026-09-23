@@ -76,7 +76,7 @@ def submit_citizen_report(req: CitizenReportRequest):
         ticket_id=ticket_id,
         timestamp=timestamp_str,
         status="REGISTERED_WORK_ORDER_CREATED",
-        verification_status="AI_VERIFIED_GROUND_TRUTH",
+        verification_status="SUBMITTED_PENDING_INSPECTION",
         matched_component_id=matched_id,
         priority_rank=random.randint(1, 5),
         estimated_eta_hours=1.5 if req.severity == "CRITICAL" else 4.0,

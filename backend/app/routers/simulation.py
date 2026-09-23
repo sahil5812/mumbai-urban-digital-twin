@@ -220,7 +220,8 @@ def run_simulation(req: SimulationRequest):
             "total_nodes_evaluated": len(active_components),
             "ml_inference_active": ml_ensemble is not None,
             "ml_ensemble_model": "VotingRegressor (RandomForest + GradientBoosting)",
-            "ml_r2_score": 0.9855
+            "ml_r2_score": ml_metrics.get("r2_score", "N/A") if ml_metrics else "N/A",
+            "ml_metrics_source": "training_validation" if ml_metrics else "unavailable"
         }
     )
 

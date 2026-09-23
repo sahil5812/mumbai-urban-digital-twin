@@ -45,7 +45,7 @@ def root():
         "docs_url": "/docs",
         "wards_monitored": 24,
         "active_ai_models": [
-            "ML Ensemble (Random Forest + GBDT) - 99.71% Accuracy",
+            "ML Ensemble (Random Forest + GBDT)",
             "Open-Meteo Live Meteorological Feed",
             "Arabian Sea Tidal Hydrodynamic Model",
             "NetworkX Cascading Infrastructure Graph",
