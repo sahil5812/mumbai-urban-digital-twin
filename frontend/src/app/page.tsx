@@ -35,7 +35,7 @@ export default function Home() {
   const [isGraphModalOpen, setIsGraphModalOpen] = useState(false);
   const [isPriorityModalOpen, setIsPriorityModalOpen] = useState(false);
   const [isCitizenModalOpen, setIsCitizenModalOpen] = useState(false);
-  const [isScenarioControlsOpen, setIsScenarioControlsOpen] = useState(true);
+  const [isScenarioControlsOpen, setIsScenarioControlsOpen] = useState(false);
   const [leftDockTab, setLeftDockTab] = useState<"SANDBOX" | "HOTSPOTS">("SANDBOX");
   const [isLoading, setIsLoading] = useState(false);
 
