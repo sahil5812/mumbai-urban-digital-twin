@@ -10,22 +10,22 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: [
+          "var(--font-plus-jakarta)",
           "'Plus Jakarta Sans'",
-          "var(--font-geist-sans)",
           "system-ui",
           "-apple-system",
-          "BlinkMacSystemFont",
-          "'Segoe UI'",
-          "Roboto",
           "sans-serif",
         ],
         mono: [
+          "var(--font-jetbrains-mono)",
           "'JetBrains Mono'",
-          "var(--font-geist-mono)",
-          "'Space Mono'",
           "monospace",
         ],
-        grotesk: ["'Space Grotesk'", "sans-serif"],
+        grotesk: [
+          "var(--font-space-grotesk)",
+          "'Space Grotesk'",
+          "sans-serif",
+        ],
       },
       colors: {
         background: "var(--background)",
