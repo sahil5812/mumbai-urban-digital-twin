@@ -17,8 +17,18 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Mumbai Urban Infrastructure Digital Twin - PS010",
+  title: "RaiNova — Mumbai Urban Infrastructure Digital Twin",
   description: "Real-time AI/ML urban infrastructure disaster management twin for Mumbai.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icon.png" },
+    ],
+  },
 };
 
 export default function RootLayout({

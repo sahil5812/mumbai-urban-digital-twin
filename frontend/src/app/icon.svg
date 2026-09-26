@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0b1329" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="primaryGrad" x1="16" y1="14" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#60a5fa" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.3" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Squircle -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="2" />
+
+  <!-- Stylized Futuristic 'R' -->
+  <path d="M18 15 H32 C39 15 44 19 44 26 C44 32 40 36 34 37 L45 50 H36 L26 38 H25 V50 H18 V15 Z M25 21 V32 H32 C35.5 32 37.5 30 37.5 26.5 C37.5 23 35.5 21 32 21 H25 Z" fill="url(#primaryGrad)" />
+
+  <!-- Nova Sparkle Star -->
+  <path d="M49 10 L50.5 15 L55 16.5 L50.5 18 L49 23 L47.5 18 L43 16.5 L47.5 15 Z" fill="#e0f2fe" />
+  <circle cx="49" cy="16.5" r="1.5" fill="#ffffff" />
+</svg>
