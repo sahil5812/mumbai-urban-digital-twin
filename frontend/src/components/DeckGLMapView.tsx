@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import DeckGL from "@deck.gl/react";
 import { ScatterplotLayer, ArcLayer, PathLayer, TextLayer, GeoJsonLayer } from "@deck.gl/layers";
-import MapGL, { NavigationControl } from "react-map-gl/maplibre";
+import MapGL, { NavigationControl, Marker } from "react-map-gl/maplibre";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { ComponentTelemetry, SafeRouteResponse, DEMGridResponse, CoordinateRouteResponse } from "../lib/types";
@@ -229,6 +229,23 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
       setCoordRouteResult(res);
       setSelectedRouteIndex(res.best_route_index ?? 0);
       setShowSafeRoute(true);
+
+      // Smoothly pan & frame camera on the calculated route
+      if (routeStartCoord && routeEndCoord) {
+        const centerLng = (routeStartCoord[0] + routeEndCoord[0]) / 2;
+        const centerLat = (routeStartCoord[1] + routeEndCoord[1]) / 2;
+        const span = Math.max(
+          Math.abs(routeEndCoord[0] - routeStartCoord[0]),
+          Math.abs(routeEndCoord[1] - routeStartCoord[1])
+        );
+        const targetZoom = Math.min(13.5, Math.max(10.8, 13.6 - Math.log2(Math.max(span * 85, 1))));
+        setViewState((prev) => ({
+          ...prev,
+          longitude: centerLng,
+          latitude: centerLat,
+          zoom: targetZoom,
+        }));
+      }
     } catch (e) {
       console.error("Coordinate route calculation error:", e);
     } finally {
@@ -905,7 +922,7 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
     });
   }, [showSafeRoute, safeRouteResult]);
 
-  // 10b-alt. Alternative Candidate Routes Layer (Dimmed Slate Gray, Clickable to Switch)
+  // 10b-alt. Alternative Candidate Routes Layer (Google Maps Soft Cornflower Blue, Clickable to Switch)
   const coordAltRoutesLayer = useMemo(() => {
     if (!showSafeRoute || !coordRouteResult?.routes?.length) return null;
 
@@ -919,15 +936,15 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
       id: `coord-alt-routes-${selectedRouteIndex}`,
       data: altRoutes,
       getPath: (d: any) => d.full_path,
-      getColor: [148, 163, 184, 175], // Dimmed Muted Slate Gray
-      getWidth: 24,
-      widthMinPixels: 4,
-      widthMaxPixels: 9,
+      getColor: [125, 170, 245, 215], // Google Maps Alternate Route: Soft Cornflower Blue
+      getWidth: 30,
+      widthMinPixels: 5,
+      widthMaxPixels: 10,
       capRounded: true,
       jointRounded: true,
       pickable: true,
       autoHighlight: true,
-      highlightColor: [56, 189, 248, 220],
+      highlightColor: [59, 130, 246, 240],
       onClick: ({ object }: any) => {
         if (object && typeof object.routeIndex === "number") {
           setSelectedRouteIndex(object.routeIndex);
@@ -936,7 +953,7 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
     });
   }, [showSafeRoute, coordRouteResult, selectedRouteIndex]);
 
-  // 10b. Active / Selected Route Segments (Risk-Colored with Emerald/Amber/Red)
+  // 10b. Active / Selected Route Segments (Google Maps Royal Blue for Safe, Amber/Red for Hazards)
   const coordRouteSegmentsLayer = useMemo(() => {
     if (!showSafeRoute || !coordRouteResult) return null;
 
@@ -962,11 +979,11 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
       getColor: (d: any) => {
         if (d.riskLevel === "HIGH") return [239, 68, 68, 255];    // Crimson Red (Submerged / Impassable)
         if (d.riskLevel === "MEDIUM") return [245, 158, 11, 255]; // Amber Orange (Moderate / Slowdown)
-        return [16, 185, 129, 255];                                // Glowing Emerald Green (Safe)
+        return [37, 99, 235, 255];                                // Google Maps Royal Blue (Safe Highway)
       },
-      getWidth: 50,
+      getWidth: 48,
       widthMinPixels: 6.5,
-      widthMaxPixels: 15,
+      widthMaxPixels: 14,
       capRounded: true,
       jointRounded: true,
       pickable: true,
@@ -975,28 +992,10 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
     });
   }, [showSafeRoute, coordRouteResult, selectedRouteIndex]);
 
-  // 10c. Route Start/Destination Pin Markers
+  // 10c. Route Start/Destination Pin Markers (Rendered via high-res MapLibre Marker components)
   const routePinMarkersLayer = useMemo(() => {
-    const pins: { coord: [number, number]; type: "start" | "destination" }[] = [];
-    if (routeStartCoord) pins.push({ coord: routeStartCoord, type: "start" });
-    if (routeEndCoord) pins.push({ coord: routeEndCoord, type: "destination" });
-    if (!pins.length) return null;
-
-    return new ScatterplotLayer({
-      id: "route-pin-markers",
-      data: pins,
-      getPosition: (d: any) => d.coord,
-      getRadius: 400,
-      radiusMinPixels: 10,
-      radiusMaxPixels: 22,
-      getFillColor: (d: any) => d.type === "start" ? [59, 130, 246, 255] : [16, 185, 129, 255],
-      getLineColor: [255, 255, 255, 255],
-      lineWidthMinPixels: 3,
-      stroked: true,
-      filled: true,
-      pickable: true,
-    });
-  }, [routeStartCoord, routeEndCoord]);
+    return null;
+  }, []);
 
   // 10d. Coordinate Route Avoided Hazard Markers
   const coordHazardsLayer = useMemo(() => {
@@ -1282,6 +1281,134 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
           attributionControl={false}
         >
           <NavigationControl position="bottom-right" showCompass={true} showZoom={true} />
+
+          {/* Start Location Pin: Circular white disc with vibrant blue inner dot */}
+          {routeStartCoord && (
+            <Marker
+              longitude={routeStartCoord[0]}
+              latitude={routeStartCoord[1]}
+              anchor="center"
+              style={{ zIndex: 40 }}
+            >
+              <div className="relative flex flex-col items-center pointer-events-auto">
+                <div className="w-5 h-5 rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.4)] border border-slate-300 flex items-center justify-center">
+                  <div className="w-2.5 h-2.5 rounded-full bg-blue-600 shadow-sm" />
+                </div>
+                <div className="mt-1 px-1.5 py-0.2 bg-slate-900/90 text-white text-[9.5px] font-bold rounded shadow whitespace-nowrap border border-white/20">
+                  Start
+                </div>
+              </div>
+            </Marker>
+          )}
+
+          {/* Destination Pin Marker: Google Maps Red Teardrop Pin */}
+          {routeEndCoord && (
+            <Marker
+              longitude={routeEndCoord[0]}
+              latitude={routeEndCoord[1]}
+              anchor="bottom"
+              style={{ zIndex: 40 }}
+            >
+              <div className="relative flex flex-col items-center group cursor-pointer pointer-events-auto">
+                <svg
+                  width="28"
+                  height="36"
+                  viewBox="0 0 28 36"
+                  fill="none"
+                  className="drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] transition-transform group-hover:scale-110"
+                >
+                  <path
+                    d="M14 0C6.268 0 0 6.268 0 14c0 10.5 14 22 14 22s14-11.5 14-22c0-7.732-6.268-14-14-14z"
+                    fill="#EA4335"
+                  />
+                  <circle cx="14" cy="13" r="5" fill="#7F1D1D" />
+                  <circle cx="14" cy="13" r="3.5" fill="#FFFFFF" />
+                </svg>
+                <div className="mt-0.5 px-2 py-0.5 rounded bg-red-950/90 border border-red-500/40 text-red-100 text-[9.5px] font-bold shadow whitespace-nowrap">
+                  Destination
+                </div>
+              </div>
+            </Marker>
+          )}
+
+          {/* Floating Google Maps Route Badges (Speech Bubbles with Time & Distance) */}
+          {showSafeRoute && coordRouteResult?.routes && coordRouteResult.routes.map((route, rIdx) => {
+            if (!route.full_path || route.full_path.length < 2) return null;
+            const isSelected = selectedRouteIndex === rIdx;
+            
+            // Stagger midpoint position along path so multiple route badges don't collide
+            const totalRoutes = coordRouteResult.routes!.length;
+            const sampleFactor = totalRoutes === 1 
+              ? 0.50 
+              : rIdx === 0 
+                ? 0.42 
+                : rIdx === 1 
+                  ? 0.58 
+                  : 0.70;
+            const sampleIdx = Math.min(
+              route.full_path.length - 1, 
+              Math.max(0, Math.floor(route.full_path.length * sampleFactor))
+            );
+            const badgeCoord = route.full_path[sampleIdx];
+            if (!badgeCoord) return null;
+
+            return (
+              <Marker
+                key={`route-badge-${rIdx}-${route.id || rIdx}`}
+                longitude={badgeCoord[0]}
+                latitude={badgeCoord[1]}
+                anchor="bottom"
+                style={{ zIndex: isSelected ? 45 : 35 }}
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  setSelectedRouteIndex(rIdx);
+                }}
+              >
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedRouteIndex(rIdx);
+                  }}
+                  className={`google-maps-callout pointer-events-auto transition-all ${
+                    isSelected 
+                      ? "ring-2 ring-blue-600 shadow-[0_6px_20px_rgba(0,0,0,0.35)] scale-105" 
+                      : "opacity-90 hover:opacity-100 hover:scale-105"
+                  }`}
+                  title={isSelected ? "Active Selected Route" : "Click to select this route"}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs">🚗</span>
+                    <span className={`text-[12.5px] font-bold tracking-tight ${
+                      isSelected ? "text-slate-900" : "text-slate-700"
+                    }`}>
+                      {route.duration_min} min
+                    </span>
+                    {route.risk_level === "LOW" ? (
+                      <span className="text-[9.5px] px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-semibold ml-0.5">
+                        Safe
+                      </span>
+                    ) : route.risk_level === "MEDIUM" ? (
+                      <span className="text-[9.5px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 font-semibold ml-0.5">
+                        Caution
+                      </span>
+                    ) : (
+                      <span className="text-[9.5px] px-1.5 py-0.2 rounded bg-rose-100 text-rose-800 font-semibold ml-0.5">
+                        Flooded
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-[10.5px] font-medium text-slate-500 mt-0.5 flex items-center justify-between gap-2">
+                    <span>{route.distance_km} km</span>
+                    {isSelected ? (
+                      <span className="text-[9px] font-bold text-blue-600">Selected</span>
+                    ) : (
+                      <span className="text-[9px] text-slate-400">Click to select</span>
+                    )}
+                  </div>
+                </div>
+              </Marker>
+            );
+          })}
         </MapGL>
       </DeckGL>
 
