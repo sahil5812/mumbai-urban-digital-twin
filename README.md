@@ -1,9 +1,10 @@
-# 🌊 RaiNova Digital Twin 
+# 🌊 RaiNova Digital Twin: Mumbai Urban Infrastructure (PS010 / PS26085)
 ### AI & Physics-Informed Predictive Twin for Cascading Road Degradation, Drainage Inundation & Municipal Disaster Mitigation
 
 > **Smart India Hackathon (SIH) 2026 — Smart Automation / Smart Cities Category (Problem Statement ID: PS010 / PS26085)**  
 > **Built for:** Brihanmumbai Municipal Corporation (BMC / MCGM) Disaster Management Cell & Public Works Department (PWD).  
-> **Repository:** [github.com/sahil5812/mumbai-urban-digital-twin](https://github.com/sahil5812/mumbai-urban-digital-twin)
+> **Repository:** [github.com/sahil5812/RaiNova](https://github.com/sahil5812/RaiNova)  
+> **Live Demo:** [rainova-ai.vercel.app](https://rainova-ai.vercel.app)
 
 ---
 
@@ -40,14 +41,14 @@ Every monsoon, Mumbai experiences catastrophic waterlogging, severe pavement det
 ### Why Traditional Systems Fail:
 Municipal authorities currently rely on **isolated, reactive dashboards** that treat roads, drainage, weather, and traffic as disconnected silos. By the time a citizen calls the helpline or a traffic jam is visible on CCTV, arterial roads are already inundated by 40–80 cm of water.
 
-### The JalDrishti Solution:
-**JalDrishti** replaces disjointed monitoring with an end-to-end **Physics-Informed Digital Twin**. It assimilates live Doppler meteorological radar feeds, computes hydrodynamic drainage pressures using Manning's open-channel equations, models Arabian Sea tidal lockouts, propagates cascading failures across road-drainage graphs, and provides **15 to 45 minutes of preemptive lead time** with auto-prioritized municipal work orders.
+### The RaiNova Solution:
+**RaiNova** replaces disjointed monitoring with an end-to-end **Physics-Informed Digital Twin**. It assimilates live Doppler meteorological radar feeds, computes hydrodynamic drainage pressures using Manning's open-channel equations, models Arabian Sea tidal lockouts, propagates cascading failures across road-drainage graphs, and provides **15 to 45 minutes of preemptive lead time** with auto-prioritized municipal work orders.
 
 ---
 
 ## ⚡ 2. The Domino Effect: Cascading Failure Physics
 
-In Mumbai's urban infrastructure, no failure occurs in isolation. JalDrishti quantitatively models the complete **interconnected chain reaction**:
+In Mumbai's urban infrastructure, no failure occurs in isolation. RaiNova quantitatively models the complete **interconnected chain reaction**:
 
 ```mermaid
 graph TD
@@ -65,7 +66,7 @@ graph TD
     J --> L[🚑 Critical Hospital & Emergency Service Disruption KEM / Sion / Lilavati]
 ```
 
-JalDrishti continuously computes node vulnerabilities and downstream impacts so disaster managers can intervene **before** water reaches critical depths.
+RaiNova continuously computes node vulnerabilities and downstream impacts so disaster managers can intervene **before** water reaches critical depths.
 
 ---
 
@@ -116,9 +117,9 @@ Built strictly adhering to the **4-Tier Digital Twin Standard Architecture** def
 
 ## 📚 4. Scientific & Research Paper Foundations
 
-JalDrishti is rigorously grounded in **8 peer-reviewed research papers and municipal engineering studies** located in `research paper/`:
+RaiNova is rigorously grounded in **8 peer-reviewed research papers and municipal engineering studies** located in `research paper/`:
 
-| # | Research Paper & Citation | Key Mathematical Principle Applied in JalDrishti |
+| # | Research Paper & Citation | Key Mathematical Principle Applied in RaiNova |
 |---|---|---|
 | 1 | **IIT Bombay Mithi River Study** (*Karmakar et al., 2021*) | 3-way linked hydrodynamic boundary conditions coupling Mumbai's 22 stormwater drains with Arabian Sea tidal lockouts when tides exceed $4.2\text{ m}$. |
 | 2 | **Mumbai Flood Susceptibility Framework** (*Joglekar et al., Jan 2026*) | Formulates the Topographic Flood Susceptibility Index: $\text{FSI} = \frac{1}{3}(R + T + L)$ combining IMD rainfall ($R$), DEM elevation ($T$), and impervious land use ($L$). |
@@ -175,7 +176,7 @@ Inspired by modern meteorology platforms (AccuWeather / ECMWF) and custom-styled
 - **`MINUTECAST®` Tab:** Ultra-high-resolution 120-minute precipitation forecast refreshed at 15-minute intervals.
 
 ### B. 5-Zone Real-Time Spatial Doppler Radar Mesh
-Unlike monolithic systems that query a single coordinate for all of Mumbai, JalDrishti queries a **5-Node Spatial Radar Mesh** concurrently across the entire Mumbai Metropolitan Region (MMR):
+Unlike monolithic systems that query a single coordinate for all of Mumbai, RaiNova queries a **5-Node Spatial Radar Mesh** concurrently across the entire Mumbai Metropolitan Region (MMR):
 
 | Station ID | Geographic Belt | Key Landmarks Monitored | Coordinates | Corridor |
 |---|---|---|---|---|
@@ -329,7 +330,7 @@ npm run start
 
 ## 🎮 10. 2-Minute Evaluator & Judge Demo Walkthrough
 
-Follow this concise sequence to demonstrate the maximum capabilities of JalDrishti to competition evaluators:
+Follow this concise sequence to demonstrate the maximum capabilities of RaiNova to competition evaluators:
 
 1. **Start on the Weather Portal (`http://localhost:3000`):**
    - Point out the **Live Doppler Radar Header** with real-time temperature, humidity, wind, and Arabian Sea tide.
@@ -377,7 +378,7 @@ Follow this concise sequence to demonstrate the maximum capabilities of JalDrish
 ---
 
 ## 👥 12. Team & Acknowledgements
-- **Team:** JalDrishti
+- **Team:** RaiNova
 - **Hackathon:** Smart India Hackathon (SIH) 2026
 - **Problem Statement:** PS010 / PS26085 — Urban Infrastructure Road & Flood Digital Twin
 - Dedicated to the citizens of Mumbai and the municipal frontline workers of the **Brihanmumbai Municipal Corporation (BMC / MCGM)**.

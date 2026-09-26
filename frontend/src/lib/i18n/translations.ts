@@ -1,4 +1,4 @@
-// Typed Internationalization (i18n) Dictionary for JalDrishti
+// Typed Internationalization (i18n) Dictionary for RaiNova
 // Supported Languages: English (en), Hindi (hi), Marathi (mr)
 
 export type Language = 'en' | 'hi' | 'mr';
