@@ -254,7 +254,7 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
     bearing: viewMode === "3D" ? -15 : 0,
     maxPitch: 75,
     minZoom: 8,
-    maxZoom: 18,
+    maxZoom: 20,
   });
 
   const animationFrameRef = useRef<number | null>(null);
@@ -293,15 +293,18 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
   }, [isOrbiting]);
 
   const mapStyle = useMemo(() => {
-    let tileUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}";
+    let tileUrl = "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png";
     let oceanColor = "#e6f2ff";
+    let sourceMaxZoom = 20;
 
     if (mapTheme === "DARK") {
-      tileUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}";
+      tileUrl = "https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png";
       oceanColor = "#0f172a";
+      sourceMaxZoom = 20;
     } else if (mapTheme === "SATELLITE") {
       tileUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
       oceanColor = "#081b2e";
+      sourceMaxZoom = 18;
     }
 
     return {
@@ -311,6 +314,7 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
           type: "raster" as const,
           tiles: [tileUrl],
           tileSize: 256,
+          maxzoom: sourceMaxZoom,
         },
       },
       layers: [
@@ -324,7 +328,7 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
           type: "raster" as const,
           source: "world-tiles",
           minzoom: 0,
-          maxzoom: 19,
+          maxzoom: 22,
         },
       ],
     };
