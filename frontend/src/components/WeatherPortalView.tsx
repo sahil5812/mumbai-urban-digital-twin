@@ -177,7 +177,135 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
           : (rainMm >= 20
             ? "Cloudy with passing rain bands, thunder and gusty afternoon showers"
             : (rainMm > 0
-              ? "{language === 'hi' ? 'बादलों के बीच कभी-कभी धूप खिलेगी, दोपहर में 14:15 IST उच्च ज्वार (4.2m) के समय छिटपुट गरज-चमक के साथ बारिश। अधिकतम: 32°C' : language === 'mr' ? 'ढगांमधून अधूनमधून सूर्यप्रकाश, दुपारी 14:15 IST च्या उधाणाच्या भरतीच्या (4.2m) वेळी तुरळक मेघगर्जनेसह पावसाची शक्यता. कमाल: 32°C' : 'Sun breaking through clouds at times with stray thunderstorms in the afternoon coinciding with 14:15 IST High Tide (4.2m). Hi: 32°C'}</span>
+              ? "Sun breaking through clouds at times with a passing localized shower"
+              : "Partly cloudy with pleasant sea breezes and dry conditions"));
+
+        return {
+          day: dayName,
+          date: dateLabel,
+          icon,
+          hiTemp: Math.round(df.temp_max_c),
+          loTemp: Math.round(df.temp_min_c),
+          rainProb: `${Math.min(95, Math.round(rainMm * 1.5 + 20))}%`,
+          rainMm,
+          summary,
+          realFeel: Math.round(df.temp_max_c + 6),
+          realFeelShade: Math.round(df.temp_max_c + 3),
+          maxUv: "9.0 (Very High)",
+          wind: `W ${Math.round(df.wind_speed_max_kmh)} km/h`,
+          precipHours: rainMm > 20 ? "3.5" : "1.5",
+          rainHours: rainMm > 20 ? "3.5" : "1.5",
+          tidePeak: 3.8,
+          spsStatus: rainMm >= 40 ? "All 9 SPS Armed" : "4 SPS Armed",
+          vulnerability: rainMm >= 40 ? "Subways & lowlines on inundation watch" : "Normal drainage capacity",
+          severity,
+          badgeColor,
+        };
+      });
+    }
+    return STATIC_TEN_DAY_FORECAST;
+  }, [liveTelemetry?.daily_forecast]);
+
+  // Weather Portal translation helper functions for Hindi, Marathi & English
+  const translateWeather = (text: string) => {
+    if (!text) return text;
+    if (language === 'hi') {
+      if (text.includes("Variable cloudiness")) return "परिवर्तनशील बादल; सुबह बौछारें और दोपहर में कुछ स्थानों पर बारिश";
+      if (text.includes("Mostly cloudy with a little rain")) return "ज्यादातर बादल छाए रहेंगे, हल्की बारिश की संभावना";
+      if (text.includes("Partly cloudy with localized thunderstorm")) return "आंशिक रूप से बादल, देर रात गरज के साथ बौछारें पड़ने की संभावना";
+      if (text.includes("Intermittent clouds")) return "रुक-रुक कर बादल";
+      if (text.includes("Heavy Downpour")) return "भारी मूसलाधार बारिश";
+      if (text.includes("Moderate Rain")) return "मध्यम बारिश";
+      if (text.includes("Light Drizzle")) return "हल्की बूंदाबांदी";
+      if (text.includes("Overcast")) return "घने बादल छाए रहेंगे";
+      if (text.includes("Cloudy with passing rain bands")) return "बादल छाए रहेंगे, रुक-रुक कर बारिश और गरज के साथ बौछारें";
+      if (text.includes("Torrential monsoon precipitation")) return "मूसलाधार मानसूनी बारिश, पंपिंग स्टेशन सक्रिय व निचले इलाकों में चेतावनी";
+      if (text.includes("Sun breaking through clouds")) return "बादलों के बीच कभी-कभी धूप खिलेगी, दोपहर में छिटपुट गरज-चमक के साथ बारिश";
+      if (text.includes("Partly cloudy with pleasant")) return "आंशिक रूप से बादल छाए रहेंगे, सुखद समुद्री हवाएं";
+      if (text.includes("AMBER ALERT")) return "एम्बर अलर्ट";
+      if (text.includes("RED ALERT")) return "रेड अलर्ट";
+      if (text.includes("MODERATE")) return "मध्यम";
+      if (text.includes("SAFE")) return "सुरक्षित";
+      if (text.includes("CRITICAL")) return "गंभीर";
+      if (text.includes("WARNING")) return "चेतावनी";
+      if (text.includes("DANGER")) return "खतरा";
+    } else if (language === 'mr') {
+      if (text.includes("Variable cloudiness")) return "बदलते ढगाळ वातावरण; सकाळी सरी आणि दुपारी तुरळक ठिकाणी पाऊस";
+      if (text.includes("Mostly cloudy with a little rain")) return "मुख्यतः ढगाळ वातावरण, हलक्या पावसाची शक्यता";
+      if (text.includes("Partly cloudy with localized thunderstorm")) return "अंशतः ढगाळ, रात्री उशिरा मेघगर्जनेसह पाऊस पडण्याची शक्यता";
+      if (text.includes("Intermittent clouds")) return "अधूनमधून ढगाळ वातावरण";
+      if (text.includes("Heavy Downpour")) return "मुसळधार पाऊस";
+      if (text.includes("Moderate Rain")) return "मध्यम पाऊस";
+      if (text.includes("Light Drizzle")) return "हलकी रिमझिम";
+      if (text.includes("Overcast")) return "दाट ढगाळ वातावरण";
+      if (text.includes("Cloudy with passing rain bands")) return "ढगाळ वातावरण, मेघगर्जनेसह जोरदार वाऱ्याच्या पावसाच्या सरी";
+      if (text.includes("Torrential monsoon precipitation")) return "मुसळधार मान्सून पाऊस, पंपिंग स्टेशन्स सक्रिय व सखल भागात सतर्कता";
+      if (text.includes("Sun breaking through clouds")) return "ढगांमधून अधूनमधून सूर्यप्रकाश, दुपारी तुरळक वादळी पाऊस";
+      if (text.includes("Partly cloudy with pleasant")) return "अंशतः ढगाळ वातावरण आणि आल्हाददायक सागरी वारे";
+      if (text.includes("AMBER ALERT")) return "अंबर इशारा";
+      if (text.includes("RED ALERT")) return "रेड अलर्ट";
+      if (text.includes("MODERATE")) return "मध्यम";
+      if (text.includes("SAFE")) return "सुरक्षित";
+      if (text.includes("CRITICAL")) return "धोकादायक";
+      if (text.includes("WARNING")) return "इशारा";
+      if (text.includes("DANGER")) return "धोका";
+    }
+    return text;
+  };
+
+  const translateVuln = (text: string) => {
+    if (!text) return text;
+    if (language === 'hi') {
+      if (text.includes("Andheri subway")) return "अंधेरी सबवे में रुक-रुक कर जलभराव की संभावना";
+      if (text.includes("Kurla LBS")) return "कुर्ला LBS मार्ग सुबह जल निकासी धीमी";
+      if (text.includes("Love Grove")) return "लव ग्रोव और क्लीवलैंड पर सामान्य स्टॉर्मवॉटर डिस्चार्ज";
+      if (text.includes("Hindmata")) return "हिंदमाता फ्लाईओवर के नीचे जलजमाव सतर्कता";
+      if (text.includes("Subways & lowlines")) return "निचले सबवे और क्षेत्र जलभराव निगरानी में";
+      if (text.includes("Normal drainage")) return "सामान्य जल निकासी क्षमता";
+      if (text.includes("Severe lowline")) return "निचले इलाकों में गंभीर जलभराव का जोखिम";
+      if (text.includes("Normal baseline")) return "सामान्य बेसलाइन जल प्रवाह";
+    } else if (language === 'mr') {
+      if (text.includes("Andheri subway")) return "अंधेरी सबवेमध्ये अधूनमधून पाणी साचण्याची शक्यता";
+      if (text.includes("Kurla LBS")) return "कुर्ला एलबीएस मार्ग सकाळी निचरा मंद";
+      if (text.includes("Love Grove")) return "लव्ह ग्रोव्ह आणि क्लीव्हलँड येथे सामान्य पाणी निचरा";
+      if (text.includes("Hindmata")) return "हिंदमाता उड्डाणपुलाखाली पाणी साचण्याचा इशारा";
+      if (text.includes("Subways & lowlines")) return "सखल सबवे व भाग पाणी साचण्याच्या देखरेखीखाली";
+      if (text.includes("Normal drainage")) return "पाणी वाहून नेण्याची सामान्य क्षमता";
+      if (text.includes("Severe lowline")) return "सखल भागात तीव्र जलमय परिस्थितीचा धोका";
+      if (text.includes("Normal baseline")) return "सामान्य नैसर्गिक प्रवाह";
+    }
+    return text;
+  };
+
+  return (
+    <div className="w-full h-full overflow-y-auto bg-transparent text-slate-100 p-4 sm:p-6 font-sans select-none">
+      <div className="max-w-4xl mx-auto space-y-4 pb-16">
+        
+        {/* CARD 1: TONIGHT'S WEATHER & ALERTS (Frosted Acrylic) */}
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 scroll-reveal">
+          <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
+              {t("tonightAlertTitle", "TONIGHT'S WEATHER & HYDROLOGY ALERT")}
+            </span>
+            <span className="text-[11px] font-mono text-cyan-300 bg-cyan-950/40 px-3 py-0.5 rounded-full border border-cyan-400/40 shadow-sm backdrop-blur-md">
+              SUN, SEP 6 • IST
+            </span>
+          </div>
+
+          <div className="space-y-2.5 text-xs sm:text-sm text-slate-200">
+            <div className="flex items-start gap-2.5">
+              <span className="text-base sm:text-lg shrink-0">⛈️</span>
+              <p>
+                <strong className="text-white font-semibold">{t("tonightLabel", "Tonight:")}</strong> {language === 'hi' ? 'आंशिक रूप से बादल छाए रहेंगे, देर रात कुर्ला, हिंदमाता और ठाणे मुंब्रा में गरज के साथ बौछारें पड़ने की संभावना। ' : language === 'mr' ? 'अंशतः ढगाळ वातावरण, रात्री उशिरा कुर्ला, हिंदमाता आणि ठाणे मुंब्रा भागात मेघगर्जनेसह पाऊस पडण्याची शक्यता. ' : 'Partly cloudy with localized thunderstorm cells developing over Kurla, Hindmata & Thane Mumbra late. '}
+                <span className="text-cyan-300 font-mono font-bold glass-text-glow">{language === 'hi' ? 'न्यूनतम: 26°C' : language === 'mr' ? 'किमान: 26°C' : 'Lo: 26°C'}</span>
+              </p>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <span className="text-base sm:text-lg shrink-0">🌤️</span>
+              <p>
+                <strong className="text-white font-semibold">{t("tomorrowLabel", "Tomorrow:")}</strong> {language === 'hi' ? 'बादलों के बीच कभी-कभी धूप खिलेगी, दोपहर में छिटपुट गरज-चमक के साथ बारिश। ' : language === 'mr' ? 'ढगांमधून अधूनमधून सूर्यप्रकाश, दुपारी तुरळक वादळी पाऊस पडण्याची शक्यता. ' : 'Sun breaking through clouds at times with stray thunderstorms in the afternoon coinciding with '}
+                <span className="text-amber-300 font-mono font-bold">{language === 'hi' ? '14:15 IST उच्च ज्वार (4.2m)' : language === 'mr' ? '14:15 IST उधाणाची भरती (4.2m)' : '14:15 IST High Tide (4.2m)'}</span>.&nbsp;
+                <span className="text-cyan-300 font-mono font-bold glass-text-glow">{language === 'hi' ? 'अधिकतम: 32°C' : language === 'mr' ? 'कमाल: 32°C' : 'Hi: 32°C'}</span>
               </p>
             </div>
           </div>
@@ -215,10 +343,10 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                   <span className="text-xl font-mono text-slate-300 font-semibold">C</span>
                 </div>
                 <div className="text-xs text-slate-300 font-medium">
-                  RealFeel® <span className="text-white font-bold font-mono">{Math.round(tempC + 4)}°</span>
+                  {language === 'hi' ? 'रियलफील®' : language === 'mr' ? 'रियलफील®' : 'RealFeel®'} <span className="text-white font-bold font-mono">{Math.round(tempC + 4)}°</span>
                 </div>
                 <div className="text-xs text-cyan-300 font-semibold mt-1 glass-text-glow">
-                  {rainMmHr > 0 ? `Rain Active (${rainMmHr} mm/h)` : "{language === 'hi' ? 'मानसून के घने बादल • अत्यधिक उमस' : language === 'mr' ? 'मान्सूनचे दाट ढग • दमट हवामान' : 'Monsoon Overcast • Humid'}"}
+                  {rainMmHr > 0 ? (language === 'hi' ? `वर्षा सक्रिय (${rainMmHr} मिमी/घं)` : language === 'mr' ? `पाऊस सुरू (${rainMmHr} मिमी/तास)` : `Rain Active (${rainMmHr} mm/h)`) : (language === 'hi' ? 'मानसून के घने बादल • अत्यधिक उमस' : language === 'mr' ? 'मान्सूनचे दाट ढग • दमट हवामान' : 'Monsoon Overcast • Humid')}
                 </div>
               </div>
             </div>
@@ -233,7 +361,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                 <div className="text-white font-bold text-sm">
                   WSW {Math.round(windKmh)} km/h
                 </div>
-                <div className="text-[10px] text-slate-400">Gusts: {Math.round(windKmh * 1.5)} km/h</div>
+                <div className="text-[10px] text-slate-400">{language === 'hi' ? `झोंके: ${Math.round(windKmh * 1.5)} किमी/घंटा` : language === 'mr' ? `वारे: ${Math.round(windKmh * 1.5)} किमी/तास` : `Gusts: ${Math.round(windKmh * 1.5)} km/h`}</div>
               </div>
 
               <div className="glass-panel-subtle p-3.5 rounded-2xl">
@@ -245,7 +373,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                   {tideM.toFixed(2)} m
                 </div>
                 <div className="text-[10px] text-slate-400">
-                  {tideM >= 4.0 ? "Spring Tide Peak" : "{language === 'hi' ? 'मध्यम उछाल' : language === 'mr' ? 'मध्यम लाटांचा जोर' : 'Moderate Surge'}"}
+                  {tideM >= 4.0 ? (language === 'hi' ? 'उच्चतम स्प्रिंग ज्वार' : language === 'mr' ? 'कमाल उधाण भरती' : 'Spring Tide Peak') : (language === 'hi' ? 'मध्यम उछाल' : language === 'mr' ? 'मध्यम लाटांचा जोर' : 'Moderate Surge')}
                 </div>
               </div>
 
@@ -266,7 +394,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                   <span className="text-[11px] font-semibold text-slate-300">{t("dewateringPumpsLabel", "DEWATERING PUMPS")}</span>
                 </div>
                 <div className="text-emerald-300 font-bold text-sm">
-                  9 SPS Active
+                  {language === 'hi' ? '9 SPS सक्रिय' : language === 'mr' ? '9 SPS कार्यरत' : '9 SPS Active'}
                 </div>
                 <div className="text-[10px] text-slate-400">{language === 'hi' ? '264 क्युमेक्स क्षमता' : language === 'mr' ? '264 क्युमेक्स क्षमता' : '264 cumecs capacity'}</div>
               </div>
@@ -539,7 +667,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                           </span>
                         </div>
                         <span className="text-[11px] sm:text-xs text-slate-300 font-medium">
-                          {item.condition}
+                          {translateWeather(item.condition)}
                         </span>
                       </div>
                     </div>
@@ -548,10 +676,10 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                     <div className="flex items-center gap-3 sm:gap-5">
                       <div className="text-right hidden sm:block">
                         <div className="text-xs text-slate-200 font-medium font-mono">
-                          RealFeel® <strong className="text-white">{item.realFeel}°</strong>
+                          {language === 'hi' ? 'रियलफील®' : language === 'mr' ? 'रियलफील®' : 'RealFeel®'} <strong className="text-white">{item.realFeel}°</strong>
                         </div>
                         <div className="text-[10px] text-slate-400">
-                          Shade: {item.realFeelShade}°
+                          {language === 'hi' ? 'छांव में' : language === 'mr' ? 'सावलीत' : 'Shade'}: {item.realFeelShade}°
                         </div>
                       </div>
 
@@ -571,7 +699,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                           ? "bg-cyan-500/20 text-cyan-300 border-cyan-400/30"
                           : "bg-emerald-500/20 text-emerald-300 border-emerald-400/30"
                       }`}>
-                        {item.floodRisk}
+                        {translateWeather(item.floodRisk)}
                       </span>
 
                       {/* Chevron Indicator */}
@@ -588,90 +716,90 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs font-mono text-slate-200">
                         {/* Row 1 */}
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">RealFeel Shade™</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'छांव में फील™' : language === 'mr' ? 'सावलीत फील™' : 'RealFeel Shade™'}</span>
                           <span className="font-bold text-white">{item.realFeelShade}°C</span>
                         </div>
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Wind & Direction</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'हवा और दिशा' : language === 'mr' ? 'वारा आणि दिशा' : 'Wind & Direction'}</span>
                           <span className="font-bold text-cyan-200">{item.wind}</span>
                         </div>
 
                         {/* Row 2 */}
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Heat Index</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'हीट इंडेक्स' : language === 'mr' ? 'उष्णता निर्देशांक' : 'Heat Index'}</span>
                           <span className="font-bold text-amber-300">{item.realFeel}°C</span>
                         </div>
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Drainage Runoff Load</span>
-                          <span className="font-bold text-emerald-400">Nominal (34%)</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'ड्रेनेज रनऑफ लोड' : language === 'mr' ? 'ड्रेनेज रनऑफ भार' : 'Drainage Runoff Load'}</span>
+                          <span className="font-bold text-emerald-400">{language === 'hi' ? 'सामान्य (34%)' : language === 'mr' ? 'सामान्य (34%)' : 'Nominal (34%)'}</span>
                         </div>
 
                         {/* Row 3 */}
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Max UV Index</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'अधिकतम UV इंडेक्स' : language === 'mr' ? 'कमाल UV निर्देशांक' : 'Max UV Index'}</span>
                           <span className="font-bold text-white">{item.uvIndex}</span>
                         </div>
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Brightness Index</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'चमक इंडेक्स' : language === 'mr' ? 'तेजस्विता निर्देशांक' : 'Brightness Index'}</span>
                           <span className="font-bold text-amber-200">{item.brightnessIndex}</span>
                         </div>
 
                         {/* Row 4 */}
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Wind Gusts</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'हवा के झोंके' : language === 'mr' ? 'वाऱ्याचे झोत' : 'Wind Gusts'}</span>
                           <span className="font-bold text-indigo-300">{item.windGusts}</span>
                         </div>
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Cloud Cover</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'बादलों का आवरण' : language === 'mr' ? 'ढगांचे आच्छादन' : 'Cloud Cover'}</span>
                           <span className="font-bold text-white">{item.cloudCover}</span>
                         </div>
 
                         {/* Row 5 */}
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Relative Humidity</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'सापेक्ष आर्द्रता' : language === 'mr' ? 'सापेक्ष आर्द्रता' : 'Relative Humidity'}</span>
                           <span className="font-bold text-teal-300">{item.humidity}%</span>
                         </div>
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Visibility Range</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'दृश्यता सीमा' : language === 'mr' ? 'दृश्यमानता' : 'Visibility Range'}</span>
                           <span className="font-bold text-white">{item.visibility}</span>
                         </div>
 
                         {/* Row 6 */}
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Indoor Humidity</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'इनडोर आर्द्रता' : language === 'mr' ? 'घरातील आर्द्रता' : 'Indoor Humidity'}</span>
                           <span className="font-bold text-slate-200">{item.indoorHumidity}</span>
                         </div>
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Cloud Ceiling</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'बादल की ऊंचाई' : language === 'mr' ? 'ढगांची उंची' : 'Cloud Ceiling'}</span>
                           <span className="font-bold text-white">{item.cloudCeiling}</span>
                         </div>
 
                         {/* Row 7: Digital Twin Metrics */}
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Dew Point</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'ओस बिंदु' : language === 'mr' ? 'दवबिंदू' : 'Dew Point'}</span>
                           <span className="font-bold text-white">{item.dewPoint}°C</span>
                         </div>
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Arabian Sea Tide Peak</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'अरब सागर ज्वार स्तर' : language === 'mr' ? 'अरबी समुद्र भरती पातळी' : 'Arabian Sea Tide Peak'}</span>
                           <span className="font-bold text-blue-300">{item.tideLevel} m</span>
                         </div>
 
                         {/* Row 8 */}
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Predicted Rain Rate</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'पूर्वानुमानित वर्षा दर' : language === 'mr' ? 'अंदाजित पाऊस दर' : 'Predicted Rain Rate'}</span>
                           <span className="font-bold text-cyan-300">{item.rainMm} mm/h</span>
                         </div>
                         <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
-                          <span className="text-slate-400">Pumping SPS Status</span>
-                          <span className="font-bold text-emerald-300">{item.pumpsArmed}</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'पंपिंग SPS स्थिति' : language === 'mr' ? 'पंपिंग SPS स्थिती' : 'Pumping SPS Status'}</span>
+                          <span className="font-bold text-emerald-300">{language === 'hi' ? item.pumpsArmed.replace('Operational', 'सक्रिय').replace('Armed', 'सज्ज') : language === 'mr' ? item.pumpsArmed.replace('Operational', 'कार्यरत').replace('Armed', 'सज्ज') : item.pumpsArmed}</span>
                         </div>
                       </div>
 
                       {/* Action Bar: Disaster Assessment & Twin Simulator Trigger */}
                       <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
                         <div className="flex items-center gap-2 text-xs">
-                          <span className="text-slate-400">Twin Risk Assessment:</span>
-                          <span className="text-slate-200 font-semibold">{item.vulnerability}</span>
+                          <span className="text-slate-400">{language === 'hi' ? 'ट्विन जोखिम मूल्यांकन:' : language === 'mr' ? 'ट्विन धोका मूल्यांकन:' : 'Twin Risk Assessment:'}</span>
+                          <span className="text-slate-200 font-semibold">{translateVuln(item.vulnerability)}</span>
                         </div>
 
                         <button
@@ -682,7 +810,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                           }}
                           className="glass-button-primary px-4 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-2 shadow-[0_4px_16px_rgba(6,182,212,0.3)] transition-all hover:scale-105 cursor-pointer"
                         >
-                          <span>Simulate {item.hour} in 3D Twin</span>
+                          <span>{language === 'hi' ? `3D ट्विन में ${item.hour} सिम्युलेट करें` : language === 'mr' ? `3D ट्विनमध्ये ${item.hour} सिम्युलेट करा` : `Simulate ${item.hour} in 3D Twin`}</span>
                           <ArrowUpRight className="w-3.5 h-3.5" />
                         </button>
                       </div>
@@ -742,66 +870,66 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                       <span>{day.rainProb}</span>
                     </div>
                     <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg border hidden sm:inline-block ${day.badgeColor}`}>
-                      {day.severity}
+                      {translateWeather(day.severity)}
                     </span>
                   </div>
                 </div>
 
                 {/* Summary Description Sentence */}
                 <p className="text-xs text-slate-200 leading-relaxed font-medium">
-                  {day.summary}
+                  {translateWeather(day.summary)}
                 </p>
 
                 {/* 2-Column Key-Value Grid with Hairline Dividers (Matching AccuWeather Screenshot) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1.5 text-xs font-mono pt-1">
                   {/* Row 1 */}
                   <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
-                    <span className="text-slate-400">RealFeel®</span>
+                    <span className="text-slate-400">{language === 'hi' ? 'रियलफील®' : language === 'mr' ? 'रियलफील®' : 'RealFeel®'}</span>
                     <span className="font-bold text-white">{day.realFeel}°C</span>
                   </div>
                   <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
-                    <span className="text-slate-400">Wind</span>
+                    <span className="text-slate-400">{language === 'hi' ? 'हवा की गति' : language === 'mr' ? 'वार्याचा वेग' : 'Wind'}</span>
                     <span className="font-bold text-cyan-200">{day.wind}</span>
                   </div>
 
                   {/* Row 2 */}
                   <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
-                    <span className="text-slate-400">RealFeel Shade™</span>
+                    <span className="text-slate-400">{language === 'hi' ? 'छांव में फील™' : language === 'mr' ? 'सावलीत फील™' : 'RealFeel Shade™'}</span>
                     <span className="font-bold text-slate-200">{day.realFeelShade}°C</span>
                   </div>
                   <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
-                    <span className="text-slate-400">Total Hours of Precipitation</span>
-                    <span className="font-bold text-white">{day.precipHours} hrs</span>
+                    <span className="text-slate-400">{language === 'hi' ? 'वर्षा के कुल घंटे' : language === 'mr' ? 'एकूण पावसाचे तास' : 'Total Hours of Precipitation'}</span>
+                    <span className="font-bold text-white">{day.precipHours} {language === 'hi' ? 'घंटे' : language === 'mr' ? 'तास' : 'hrs'}</span>
                   </div>
 
                   {/* Row 3 */}
                   <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
-                    <span className="text-slate-400">Max UV Index</span>
+                    <span className="text-slate-400">{language === 'hi' ? 'अधिकतम UV इंडेक्स' : language === 'mr' ? 'कमाल UV निर्देशांक' : 'Max UV Index'}</span>
                     <span className="font-bold text-white">{day.maxUv}</span>
                   </div>
                   <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
-                    <span className="text-slate-400">Total Hours of Rain</span>
-                    <span className="font-bold text-white">{day.rainHours} hrs</span>
+                    <span className="text-slate-400">{language === 'hi' ? 'बारिश के घंटे' : language === 'mr' ? 'पावसाचे तास' : 'Total Hours of Rain'}</span>
+                    <span className="font-bold text-white">{day.rainHours} {language === 'hi' ? 'घंटे' : language === 'mr' ? 'तास' : 'hrs'}</span>
                   </div>
 
                   {/* Row 4: Hydrological & Coastal Digital Twin Metrics */}
                   <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
-                    <span className="text-slate-400">Arabian Sea Tide Peak</span>
+                    <span className="text-slate-400">{language === 'hi' ? 'अरब सागर ज्वार शिखर' : language === 'mr' ? 'अरबी समुद्र भरती शिखर' : 'Arabian Sea Tide Peak'}</span>
                     <span className={`font-bold ${day.tidePeak >= 4.0 ? "text-amber-300" : "text-blue-300"}`}>
-                      {day.tidePeak.toFixed(1)} m {day.tidePeak >= 4.0 ? "(Spring Peak)" : "(Surge)"}
+                      {day.tidePeak.toFixed(1)} m {day.tidePeak >= 4.0 ? (language === 'hi' ? '(स्प्रिंग शिखर)' : language === 'mr' ? '(उधाण शिखर)' : '(Spring Peak)') : (language === 'hi' ? '(उछाल)' : language === 'mr' ? '(लाटांचा जोर)' : '(Surge)')}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-1 border-b border-white/[0.06]">
-                    <span className="text-slate-400">Dewatering SPS Readiness</span>
-                    <span className="font-bold text-emerald-300">{day.spsStatus}</span>
+                    <span className="text-slate-400">{language === 'hi' ? 'पंपिंग स्टेशन तत्परता' : language === 'mr' ? 'पंपिंग स्टेशन सज्जता' : 'Dewatering SPS Readiness'}</span>
+                    <span className="font-bold text-emerald-300">{language === 'hi' ? day.spsStatus.replace('All 9 SPS Armed', 'सभी 9 SPS सक्रिय').replace('SPS Active', 'SPS सक्रिय').replace('SPS Armed', 'SPS सक्रिय') : language === 'mr' ? day.spsStatus.replace('All 9 SPS Armed', 'सर्व 9 SPS कार्यरत').replace('SPS Active', 'SPS कार्यरत').replace('SPS Armed', 'SPS कार्यरत') : day.spsStatus}</span>
                   </div>
                 </div>
 
                 {/* Bottom Action & Disaster Intelligence Bar */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-white/10">
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="text-slate-400">Vulnerability Watch:</span>
-                    <span className="text-slate-200 font-semibold">{day.vulnerability}</span>
+                    <span className="text-slate-400">{language === 'hi' ? 'संवेदनशील निगरानी:' : language === 'mr' ? 'संवेदनशील देखरेख:' : 'Vulnerability Watch:'}</span>
+                    <span className="text-slate-200 font-semibold">{translateVuln(day.vulnerability)}</span>
                   </div>
 
                   <button
@@ -811,7 +939,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                     }}
                     className="glass-button-primary px-3.5 py-1.5 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow-[0_4px_16px_rgba(6,182,212,0.3)] transition-all hover:scale-105 cursor-pointer ml-auto"
                   >
-                    <span>Simulate {day.day} in 3D Twin</span>
+                    <span>{language === 'hi' ? `3D ट्विन में ${day.day} सिम्युलेट करें` : language === 'mr' ? `3D ट्विनमध्ये ${day.day} सिम्युलेट करा` : `Simulate ${day.day} in 3D Twin`}</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -824,7 +952,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
         <div className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] scroll-reveal">
           <div className="border-b border-white/10 pb-3 mb-3">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
-              SUN, MOON & COASTAL ASTRONOMICAL TIDES
+              {language === 'hi' ? 'सूर्य, चंद्र एवं तटीय खगोलीय ज्वार-भाटा' : language === 'mr' ? 'सूर्य, चंद्र आणि किनारी खगोलीय भरती-ओहोटी' : 'SUN, MOON & COASTAL ASTRONOMICAL TIDES'}
             </span>
           </div>
 

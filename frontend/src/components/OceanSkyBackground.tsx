@@ -832,7 +832,8 @@ export const OceanSkyBackground: React.FC = () => {
     // Use capture: true so scroll events from internal div.overflow-y-auto containers are caught!
     window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
 
-    // 2. Wheel Listener: Scrolling mouse wheel or touchpad shifts atmosphere smoothly without abrupt wrap-around
+    // 2. Wheel Listener: Exact 4-Scroll Sync (0.25 step per scroll = exactly 4 scrolls to complete 100%)
+    let lastWheelTime = 0;
     const handleWheel = (e: WheelEvent) => {
       if (e.ctrlKey || e.metaKey) return;
 
@@ -864,12 +865,17 @@ export const OceanSkyBackground: React.FC = () => {
         return;
       }
 
-      // If NOT inside an active scroll container (e.g. 3D Map mode, background, nav),
-      // smoothly advance or reverse without ANY hard jumps between DAWN and PRE-DAWN:
-      const delta = e.deltaY;
-      const sensitivity = 0.0006;
-      const next = targetSmoothRef.current + delta * sensitivity;
-      targetSmoothRef.current = Math.max(0.0, Math.min(1.0, next));
+      // 4-SCROLL SYNC: exactly 4 mouse wheel or touchpad scrolls to complete 100% (0.25 per step)
+      const now = performance.now();
+      if (now - lastWheelTime < 160) {
+        return;
+      }
+      lastWheelTime = now;
+
+      const dir = Math.sign(e.deltaY);
+      if (dir !== 0) {
+        targetSmoothRef.current = Math.max(0.0, Math.min(1.0, targetSmoothRef.current + dir * 0.25));
+      }
     };
 
     window.addEventListener("wheel", handleWheel, { passive: true });
@@ -891,8 +897,8 @@ export const OceanSkyBackground: React.FC = () => {
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      // Smoothly approach target scene (SMOOTH_SPEED = 8.0)
-      const speed = 8.0;
+      // Smoothly approach target scene (SMOOTH_SPEED = 4.5 for cinematic glide)
+      const speed = 4.5;
       currentSmoothRef.current +=
         (targetSmoothRef.current - currentSmoothRef.current) *
         (1 - Math.exp(-dt * speed));
