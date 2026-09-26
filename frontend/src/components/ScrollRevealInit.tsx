@@ -85,7 +85,26 @@ export const ScrollRevealInit: React.FC = () => {
       subtree: true,
     });
 
+    // Auto-recover from chunk mismatch during live Vercel deployments
+    const handleChunkError = (e: ErrorEvent) => {
+      const msg = e.message || "";
+      if (
+        msg.includes("Loading chunk") ||
+        msg.includes("Failed to fetch dynamically imported module") ||
+        msg.includes("Failed to load module script")
+      ) {
+        const lastReload = sessionStorage.getItem("chunk_reload_ts");
+        const now = Date.now();
+        if (!lastReload || now - parseInt(lastReload, 10) > 10000) {
+          sessionStorage.setItem("chunk_reload_ts", now.toString());
+          window.location.reload();
+        }
+      }
+    };
+    window.addEventListener("error", handleChunkError);
+
     return () => {
+      window.removeEventListener("error", handleChunkError);
       if (batchTimeout) clearTimeout(batchTimeout);
       if (mutationDebounceTimer) clearTimeout(mutationDebounceTimer);
       observer.disconnect();
