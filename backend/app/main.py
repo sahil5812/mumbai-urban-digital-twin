@@ -2,6 +2,7 @@ import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import simulation, graph_routes, citizen_reports, ml_routes, live_data
+from app.routers.graph_routes import routes_router
 from app.services.live_telemetry import live_telemetry_background_loop, force_refresh_telemetry
 
 app = FastAPI(
@@ -21,6 +22,7 @@ app.add_middleware(
 
 app.include_router(simulation.router)
 app.include_router(graph_routes.router)
+app.include_router(routes_router)
 app.include_router(citizen_reports.router)
 app.include_router(ml_routes.router)
 app.include_router(live_data.router)

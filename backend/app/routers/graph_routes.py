@@ -1,10 +1,20 @@
 from fastapi import APIRouter, Query
+from pydantic import BaseModel
+from typing import List, Optional
 from app.models.schemas import CascadingGraphResponse
 from app.models.graph_engine import MumbaiInfrastructureGraph
 from app.models.flood_model import MumbaiFloodModel
 from app.data.mumbai_data_loader import load_master_infrastructure
 
 router = APIRouter(prefix="/api/graph", tags=["Infrastructure Graph & Routing"])
+routes_router = APIRouter(prefix="/api/routes", tags=["Coordinate-Based Routing"])
+
+class SafeRouteRequest(BaseModel):
+    start: List[float]  # [longitude, latitude]
+    destination: List[float]  # [longitude, latitude]
+    rainfall_mm_hr: float = 85.0
+    tide_level_m: float = 3.5
+    siltation_pct: float = 35.0
 
 infra = load_master_infrastructure()
 graph_engine = MumbaiInfrastructureGraph()
@@ -119,4 +129,50 @@ def get_flood_safe_route(
     route_result["destination"] = destination
     return route_result
 
-
+@routes_router.post("/safe")
+def post_coordinate_safe_route(req: SafeRouteRequest):
+    """
+    Coordinate-based flood-safe routing:
+    Accepts [lng, lat] coordinates, snaps to nearest road graph nodes,
+    and computes the Dijkstra flood-safe route with risk-colored segments.
+    """
+    init_graph()
+    
+    # 1. Find nearest graph nodes to the input coordinates
+    origin_node, origin_dist, _ = graph_engine.find_nearest_road_node(req.start[0], req.start[1])
+    dest_node, dest_dist, _ = graph_engine.find_nearest_road_node(req.destination[0], req.destination[1])
+    
+    # 2. Build flood depth map (same logic as existing safe-route endpoint)
+    depth_map = {}
+    for node in infra.get("hotspots", []) + infra.get("roads", []):
+        node_id = str(node.get("id", ""))
+        c_type = node.get("type", "HOTSPOT")
+        elev = float(node.get("elevation_m", 2.5))
+        name = str(node.get("name", ""))
+        hist_depth = float(node.get("historical_avg_depth_cm", 50.0))
+        
+        flood_res = flood_model.calculate_inundation_depth(
+            rainfall_mm_hr=req.rainfall_mm_hr,
+            tide_level_m=req.tide_level_m,
+            elevation_m=elev,
+            siltation_pct=req.siltation_pct,
+            component_type=c_type,
+            name=name,
+            historical_avg_depth=hist_depth
+        )
+        calc_depth = flood_res.get("water_depth_cm", 0.0)
+        depth_map[node_id] = round(calc_depth, 1)
+        
+        # Legacy alias support
+        if "HND" in node_id or "Hindmata" in name:
+            depth_map["WL_HND_01"] = round(calc_depth, 1)
+        elif "MLN" in node_id or "Milan" in name:
+            depth_map["WL_MLN_01"] = round(calc_depth, 1)
+        elif "AND" in node_id or "Andheri" in name:
+            depth_map["WL_AND_01"] = round(calc_depth, 1)
+        elif "KRL" in node_id or "Kurla" in name:
+            depth_map["WL_KRL_01"] = round(calc_depth, 1)
+    
+    # 3. Calculate route with coordinate enrichment
+    result = graph_engine.calculate_safe_route_with_coords(origin_node, dest_node, depth_map)
+    return result

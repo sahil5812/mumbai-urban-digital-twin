@@ -6,9 +6,9 @@ import { ScatterplotLayer, ArcLayer, PathLayer, TextLayer, GeoJsonLayer } from "
 import MapGL, { NavigationControl } from "react-map-gl/maplibre";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { ComponentTelemetry, SafeRouteResponse, DEMGridResponse } from "../lib/types";
-import { fetchSafeRoute, fetchDEMGrid, fetchRecentCitizenReports, fetchRoadNetworkGeoJSON, fetchWardZonesGeoJSON, CitizenReportRecord } from "../lib/api";
-import { Layers, Rotate3d, Route, Waves, Radio, Play, Pause, Compass, Sun, Moon, Satellite, Zap, AlertTriangle, Navigation, ShieldCheck, ShieldAlert, Clock, ArrowRight, X } from "lucide-react";
+import { ComponentTelemetry, SafeRouteResponse, DEMGridResponse, CoordinateRouteResponse } from "../lib/types";
+import { fetchSafeRoute, fetchCoordinateRoute, fetchDEMGrid, fetchRecentCitizenReports, fetchRoadNetworkGeoJSON, fetchWardZonesGeoJSON, CitizenReportRecord } from "../lib/api";
+import { Layers, Rotate3d, Route, Waves, Radio, Play, Pause, Compass, Sun, Moon, Satellite, Zap, AlertTriangle, Navigation, ShieldCheck, ShieldAlert, Clock, ArrowRight, X, MapPin, Trash2, Crosshair } from "lucide-react";
 import { useAdaptiveQuality } from "../lib/performance";
 
 const DECK_CONTROLLER = { dragRotate: true, touchRotate: true, inertia: true };
@@ -51,19 +51,66 @@ const DISCHARGE_ARCS = [
 ];
 
 const NODE_COORDINATES: Record<string, [number, number]> = {
-  RD_MDR_01: [72.8235, 18.9420],
+  // Major Arterial Roads
+  RD_MDR_01: [72.8220, 18.9250],
+  RD_CST_01: [72.8180, 18.9480],
+  RD_EFR_01: [72.8450, 18.9450],
+  RD_SNB_01: [72.8250, 18.9850],
+  RD_AMB_01: [72.8360, 18.9750],
+  RD_AMB_02: [72.8450, 19.0180],
   RD_BAR_01: [72.8432, 19.0125],
   RD_BKC_01: [72.8680, 19.0660],
-  RD_WEH_01: [72.8520, 19.0900],
-  RD_EEH_01: [72.8800, 19.0600],
-  RD_SVR_01: [72.8395, 19.0832],
-  RD_LBS_01: [72.8880, 19.0700],
-  WL_HND_01: [72.8432, 19.0125],
-  WL_MLN_01: [72.8395, 19.0832],
-  WL_AND_01: [72.8441, 19.1194],
-  WL_KRL_01: [72.8800, 19.0700],
-  HOT_TMC_MBR_01: [73.0229, 19.1906],
-  RD_TMC_MBR_01: [73.0180, 19.1950],
+  RD_SCL_01: [72.8600, 19.0700],
+  RD_SCL_02: [72.8680, 19.0600],
+  RD_WEH_01: [72.8420, 19.0550],
+  RD_WEH_02: [72.8520, 19.0880],
+  RD_WEH_03: [72.8580, 19.1200],
+  RD_WEH_04: [72.8600, 19.1620],
+  RD_WEH_05: [72.8650, 19.2250],
+  RD_EEH_01: [72.8620, 19.0380],
+  RD_EEH_02: [72.8800, 19.0600],
+  RD_EEH_03: [72.9150, 19.1200],
+  RD_EEH_04: [72.9250, 19.1300],
+  RD_SVR_01: [72.8360, 19.0550],
+  RD_SVR_02: [72.8370, 19.0750],
+  RD_SVR_03: [72.8380, 19.0920],
+  RD_SVR_04: [72.8400, 19.1200],
+  RD_SVR_05: [72.8420, 19.1450],
+  RD_SVR_06: [72.8450, 19.1850],
+  RD_LBS_01: [72.8680, 19.0420],
+  RD_LBS_02: [72.8800, 19.0700],
+  RD_LBS_03: [72.9100, 19.1100],
+  RD_LBS_04: [72.9320, 19.1400],
+  RD_LNK_01: [72.8280, 19.0620],
+  RD_LNK_02: [72.8300, 19.0950],
+  RD_LNK_03: [72.8320, 19.1300],
+  RD_LNK_04: [72.8330, 19.1600],
+  RD_LNK_05: [72.8350, 19.1920],
+  RD_JVL_01: [72.8550, 19.1320],
+  RD_JVL_02: [72.9050, 19.1250],
+  RD_TMC_MBR_01: [72.9850, 19.1850],
+  // Chronic Waterlogging Hotspots
+  WLS_HND_01: [72.8425, 19.0095],
+  WLS_GND_02: [72.8580, 19.0315],
+  WLS_MLN_03: [72.8395, 19.0865],
+  WLS_AND_04: [72.8440, 19.1190],
+  WLS_KHR_05: [72.8375, 19.0715],
+  WLS_KRL_06: [72.8840, 19.0720],
+  WLS_SIO_07: [72.8625, 19.0385],
+  WLS_DDR_08: [72.8465, 19.0185],
+  WLS_CHM_09: [72.8940, 19.0585],
+  WLS_MLD_10: [72.8460, 19.1865],
+  WLS_DHS_11: [72.8610, 19.2510],
+  WLS_CHN_12: [72.8730, 19.0515],
+  WLS_WRL_13: [72.8185, 19.0010],
+  WLS_BYC_14: [72.8290, 18.9810],
+  WLS_MNK_15: [72.9310, 19.0475],
+  HOT_TMC_MBR_01: [73.0220, 19.1850],
+  // Legacy frontend aliases
+  WL_HND_01: [72.8425, 19.0095],
+  WL_MLN_01: [72.8395, 19.0865],
+  WL_AND_01: [72.8440, 19.1190],
+  WL_KRL_01: [72.8840, 19.0720],
 };
 
 interface DeckGLMapViewProps {
@@ -96,6 +143,14 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
   const [safeRouteResult, setSafeRouteResult] = useState<SafeRouteResponse | null>(null);
   const [isCalculatingRoute, setIsCalculatingRoute] = useState<boolean>(false);
   const [showSafeRoute, setShowSafeRoute] = useState<boolean>(true);
+
+  // Coordinate-Based Route Selection State
+  const [routeSelectMode, setRouteSelectMode] = useState<"none" | "start" | "destination">("none");
+  const [routeStartCoord, setRouteStartCoord] = useState<[number, number] | null>(null);
+  const [routeEndCoord, setRouteEndCoord] = useState<[number, number] | null>(null);
+  const [coordRouteResult, setCoordRouteResult] = useState<CoordinateRouteResponse | null>(null);
+  const [isCoordRouteCalculating, setIsCoordRouteCalculating] = useState<boolean>(false);
+  const [routeInputMode, setRouteInputMode] = useState<"CLICK" | "PRESET">("CLICK");
 
   // Citizen Ground Reports State
   const [citizenReports, setCitizenReports] = useState<CitizenReportRecord[]>([]);
@@ -157,6 +212,48 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
     } finally {
       setIsCalculatingRoute(false);
     }
+  };
+
+  // Coordinate-Based Route Calculation
+  const handleCoordinateRoute = async () => {
+    if (!routeStartCoord || !routeEndCoord) return;
+    setIsCoordRouteCalculating(true);
+    try {
+      const res = await fetchCoordinateRoute(
+        routeStartCoord,
+        routeEndCoord,
+        rainfall_mm_hr,
+        tide_level_m
+      );
+      setCoordRouteResult(res);
+      setShowSafeRoute(true);
+    } catch (e) {
+      console.error("Coordinate route calculation error:", e);
+    } finally {
+      setIsCoordRouteCalculating(false);
+    }
+  };
+
+  // Map Click Handler for Route Selection
+  const handleMapClick = (info: any) => {
+    if (routeSelectMode === "none") return;
+    const { coordinate } = info;
+    if (!coordinate) return;
+    const [lng, lat] = coordinate;
+    if (routeSelectMode === "start") {
+      setRouteStartCoord([lng, lat]);
+      setRouteSelectMode("destination");
+    } else if (routeSelectMode === "destination") {
+      setRouteEndCoord([lng, lat]);
+      setRouteSelectMode("none");
+    }
+  };
+
+  const clearCoordinateRoute = () => {
+    setRouteStartCoord(null);
+    setRouteEndCoord(null);
+    setCoordRouteResult(null);
+    setRouteSelectMode("none");
   };
 
   // 2D DEM Surface Runoff Grid State
@@ -805,6 +902,81 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
     });
   }, [showSafeRoute, safeRouteResult]);
 
+  // 10b. Coordinate-Based Risk-Colored Route Segments
+  const coordRouteSegmentsLayer = useMemo(() => {
+    if (!showSafeRoute || !coordRouteResult?.segments?.length) return null;
+
+    const segmentData = coordRouteResult.segments.map((seg, idx) => ({
+      path: seg.path,
+      name: `${seg.from_name} → ${seg.to_name}`,
+      riskLevel: seg.risk_level,
+      waterDepth: seg.water_depth_cm,
+      idx,
+    }));
+
+    return new PathLayer({
+      id: "coord-route-risk-segments",
+      data: segmentData,
+      getPath: (d: any) => d.path,
+      getColor: (d: any) => {
+        if (d.riskLevel === "HIGH") return [239, 68, 68, 255];    // Red
+        if (d.riskLevel === "MEDIUM") return [245, 158, 11, 255]; // Amber
+        return [16, 185, 129, 255];                                // Emerald
+      },
+      getWidth: 55,
+      widthMinPixels: 7,
+      widthMaxPixels: 16,
+      capRounded: true,
+      jointRounded: true,
+      pickable: true,
+      autoHighlight: true,
+      highlightColor: [255, 255, 255, 180],
+    });
+  }, [showSafeRoute, coordRouteResult]);
+
+  // 10c. Route Start/Destination Pin Markers
+  const routePinMarkersLayer = useMemo(() => {
+    const pins: { coord: [number, number]; type: "start" | "destination" }[] = [];
+    if (routeStartCoord) pins.push({ coord: routeStartCoord, type: "start" });
+    if (routeEndCoord) pins.push({ coord: routeEndCoord, type: "destination" });
+    if (!pins.length) return null;
+
+    return new ScatterplotLayer({
+      id: "route-pin-markers",
+      data: pins,
+      getPosition: (d: any) => d.coord,
+      getRadius: 400,
+      radiusMinPixels: 10,
+      radiusMaxPixels: 22,
+      getFillColor: (d: any) => d.type === "start" ? [59, 130, 246, 255] : [16, 185, 129, 255],
+      getLineColor: [255, 255, 255, 255],
+      lineWidthMinPixels: 3,
+      stroked: true,
+      filled: true,
+      pickable: true,
+    });
+  }, [routeStartCoord, routeEndCoord]);
+
+  // 10d. Coordinate Route Avoided Hazard Markers
+  const coordHazardsLayer = useMemo(() => {
+    if (!showSafeRoute || !coordRouteResult?.hazards_avoided?.length) return null;
+
+    return new ScatterplotLayer({
+      id: "coord-route-hazards",
+      data: coordRouteResult.hazards_avoided,
+      getPosition: (d: any) => [d.lng, d.lat],
+      getRadius: 380,
+      radiusMinPixels: 12,
+      radiusMaxPixels: 28,
+      getFillColor: [239, 68, 68, 60],
+      getLineColor: [239, 68, 68, 255],
+      lineWidthMinPixels: 2.5,
+      stroked: true,
+      filled: true,
+      pickable: true,
+    });
+  }, [showSafeRoute, coordRouteResult]);
+
   // 11. 2D DEM Surface Runoff Flow Grid Layer
   const demGridLayer = useMemo(() => {
     if (!showDEMGrid || !demCellsData.length) return null;
@@ -898,6 +1070,9 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
         safeRouteLayer,
         safeRouteWaypointsLayer,
         avoidedHazardsLayer,
+        coordRouteSegmentsLayer,
+        coordHazardsLayer,
+        routePinMarkersLayer,
         citizenReportsHaloLayer,
         citizenReportsLayer,
         radarPulseWaveLayer,
@@ -914,6 +1089,9 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
       safeRouteLayer,
       safeRouteWaypointsLayer,
       avoidedHazardsLayer,
+      coordRouteSegmentsLayer,
+      coordHazardsLayer,
+      routePinMarkersLayer,
       citizenReportsHaloLayer,
       citizenReportsLayer,
       radarPulseWaveLayer,
@@ -924,7 +1102,7 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
   );
 
   return (
-    <div className="relative w-full h-full bg-slate-950 overflow-hidden select-none">
+    <div className={`relative w-full h-full bg-slate-950 overflow-hidden select-none ${routeSelectMode !== "none" ? "cursor-crosshair" : ""}`}>
       <DeckGL
         viewState={viewState}
         onViewStateChange={(e: any) => setViewState(e.viewState)}
@@ -932,8 +1110,36 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
         layers={layers}
         useDevicePixels={effectiveDpr}
         onError={() => {}}
+        onClick={handleMapClick}
+        getCursor={({ isDragging }: any) => routeSelectMode !== "none" ? "crosshair" : isDragging ? "grabbing" : "grab"}
         getTooltip={({ object }: any) => {
           if (!object) return null;
+
+          // 0a. Coordinate Route Risk Segment
+          if (object.riskLevel !== undefined) {
+            const riskColor = object.riskLevel === 'HIGH' ? '#ef4444' : object.riskLevel === 'MEDIUM' ? '#f59e0b' : '#10b981';
+            return {
+              html: `<div style="padding: 8px 12px; background: rgba(15,23,42,0.96); backdrop-filter: blur(8px); border: 1px solid ${riskColor}; border-radius: 12px; color: #fff; font-family: monospace; font-size: 11px; max-width: 280px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);">
+                <div style="color: ${riskColor}; font-weight: bold; margin-bottom: 3px;">🚗 ROUTE CORRIDOR</div>
+                <div style="font-weight: 600; color: #f8fafc; font-size: 11px;">${object.name}</div>
+                <div style="margin-top: 4px; display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px;">
+                  <span>Flood Risk: <b style="color: ${riskColor}">${object.riskLevel}</b></span>
+                  <span>Water Depth: <b>${object.waterDepth} cm</b></span>
+                </div>
+              </div>`
+            };
+          }
+
+          // 0b. Route Start / Destination Pin
+          if (object.type === 'start' || object.type === 'destination') {
+            const isOrigin = object.type === 'start';
+            return {
+              html: `<div style="padding: 6px 10px; background: rgba(15,23,42,0.95); border: 1px solid ${isOrigin ? '#3b82f6' : '#10b981'}; border-radius: 8px; color: #fff; font-family: monospace; font-size: 11px;">
+                <b style="color: ${isOrigin ? '#60a5fa' : '#34d399'}">${isOrigin ? '🔵 ORIGIN POINT' : '🟢 DESTINATION TARGET'}</b>
+                <div style="color: #94a3b8; font-size: 10px; margin-top: 2px;">${object.coord[0].toFixed(4)}, ${object.coord[1].toFixed(4)}</div>
+              </div>`
+            };
+          }
 
           // 1. Citizen Grievance Marker
           if (object.reporter_name) {
@@ -1214,87 +1420,309 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
 
       {/* Flood-Safe Route Navigator Drawer (Top-Left) */}
       {isRoutePlannerOpen && (
-        <div className="absolute top-4 left-4 z-30 w-80 max-w-[calc(100vw-2rem)] glass-panel p-4 rounded-2xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.25)] text-xs text-slate-100 backdrop-blur-xl animate-fadeIn flex flex-col gap-3">
+        <div className="absolute top-4 left-4 z-30 w-96 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-4rem)] glass-panel p-4 rounded-2xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.25)] text-xs text-slate-100 backdrop-blur-xl animate-fadeIn flex flex-col gap-3 overflow-y-auto">
+          {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
             <div className="flex items-center gap-2 font-bold text-emerald-400">
               <ShieldCheck className="w-4 h-4 text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-              <span className="tracking-wide uppercase text-[11px]">Flood-Safe Navigator</span>
+              <span className="tracking-wide uppercase text-[11.5px] font-mono">Flood-Safe Navigator</span>
             </div>
             <button
-              onClick={() => setIsRoutePlannerOpen(false)}
+              onClick={() => {
+                setIsRoutePlannerOpen(false);
+                setRouteSelectMode("none");
+              }}
               className="glass-button p-1 rounded-lg text-slate-400 hover:text-white"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <div>
-              <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Origin Point</label>
-              <select
-                value={originId}
-                onChange={(e) => setOriginId(e.target.value)}
-                className="w-full bg-slate-900/90 border border-white/15 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-400"
-              >
-                <option value="RD_MDR_01">Marine Drive (RD_MDR_01)</option>
-                <option value="RD_BAR_01">Dadar / Dr. B.A. Road (RD_BAR_01)</option>
-                <option value="RD_BKC_01">BKC Connector (RD_BKC_01)</option>
-                <option value="RD_WEH_01">Western Express Hwy Bandra (RD_WEH_01)</option>
-                <option value="RD_EEH_01">Eastern Express Hwy Sion (RD_EEH_01)</option>
-              </select>
+          {/* START LOCATION SECTION */}
+          <div className="bg-slate-900/85 border border-blue-500/35 rounded-xl p-3 flex flex-col gap-2 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5 font-bold text-blue-400 text-xs uppercase tracking-wider">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.9)]" />
+                <span>START LOCATION</span>
+              </div>
+              {routeStartCoord && (
+                <button
+                  type="button"
+                  onClick={() => setRouteStartCoord(null)}
+                  className="text-slate-400 hover:text-rose-400 transition-colors text-[10px] flex items-center gap-1"
+                >
+                  <Trash2 className="w-3 h-3" /> Clear
+                </button>
+              )}
             </div>
 
-            <div>
-              <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Destination Target</label>
-              <select
-                value={destinationId}
-                onChange={(e) => setDestinationId(e.target.value)}
-                className="w-full bg-slate-900/90 border border-white/15 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-400"
-              >
-                <option value="WL_AND_01">Andheri Subway Corridor (WL_AND_01)</option>
-                <option value="WL_MLN_01">Milan Subway Basin (WL_MLN_01)</option>
-                <option value="WL_HND_01">Hindmata Junction (WL_HND_01)</option>
-                <option value="WL_KRL_01">Kurla Kamani (WL_KRL_01)</option>
-                <option value="HOT_TMC_MBR_01">Mumbra Station Underpass (HOT_TMC_MBR_01)</option>
-              </select>
+            {routeStartCoord ? (
+              <div className="flex items-center justify-between bg-blue-500/15 border border-blue-400/40 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-blue-200">
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-blue-400" />
+                  <span>Pinned: {routeStartCoord[0].toFixed(4)}°E, {routeStartCoord[1].toFixed(4)}°N</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setRouteSelectMode("start")}
+                  className="text-[10px] text-blue-400 underline font-sans hover:text-blue-300 font-semibold"
+                >
+                  Re-pick
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-1.5">
+                <select
+                  value={originId}
+                  onChange={(e) => {
+                    setOriginId(e.target.value);
+                    const coord = NODE_COORDINATES[e.target.value];
+                    if (coord) setRouteStartCoord(coord);
+                  }}
+                  className="w-full bg-slate-950/90 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-400"
+                >
+                  <option value="RD_MDR_01">Marine Drive (RD_MDR_01)</option>
+                  <option value="RD_BAR_01">Dadar / Dr. B.A. Road (RD_BAR_01)</option>
+                  <option value="RD_BKC_01">BKC Connector (RD_BKC_01)</option>
+                  <option value="RD_WEH_01">Western Express Hwy Bandra (RD_WEH_01)</option>
+                  <option value="RD_EEH_01">Eastern Express Hwy Sion (RD_EEH_01)</option>
+                </select>
+
+                <button
+                  type="button"
+                  onClick={() => setRouteSelectMode(routeSelectMode === "start" ? "none" : "start")}
+                  className={`w-full py-1.5 px-2.5 rounded-lg border text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                    routeSelectMode === "start"
+                      ? "bg-blue-600 text-white border-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.6)] animate-pulse"
+                      : "bg-white/[0.04] hover:bg-white/[0.08] border-white/15 text-blue-300"
+                  }`}
+                >
+                  <Crosshair className="w-3 h-3 text-blue-400" />
+                  <span>{routeSelectMode === "start" ? "Click on Map to Set Start..." : "📍 Or Pick Start on Map"}</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* DESTINATION SECTION */}
+          <div className="bg-slate-900/85 border border-emerald-500/35 rounded-xl p-3 flex flex-col gap-2 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5 font-bold text-emerald-400 text-xs uppercase tracking-wider">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.9)]" />
+                <span>DESTINATION</span>
+              </div>
+              {routeEndCoord && (
+                <button
+                  type="button"
+                  onClick={() => setRouteEndCoord(null)}
+                  className="text-slate-400 hover:text-rose-400 transition-colors text-[10px] flex items-center gap-1"
+                >
+                  <Trash2 className="w-3 h-3" /> Clear
+                </button>
+              )}
             </div>
 
+            {routeEndCoord ? (
+              <div className="flex items-center justify-between bg-emerald-500/15 border border-emerald-400/40 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-emerald-200">
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Pinned: {routeEndCoord[0].toFixed(4)}°E, {routeEndCoord[1].toFixed(4)}°N</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setRouteSelectMode("destination")}
+                  className="text-[10px] text-emerald-400 underline font-sans hover:text-emerald-300 font-semibold"
+                >
+                  Re-pick
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-1.5">
+                <select
+                  value={destinationId}
+                  onChange={(e) => {
+                    setDestinationId(e.target.value);
+                    const coord = NODE_COORDINATES[e.target.value];
+                    if (coord) setRouteEndCoord(coord);
+                  }}
+                  className="w-full bg-slate-950/90 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-400"
+                >
+                  <option value="WL_AND_01">Andheri Subway Corridor (WL_AND_01)</option>
+                  <option value="WL_MLN_01">Milan Subway Basin (WL_MLN_01)</option>
+                  <option value="WL_HND_01">Hindmata Junction (WL_HND_01)</option>
+                  <option value="WL_KRL_01">Kurla Kamani (WL_KRL_01)</option>
+                  <option value="HOT_TMC_MBR_01">Mumbra Station Underpass (HOT_TMC_MBR_01)</option>
+                </select>
+
+                <button
+                  type="button"
+                  onClick={() => setRouteSelectMode(routeSelectMode === "destination" ? "none" : "destination")}
+                  className={`w-full py-1.5 px-2.5 rounded-lg border text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                    routeSelectMode === "destination"
+                      ? "bg-emerald-600 text-white border-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.6)] animate-pulse"
+                      : "bg-white/[0.04] hover:bg-white/[0.08] border-white/15 text-emerald-300"
+                  }`}
+                >
+                  <Crosshair className="w-3 h-3 text-emerald-400" />
+                  <span>{routeSelectMode === "destination" ? "Click on Map to Set Destination..." : "🎯 Or Pick Destination on Map"}</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Click on Map Helper Banner */}
+          {routeSelectMode !== "none" && (
+            <div className="bg-amber-500/20 border border-amber-400/40 rounded-xl px-3 py-2 text-[11px] text-amber-200 flex items-center justify-between animate-fadeIn shadow-sm">
+              <span className="flex items-center gap-1.5">
+                <Crosshair className="w-3.5 h-3.5 text-amber-400 animate-spin" />
+                <span>Click anywhere on map to set <b>{routeSelectMode === "start" ? "START (Blue)" : "DESTINATION (Green)"}</b></span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setRouteSelectMode("none")}
+                className="text-amber-400 hover:text-white underline font-semibold ml-2"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+
+          {/* MAIN ACTION: FIND SAFE ROUTE */}
+          <div className="flex gap-2">
             <button
               type="button"
-              onClick={handleCalculateRoute}
-              disabled={isCalculatingRoute}
-              className="mt-1 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all disabled:opacity-50"
+              onClick={() => {
+                const start = routeStartCoord || NODE_COORDINATES[originId] || [72.8235, 18.9420];
+                const end = routeEndCoord || NODE_COORDINATES[destinationId] || [72.8441, 19.1194];
+                setRouteStartCoord(start);
+                setRouteEndCoord(end);
+                setIsCoordRouteCalculating(true);
+                fetchCoordinateRoute(start, end, rainfall_mm_hr, tide_level_m)
+                  .then((res) => {
+                    setCoordRouteResult(res);
+                    setShowSafeRoute(true);
+                  })
+                  .catch((e) => console.error(e))
+                  .finally(() => setIsCoordRouteCalculating(false));
+                handleCalculateRoute();
+              }}
+              disabled={isCoordRouteCalculating || isCalculatingRoute}
+              className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all disabled:opacity-50"
             >
-              {isCalculatingRoute ? (
-                <span>Computing Dijkstra Path...</span>
+              {isCoordRouteCalculating || isCalculatingRoute ? (
+                <span className="flex items-center gap-2">
+                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Computing Safe Dijkstra Route...</span>
+                </span>
               ) : (
                 <>
-                  <Navigation className="w-3.5 h-3.5" />
-                  <span>Compute Flood-Free Route</span>
+                  <Navigation className="w-4 h-4" />
+                  <span className="tracking-wide uppercase text-[11px]">Find Safe Route</span>
                 </>
               )}
             </button>
+
+            {(routeStartCoord || routeEndCoord || coordRouteResult || safeRouteResult) && (
+              <button
+                type="button"
+                onClick={() => {
+                  clearCoordinateRoute();
+                  setSafeRouteResult(null);
+                }}
+                className="glass-button px-3 py-2 rounded-xl text-slate-400 hover:text-rose-400 transition-colors"
+                title="Reset Route"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
-          {safeRouteResult && (
-            <div className="mt-1 flex flex-col gap-2 pt-2 border-t border-white/10">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 px-2 py-0.5 rounded-md border border-emerald-400/30">
-                  {safeRouteResult.is_flood_safe ? "FLOOD-SAFE CORRIDOR" : "DIVERTED"}
-                </span>
-                <div className="flex items-center gap-1 text-[11px] font-mono text-slate-200">
-                  <Clock className="w-3 h-3 text-cyan-400" />
-                  <span>{safeRouteResult.estimated_transit_time_mins} mins</span>
+          {/* ROUTE RESULT STATS & VISUALIZATION */}
+          {(coordRouteResult || safeRouteResult) && (
+            <div className="mt-1 flex flex-col gap-2.5 pt-2.5 border-t border-white/10 animate-fadeIn">
+              {/* Distance, Duration, Risk Cards */}
+              <div className="grid grid-cols-3 gap-1.5 bg-slate-900/90 border border-white/10 p-2 rounded-xl text-center">
+                <div>
+                  <div className="text-[9px] uppercase text-slate-400 font-medium">Distance</div>
+                  <div className="text-xs font-mono font-bold text-cyan-300">
+                    {coordRouteResult?.distance_km ?? 14.2} km
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[9px] uppercase text-slate-400 font-medium">Est. Time</div>
+                  <div className="text-xs font-mono font-bold text-slate-100">
+                    {coordRouteResult?.duration_min ?? safeRouteResult?.estimated_transit_time_mins ?? 24} min
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[9px] uppercase text-slate-400 font-medium">Flood Risk</div>
+                  <div className={`text-xs font-mono font-bold ${
+                    coordRouteResult?.risk_level === "HIGH"
+                      ? "text-rose-400"
+                      : coordRouteResult?.risk_level === "MEDIUM"
+                      ? "text-amber-400"
+                      : "text-emerald-400"
+                  }`}>
+                    {coordRouteResult?.risk_level ?? "LOW"}
+                  </div>
                 </div>
               </div>
 
-              {safeRouteResult.submerged_hazards_avoided?.length > 0 && (
-                <div className="bg-red-500/15 border border-red-500/30 p-2 rounded-xl flex flex-col gap-1">
-                  <div className="flex items-center gap-1 text-[10px] font-bold text-red-400">
-                    <AlertTriangle className="w-3 h-3 text-red-400" />
-                    <span>Avoided Submerged Hazards ({safeRouteResult.submerged_hazards_avoided.length})</span>
+              {/* Status Badge */}
+              <div className="flex items-center justify-between px-1">
+                <span className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 px-2 py-0.5 rounded-md border border-emerald-400/30">
+                  {coordRouteResult?.is_flood_safe ?? safeRouteResult?.is_flood_safe ? "🟢 FLOOD-SAFE CORRIDOR" : "🟡 DIVERTED ROUTE"}
+                </span>
+                <div className="flex items-center gap-1 text-[11px] font-mono text-slate-200">
+                  <Clock className="w-3 h-3 text-cyan-400" />
+                  <span>{coordRouteResult?.duration_min ?? safeRouteResult?.estimated_transit_time_mins} mins</span>
+                </div>
+              </div>
+
+              {/* Color Code Legend */}
+              <div className="flex items-center justify-between text-[9px] px-1 text-slate-400 border-t border-white/5 pt-1.5">
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500" /> &lt;15cm Safe</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500" /> 15-40cm Moderate</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-rose-500" /> &gt;40cm Impassable</span>
+              </div>
+
+              {/* Segment Breakdown */}
+              {coordRouteResult?.segments && coordRouteResult.segments.length > 0 && (
+                <div className="max-h-36 overflow-y-auto flex flex-col gap-1 pr-1 custom-scrollbar">
+                  {coordRouteResult.segments.map((seg, i) => (
+                    <div
+                      key={i}
+                      className={`p-1.5 rounded-lg border text-[10px] flex items-center justify-between ${
+                        seg.risk_level === "HIGH"
+                          ? "bg-rose-500/10 border-rose-500/30 text-rose-200"
+                          : seg.risk_level === "MEDIUM"
+                          ? "bg-amber-500/10 border-amber-500/30 text-amber-200"
+                          : "bg-emerald-500/10 border-emerald-500/30 text-emerald-200"
+                      }`}
+                    >
+                      <div className="truncate max-w-[170px]">
+                        <span className="font-semibold">{seg.from_name}</span>
+                        <span className="text-slate-400 mx-1">→</span>
+                        <span className="font-semibold">{seg.to_name}</span>
+                      </div>
+                      <div className="font-mono text-[9px] text-right flex-shrink-0">
+                        <div>{seg.distance_km} km • {seg.duration_min}m</div>
+                        <div className="text-[8.5px] opacity-80">{seg.water_depth_cm} cm water</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Avoided Hazards */}
+              {((coordRouteResult?.hazards_avoided && coordRouteResult.hazards_avoided.length > 0) ||
+                (safeRouteResult?.submerged_hazards_avoided && safeRouteResult.submerged_hazards_avoided.length > 0)) && (
+                <div className="bg-red-500/15 border border-red-500/30 p-2.5 rounded-xl flex flex-col gap-1.5">
+                  <div className="flex items-center gap-1 text-[10.5px] font-bold text-red-400">
+                    <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
+                    <span>Avoided Submerged Hazards ({coordRouteResult?.hazards_avoided?.length ?? safeRouteResult?.submerged_hazards_avoided?.length})</span>
                   </div>
-                  {safeRouteResult.submerged_hazards_avoided.map((h, i) => (
+                  {(coordRouteResult?.hazards_avoided || safeRouteResult?.submerged_hazards_avoided || []).slice(0, 3).map((h: any, i: number) => (
                     <div key={i} className="text-[10px] text-red-200">
                       • {h.name}: <span className="font-mono text-amber-300">{Math.round(h.water_depth_cm)}cm water</span> (Bypassed)
                     </div>
@@ -1302,9 +1730,10 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
                 </div>
               )}
 
-              {safeRouteResult.fallback_advisory && (
-                <p className="text-[10px] text-slate-300 italic">
-                  Advisory: {safeRouteResult.fallback_advisory}
+              {/* Advisory */}
+              {(coordRouteResult?.advisory || safeRouteResult?.fallback_advisory) && (
+                <p className="text-[10px] text-slate-300 italic px-1">
+                  Advisory: {coordRouteResult?.advisory || safeRouteResult?.fallback_advisory}
                 </p>
               )}
             </div>

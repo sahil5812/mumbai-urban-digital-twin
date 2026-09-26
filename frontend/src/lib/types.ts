@@ -187,4 +187,39 @@ export interface DEMGridResponse {
   grid_resolution_km: number;
 }
 
+export interface CoordinateRouteSegment {
+  path: [number, number][];
+  from_node: string;
+  to_node: string;
+  from_name: string;
+  to_name: string;
+  distance_km: number;
+  duration_min: number;
+  water_depth_cm: number;
+  risk: number;
+  risk_level: "LOW" | "MEDIUM" | "HIGH";
+  segment_status: "FLOOD_FREE" | "SLOW" | "SUBMERGED";
+}
 
+export interface CoordinateRouteHazard {
+  node_id: string;
+  name: string;
+  water_depth_cm: number;
+  lat: number;
+  lng: number;
+}
+
+export interface CoordinateRouteResponse {
+  distance_km: number;
+  duration_min: number;
+  risk_score: number;
+  risk_level: "LOW" | "MEDIUM" | "HIGH";
+  origin_node: string;
+  destination_node: string;
+  origin_name: string;
+  destination_name: string;
+  is_flood_safe: boolean;
+  segments: CoordinateRouteSegment[];
+  hazards_avoided: CoordinateRouteHazard[];
+  advisory: string;
+}

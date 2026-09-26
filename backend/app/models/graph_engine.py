@@ -5,6 +5,14 @@ and computes flood-safe emergency alternative routes.
 """
 
 import networkx as nx
+import math
+
+def _haversine_km(lon1, lat1, lon2, lat2):
+    R = 6371.0
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
+    return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
 
 class MumbaiInfrastructureGraph:
     def __init__(self):
@@ -164,6 +172,116 @@ class MumbaiInfrastructureGraph:
                 "error": str(e),
                 "fallback_advisory": "Take Western Express Highway Elevated Corridor."
             }
+
+    def find_nearest_road_node(self, lng, lat):
+        min_dist = float('inf')
+        nearest_node = None
+        node_data = None
+        for n, d in self.road_graph.nodes(data=True):
+            n_lat = d.get("lat")
+            n_lon = d.get("lon")
+            if n_lat is not None and n_lon is not None:
+                dist = _haversine_km(lng, lat, n_lon, n_lat)
+                if dist < min_dist:
+                    min_dist = dist
+                    nearest_node = n
+                    node_data = d
+        return nearest_node, min_dist, node_data
+
+    def calculate_safe_route_with_coords(self, origin_id, destination_id, water_depth_map=None):
+        base_result = self.calculate_safe_route(origin_id, destination_id, water_depth_map)
+        
+        if base_result.get("error"):
+            return {
+                "distance_km": 0.0,
+                "duration_min": 0.0,
+                "risk_score": 0.0,
+                "risk_level": "LOW",
+                "origin_node": origin_id,
+                "destination_node": destination_id,
+                "origin_name": self.road_graph.nodes[origin_id].get("label", origin_id) if origin_id in self.road_graph else origin_id,
+                "destination_name": self.road_graph.nodes[destination_id].get("label", destination_id) if destination_id in self.road_graph else destination_id,
+                "is_flood_safe": False,
+                "segments": [],
+                "hazards_avoided": [],
+                "advisory": base_result.get("fallback_advisory", "")
+            }
+
+        total_distance = 0.0
+        enriched_segments = []
+        path = base_result.get("recommended_path", [])
+        
+        for i in range(len(path) - 1):
+            u = path[i]
+            v = path[i+1]
+            u_data = self.road_graph.nodes[u]
+            v_data = self.road_graph.nodes[v]
+            
+            u_lng, u_lat = u_data.get("lon", 0), u_data.get("lat", 0)
+            v_lng, v_lat = v_data.get("lon", 0), v_data.get("lat", 0)
+            dist = _haversine_km(u_lng, u_lat, v_lng, v_lat)
+            total_distance += dist
+            
+            u_depth = water_depth_map.get(u, u_data.get("water_depth", 0.0)) if water_depth_map else u_data.get("water_depth", 0.0)
+            v_depth = water_depth_map.get(v, v_data.get("water_depth", 0.0)) if water_depth_map else v_data.get("water_depth", 0.0)
+            max_depth = max(u_depth, v_depth)
+            
+            risk = min(max_depth / 50.0, 1.0)
+            if max_depth < 15:
+                risk_level = "LOW"
+            elif max_depth < 40:
+                risk_level = "MEDIUM"
+            else:
+                risk_level = "HIGH"
+                
+            edge_data = self.road_graph.get_edge_data(u, v, {})
+            duration_min = edge_data.get("base_time_mins", 12.0)
+            
+            enriched_segments.append({
+                "path": [[u_lng, u_lat], [v_lng, v_lat]],
+                "from_node": u,
+                "to_node": v,
+                "from_name": u_data.get("label", u),
+                "to_name": v_data.get("label", v),
+                "distance_km": round(dist, 3),
+                "duration_min": duration_min,
+                "water_depth_cm": round(max_depth, 1),
+                "risk": round(risk, 2),
+                "risk_level": risk_level,
+                "segment_status": "FLOOD_FREE" if max_depth < 15 else ("SLOW" if max_depth < 40 else "SUBMERGED")
+            })
+            
+        avg_risk = sum(s["risk"] for s in enriched_segments) / len(enriched_segments) if enriched_segments else 0.0
+        if avg_risk < 0.3:
+            overall_risk_level = "LOW"
+        elif avg_risk < 0.8:
+            overall_risk_level = "MEDIUM"
+        else:
+            overall_risk_level = "HIGH"
+            
+        enriched_hazards = []
+        for h in base_result.get("submerged_hazards_avoided", []):
+            nid = h.get("node_id")
+            if nid in self.road_graph:
+                ndata = self.road_graph.nodes[nid]
+                h["lat"] = ndata.get("lat")
+                h["lng"] = ndata.get("lon")
+            enriched_hazards.append(h)
+            
+        return {
+            "distance_km": round(total_distance, 3),
+            "duration_min": base_result.get("estimated_transit_time_mins", 0.0),
+            "risk_score": round(avg_risk, 2),
+            "risk_level": overall_risk_level,
+            "origin_node": origin_id,
+            "destination_node": destination_id,
+            "origin_name": self.road_graph.nodes[origin_id].get("label", origin_id) if origin_id in self.road_graph else origin_id,
+            "destination_name": self.road_graph.nodes[destination_id].get("label", destination_id) if destination_id in self.road_graph else destination_id,
+            "is_flood_safe": base_result.get("is_flood_safe", False),
+            "segments": enriched_segments,
+            "hazards_avoided": enriched_hazards,
+            "advisory": base_result.get("fallback_advisory", "")
+        }
 
     def get_graph_dict(self):
         nodes_list = []
