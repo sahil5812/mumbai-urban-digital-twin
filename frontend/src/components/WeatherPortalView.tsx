@@ -177,64 +177,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
           : (rainMm >= 20
             ? "Cloudy with passing rain bands, thunder and gusty afternoon showers"
             : (rainMm > 0
-              ? "Sun breaking through clouds at times with a passing localized shower"
-              : "Partly cloudy with pleasant sea breezes and dry conditions"));
-
-        return {
-          day: dayName,
-          date: dateLabel,
-          icon,
-          hiTemp: Math.round(df.temp_max_c),
-          loTemp: Math.round(df.temp_min_c),
-          rainProb: `${Math.min(95, Math.round(rainMm * 1.5 + 20))}%`,
-          rainMm,
-          summary,
-          realFeel: Math.round(df.temp_max_c + 6),
-          realFeelShade: Math.round(df.temp_max_c + 3),
-          maxUv: "9.0 (Very High)",
-          wind: `W ${Math.round(df.wind_speed_max_kmh)} km/h`,
-          precipHours: rainMm > 20 ? "3.5" : "1.5",
-          rainHours: rainMm > 20 ? "3.5" : "1.5",
-          tidePeak: 3.8,
-          spsStatus: rainMm >= 40 ? "All 9 SPS Armed" : "4 SPS Armed",
-          vulnerability: rainMm >= 40 ? "Subways & lowlines on inundation watch" : "Normal drainage capacity",
-          severity,
-          badgeColor,
-        };
-      });
-    }
-    return STATIC_TEN_DAY_FORECAST;
-  }, [liveTelemetry?.daily_forecast]);
-
-  return (
-    <div className="w-full h-full overflow-y-auto bg-transparent text-slate-100 p-4 sm:p-6 font-sans select-none">
-      <div className="max-w-4xl mx-auto space-y-4 pb-16">
-        
-        {/* CARD 1: TONIGHT'S WEATHER & ALERTS (Frosted Acrylic) */}
-        <div className="glass-panel rounded-3xl p-5 sm:p-6 scroll-reveal">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
-              {t("tonightAlertTitle", "TONIGHT'S WEATHER & HYDROLOGY ALERT")}
-            </span>
-            <span className="text-[11px] font-mono text-cyan-300 bg-cyan-950/40 px-3 py-0.5 rounded-full border border-cyan-400/40 shadow-sm backdrop-blur-md">
-              SUN, SEP 6 • IST
-            </span>
-          </div>
-
-          <div className="space-y-2.5 text-xs sm:text-sm text-slate-200">
-            <div className="flex items-start gap-2.5">
-              <span className="text-base sm:text-lg shrink-0">⛈️</span>
-              <p>
-                <strong className="text-white font-semibold">{t("tonightLabel", "Tonight:")}</strong> Partly cloudy with localized thunderstorm cells developing over Kurla, Hindmata & Thane Mumbra late.&nbsp;
-                <span className="text-cyan-300 font-mono font-bold glass-text-glow">Lo: 26°C</span>
-              </p>
-            </div>
-            <div className="flex items-start gap-2.5">
-              <span className="text-base sm:text-lg shrink-0">🌤️</span>
-              <p>
-                <strong className="text-white font-semibold">{t("tomorrowLabel", "Tomorrow:")}</strong> Sun breaking through clouds at times with stray thunderstorms in the afternoon coinciding with&nbsp;
-                <span className="text-amber-300 font-mono font-bold">14:15 IST High Tide (4.2m)</span>.&nbsp;
-                <span className="text-cyan-300 font-mono font-bold glass-text-glow">Hi: 32°C</span>
+              ? "{language === 'hi' ? 'बादलों के बीच कभी-कभी धूप खिलेगी, दोपहर में 14:15 IST उच्च ज्वार (4.2m) के समय छिटपुट गरज-चमक के साथ बारिश। अधिकतम: 32°C' : language === 'mr' ? 'ढगांमधून अधूनमधून सूर्यप्रकाश, दुपारी 14:15 IST च्या उधाणाच्या भरतीच्या (4.2m) वेळी तुरळक मेघगर्जनेसह पावसाची शक्यता. कमाल: 32°C' : 'Sun breaking through clouds at times with stray thunderstorms in the afternoon coinciding with 14:15 IST High Tide (4.2m). Hi: 32°C'}</span>
               </p>
             </div>
           </div>
@@ -275,7 +218,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                   RealFeel® <span className="text-white font-bold font-mono">{Math.round(tempC + 4)}°</span>
                 </div>
                 <div className="text-xs text-cyan-300 font-semibold mt-1 glass-text-glow">
-                  {rainMmHr > 0 ? `Rain Active (${rainMmHr} mm/h)` : "Monsoon Overcast • Humid"}
+                  {rainMmHr > 0 ? `Rain Active (${rainMmHr} mm/h)` : "{language === 'hi' ? 'मानसून के घने बादल • अत्यधिक उमस' : language === 'mr' ? 'मान्सूनचे दाट ढग • दमट हवामान' : 'Monsoon Overcast • Humid'}"}
                 </div>
               </div>
             </div>
@@ -302,7 +245,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                   {tideM.toFixed(2)} m
                 </div>
                 <div className="text-[10px] text-slate-400">
-                  {tideM >= 4.0 ? "Spring Tide Peak" : "Moderate Surge"}
+                  {tideM >= 4.0 ? "Spring Tide Peak" : "{language === 'hi' ? 'मध्यम उछाल' : language === 'mr' ? 'मध्यम लाटांचा जोर' : 'Moderate Surge'}"}
                 </div>
               </div>
 
@@ -314,7 +257,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                 <div className="text-white font-bold text-sm">
                   {Math.max(5.2, (rainMmHr * 0.45 + 5.2)).toFixed(1)} m³/s
                 </div>
-                <div className="text-[10px] text-slate-400">Mithi & Parsik basins</div>
+                <div className="text-[10px] text-slate-400">{language === 'hi' ? 'मीठी व पारसिक बेसिन' : language === 'mr' ? 'मिठी व पारसिक खोरे' : 'Mithi & Parsik basins'}</div>
               </div>
 
               <div className="glass-panel-subtle p-3.5 rounded-2xl">
@@ -325,7 +268,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                 <div className="text-emerald-300 font-bold text-sm">
                   9 SPS Active
                 </div>
-                <div className="text-[10px] text-slate-400">264 cumecs capacity</div>
+                <div className="text-[10px] text-slate-400">{language === 'hi' ? '264 क्युमेक्स क्षमता' : language === 'mr' ? '264 क्युमेक्स क्षमता' : '264 cumecs capacity'}</div>
               </div>
             </div>
           </div>
@@ -342,7 +285,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                 {t("lookingAheadTitle", "LOOKING AHEAD • HYDROLOGICAL ADVISORY")}
               </span>
               <p className="text-xs text-slate-200 mt-0.5 leading-relaxed">
-                Thunderstorm cells expected late Sunday night with high tide surge coincidence (+4.1m). Lowline subways (Milan, Andheri, Hindmata, Reti Bunder) under automated sensor surveillance.
+                {language === 'hi' ? 'रविवार देर रात उच्च ज्वार (+4.1m) के साथ गरज-चमक वाली बारिश की संभावना। निचले सबवे (मिलन, अंधेरी, हिंदमाता, रेती बंदर) स्वचालित सेंसर निगरानी में हैं।' : language === 'mr' ? 'रविवार रात्री उशिरा उधाणाची भरती (+4.1m) आणि वादळी पावसाची शक्यता. सखल सबवे (मिलन, अंधेरी, हिंदमाता, रेती बंदर) स्वयंचलित सेन्सर देखरेखीखाली आहेत.' : 'Thunderstorm cells expected late Sunday night with high tide surge coincidence (+4.1m). Lowline subways (Milan, Andheri, Hindmata, Reti Bunder) under automated sensor surveillance.'}
               </p>
             </div>
           </div>
