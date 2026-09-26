@@ -293,16 +293,20 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
   }, [isOrbiting]);
 
   const mapStyle = useMemo(() => {
-    let tileUrl = "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png";
+    let tiles = [
+      "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    ];
     let oceanColor = "#e6f2ff";
-    let sourceMaxZoom = 20;
+    let sourceMaxZoom = 19;
 
     if (mapTheme === "DARK") {
-      tileUrl = "https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png";
+      tiles = ["https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"];
       oceanColor = "#0f172a";
-      sourceMaxZoom = 20;
+      sourceMaxZoom = 16;
     } else if (mapTheme === "SATELLITE") {
-      tileUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+      tiles = ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"];
       oceanColor = "#081b2e";
       sourceMaxZoom = 18;
     }
@@ -312,7 +316,7 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
       sources: {
         "world-tiles": {
           type: "raster" as const,
-          tiles: [tileUrl],
+          tiles,
           tileSize: 256,
           maxzoom: sourceMaxZoom,
         },
@@ -1063,7 +1067,7 @@ const DeckGLMapViewComponent: React.FC<DeckGLMapViewProps> = ({
             className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10.5px] font-bold transition-all ${
               mapTheme === "STREET" ? "bg-cyan-600/80 text-white shadow-[0_0_12px_rgba(6,182,212,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] border border-cyan-400/50" : "text-slate-400 hover:text-slate-100"
             }`}
-            title="Daylight Urban Street Map (Esri Street Map)"
+            title="Daylight Urban Street Map (OpenStreetMap)"
           >
             <Sun className="w-3 h-3" />
             <span>Street</span>
