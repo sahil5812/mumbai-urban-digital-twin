@@ -1,5 +1,5 @@
 @import "leaflet/dist/leaflet.css";
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -21,6 +21,10 @@
 body {
   background-color: var(--bg);
   color: var(--foreground);
+  font-family: 'Plus Jakarta Sans', var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.012em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
@@ -29,7 +33,7 @@ body {
   font-family: 'Space Grotesk', sans-serif;
 }
 .font-space-mono {
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', 'Space Mono', monospace;
 }
 
 /* Cinematic Full Ocean View Mode */

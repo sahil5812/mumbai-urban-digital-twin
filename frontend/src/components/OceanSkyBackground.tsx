@@ -655,10 +655,37 @@ const applySceneColor = (s: number) => {
   root.style.setProperty("--scrim", scrimVal);
 };
 
+const getMumbaiTimeRatio = (): number => {
+  try {
+    const now = new Date();
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    const ist = new Date(utc + 3600000 * 5.5);
+    const h = ist.getHours() + ist.getMinutes() / 60;
+
+    // 05:30 - 08:30 -> DAWN (0.0)
+    if (h >= 5.5 && h < 8.5) return 0.0;
+    // 08:30 - 16:45 -> MIDDAY (0.2)
+    if (h >= 8.5 && h < 16.75) return 0.2;
+    // 16:45 - 19:15 -> DUSK (0.4)
+    if (h >= 16.75 && h < 19.25) return 0.4;
+    // 19:15 - 22:30 -> STORM (0.6)
+    if (h >= 19.25 && h < 22.5) return 0.6;
+    // 22:30 - 03:30 -> NIGHT (0.8)
+    if (h >= 22.5 || h < 3.5) return 0.8;
+    // 03:30 - 05:30 -> PRE-DAWN (1.0)
+    return 1.0;
+  } catch {
+    return 0.2;
+  }
+};
+
 export const OceanSkyBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [currentSceneIdx, setCurrentSceneIdx] = useState<number>(0);
+  const initialRatio = getMumbaiTimeRatio();
+  const initialSceneIdx = Math.min(SCENE_NAMES.length - 1, Math.round(initialRatio * (SCENE_NAMES.length - 1)));
+  const [currentSceneIdx, setCurrentSceneIdx] = useState<number>(initialSceneIdx);
   const [isCinematic, setIsCinematic] = useState<boolean>(false);
+  const isCinematicRef = useRef<boolean>(false);
 
   // Direct DOM element refs to eliminate 60 FPS React root re-renders
   const sceneNameRef = useRef<HTMLSpanElement | null>(null);
@@ -668,11 +695,12 @@ export const OceanSkyBackground: React.FC = () => {
   const lastIdxRef = useRef<number>(-1);
   const lastColorSRef = useRef<number>(-1);
 
-  // Smooth interpolation target
-  const targetSmoothRef = useRef<number>(0);
-  const currentSmoothRef = useRef<number>(0);
+  // Smooth interpolation target initialized to real-time Mumbai time (Option A)
+  const targetSmoothRef = useRef<number>(initialRatio);
+  const currentSmoothRef = useRef<number>(initialRatio);
 
   useEffect(() => {
+    isCinematicRef.current = isCinematic;
     if (typeof document !== "undefined") {
       if (isCinematic) {
         document.body.classList.add("cinematic-mode");
@@ -794,9 +822,10 @@ export const OceanSkyBackground: React.FC = () => {
     window.addEventListener("resize", handleResize, { passive: true });
 
     // ── Unified Scroll & Wheel Observers ──────────────────────────────────────
-    // 1. Capture scroll on window, document, and ANY scrollable sub-container (e.g. WeatherPortalView)
+    // 1. Capture scroll on window, document, and ANY scrollable sub-container (Active only in Full Ocean View)
     let cachedScrollEl: HTMLElement | null = null;
     const handleScroll = (e?: Event) => {
+      if (!isCinematicRef.current) return;
       let scrollRatio = -1;
       const target = e?.target as HTMLElement | Document | Window | null;
 
@@ -832,9 +861,9 @@ export const OceanSkyBackground: React.FC = () => {
     // Use capture: true so scroll events from internal div.overflow-y-auto containers are caught!
     window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
 
-    // 2. Wheel Listener: Synchronized atmosphere with content scrolling
+    // 2. Wheel Listener: Active only in Full Ocean View mode (Option A)
     const handleWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || e.metaKey) return;
+      if (e.ctrlKey || e.metaKey || !isCinematicRef.current) return;
 
       const target = e.target as HTMLElement | null;
       // If hovering directly over deck.gl 3D map canvas, let DeckGL handle zooming unless user holds Shift or Alt

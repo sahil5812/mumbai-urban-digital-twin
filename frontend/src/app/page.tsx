@@ -42,8 +42,8 @@ export default function Home() {
   // Sub-Navbar Active Tab State
   const [activeSubNavTab, setActiveSubNavTab] = useState<SubNavTab>("TODAY");
 
-  // Portal View Mode ("PORTAL" for weather dashboard, "MAP" for 3D digital twin map)
-  const [portalViewMode, setPortalViewMode] = useState<"PORTAL" | "MAP">("PORTAL");
+  // Portal View Mode ("MAP" for 3D digital twin map by default, "PORTAL" for weather dashboard)
+  const [portalViewMode, setPortalViewMode] = useState<"PORTAL" | "MAP">("MAP");
 
   // Top Navbar auto-hide on scroll state (active only in Weather Portal mode)
   // In 3D Twin Map mode, Navbar is ALWAYS visible and never hidden
