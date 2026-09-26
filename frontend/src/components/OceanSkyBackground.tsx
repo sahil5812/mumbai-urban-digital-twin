@@ -832,8 +832,7 @@ export const OceanSkyBackground: React.FC = () => {
     // Use capture: true so scroll events from internal div.overflow-y-auto containers are caught!
     window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
 
-    // 2. Wheel Listener: Exact 4-Scroll Sync (0.25 step per scroll = exactly 4 scrolls to complete 100%)
-    let lastWheelTime = 0;
+    // 2. Wheel Listener: Synchronized atmosphere with content scrolling
     const handleWheel = (e: WheelEvent) => {
       if (e.ctrlKey || e.metaKey) return;
 
@@ -865,17 +864,17 @@ export const OceanSkyBackground: React.FC = () => {
         return;
       }
 
-      // 4-SCROLL SYNC: exactly 4 mouse wheel or touchpad scrolls to complete 100% (0.25 per step)
-      const now = performance.now();
-      if (now - lastWheelTime < 160) {
+      // If user scrolls on background/margin while a scrollable view is open, forward scroll to that view
+      const activeContainer = document.querySelector<HTMLElement>(".overflow-y-auto, .overflow-auto");
+      if (activeContainer && activeContainer.scrollHeight > activeContainer.clientHeight + 10) {
+        activeContainer.scrollTop += e.deltaY;
         return;
       }
-      lastWheelTime = now;
 
-      const dir = Math.sign(e.deltaY);
-      if (dir !== 0) {
-        targetSmoothRef.current = Math.max(0.0, Math.min(1.0, targetSmoothRef.current + dir * 0.25));
-      }
+      // Pure background / 3D map mode (no scrollable modal): smooth progressive scroll
+      const delta = e.deltaY;
+      const sensitivity = 0.0006;
+      targetSmoothRef.current = Math.max(0.0, Math.min(1.0, targetSmoothRef.current + delta * sensitivity));
     };
 
     window.addEventListener("wheel", handleWheel, { passive: true });

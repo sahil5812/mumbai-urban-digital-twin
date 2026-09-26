@@ -72,14 +72,12 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
   // Track expanded hour item (default: 8 AM is expanded, matching reference screenshot)
   const [expandedHourId, setExpandedHourId] = useState<string | null>("8 AM");
 
-  const hourlySectionRef = useRef<HTMLDivElement | null>(null);
-  const tenDaySectionRef = useRef<HTMLDivElement | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (activeTab === "HOURLY" && hourlySectionRef.current) {
-      hourlySectionRef.current.scrollIntoView({ behavior: "smooth" });
-    } else if (activeTab === "10-DAY" && tenDaySectionRef.current) {
-      tenDaySectionRef.current.scrollIntoView({ behavior: "smooth" });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+      scrollContainerRef.current.dispatchEvent(new Event("scroll", { bubbles: true }));
     }
   }, [activeTab]);
 
@@ -278,10 +276,14 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto bg-transparent text-slate-100 p-4 sm:p-6 font-sans select-none">
+    <div
+      ref={scrollContainerRef}
+      className="w-full h-full overflow-y-auto bg-transparent text-slate-100 p-4 sm:p-6 font-sans select-none"
+    >
       <div className="max-w-4xl mx-auto space-y-4 pb-16">
         
         {/* CARD 1: TONIGHT'S WEATHER & ALERTS (Frosted Acrylic) */}
+        {(activeTab === "TODAY" || !activeTab) && (
         <div className="glass-panel rounded-3xl p-5 sm:p-6 scroll-reveal">
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
@@ -310,8 +312,10 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
             </div>
           </div>
         </div>
+        )}
 
         {/* CARD 2: CURRENT WEATHER & HYDROLOGICAL METRICS (Frosted Acrylic) */}
+        {(activeTab === "TODAY" || activeTab === "HOURLY" || activeTab === "RADAR" || !activeTab) && (
         <div className="glass-panel rounded-3xl p-5 sm:p-6 scroll-reveal">
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
@@ -401,8 +405,10 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
             </div>
           </div>
         </div>
+        )}
 
         {/* CARD 3: LOOKING AHEAD ADVISORY BANNER (Frosted Amber Glass) */}
+        {(activeTab === "TODAY" || !activeTab) && (
         <div className="glass-panel rounded-3xl p-4 sm:p-5 border-amber-500/30 bg-gradient-to-r from-amber-950/30 via-slate-950/40 to-slate-950/50 flex items-center justify-between gap-4 scroll-reveal">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-400/40 shrink-0 backdrop-blur-xl shadow-[0_0_12px_rgba(245,158,11,0.2)]">
@@ -426,8 +432,10 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
+        )}
 
         {/* CARD 4: MUMBAI & THANE WEATHER RADAR PREVIEW (Frosted Acrylic) */}
+        {(activeTab === "TODAY" || activeTab === "RADAR" || !activeTab) && (
         <div className="glass-panel rounded-3xl p-5 sm:p-6 overflow-hidden scroll-reveal">
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
             <div className="flex items-center gap-2">
@@ -455,11 +463,11 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
             <div className="absolute inset-0 p-4 pointer-events-none">
               <div className="absolute top-1/4 left-1/3 flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/80 border border-white/20 text-[10px] font-mono text-cyan-200 shadow-lg backdrop-blur-xl">
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                <span>Heavy Cloud Cell (Kurla-Sion)</span>
+                <span>{language === 'hi' ? 'सक्रिय मानसूनी बादल (कुर्ला-सायन)' : language === 'mr' ? 'सक्रिय पावसाळी ढग (कुर्ला-सायन)' : 'Heavy Cloud Cell (Kurla-Sion)'}</span>
               </div>
               <div className="absolute bottom-1/3 right-1/4 flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/80 border border-white/20 text-[10px] font-mono text-emerald-200 shadow-lg backdrop-blur-xl">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span>Reti Bunder SPS Active (28 cumecs)</span>
+                <span>{language === 'hi' ? 'रेती बंदर SPS सक्रिय (28 क्युमेक्स)' : language === 'mr' ? 'रेती बंदर SPS कार्यरत (28 क्युमेक्स)' : 'Reti Bunder SPS Active (28 cumecs)'}</span>
               </div>
             </div>
 
@@ -519,13 +527,12 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
             </div>
           </div>
         </div>
+        )}
 
         {/* CARD 5: HOURLY WEATHER & HYDROLOGY EXPANDABLE LIST (AccuWeather Inspired) */}
+        {activeTab === "HOURLY" && (
         <div
-          ref={hourlySectionRef}
-          className={`glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] transition-all duration-500 scroll-reveal ${
-            activeTab === "HOURLY" ? "ring-2 ring-cyan-400/80 shadow-[0_0_30px_rgba(6,182,212,0.3)]" : ""
-          }`}
+          className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] transition-all duration-500 scroll-reveal ring-2 ring-cyan-400/80 shadow-[0_0_30px_rgba(6,182,212,0.3)]"
         >
           {/* Section Header */}
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3 mb-4">
@@ -821,13 +828,12 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
             })}
           </div>
         </div>
+        )}
 
         {/* CARD 6: 10-DAY SYNOPTIC WEATHER & ARABIAN SEA TIDAL FORECAST (Inspired by AccuWeather Screenshots) */}
+        {activeTab === "10-DAY" && (
         <div
-          ref={tenDaySectionRef}
-          className={`glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] transition-all duration-500 scroll-reveal ${
-            activeTab === "10-DAY" ? "ring-2 ring-amber-400/80 shadow-[0_0_30px_rgba(245,158,11,0.3)]" : ""
-          }`}
+          className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] transition-all duration-500 scroll-reveal ring-2 ring-amber-400/80 shadow-[0_0_30px_rgba(245,158,11,0.3)]"
         >
           {/* Section Header */}
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3 mb-4">
@@ -838,7 +844,7 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
               </h2>
             </div>
             <span className="text-[11px] font-mono text-cyan-300 bg-white/[0.06] px-2.5 py-1 rounded-xl border border-white/10">
-              Arabian Sea Hydro-Meteorological Model
+              {language === 'hi' ? 'अरब सागर जल-मौसम मॉडल' : language === 'mr' ? 'अरबी समुद्र जल-हवामान प्रारूप' : 'Arabian Sea Hydro-Meteorological Model'}
             </span>
           </div>
 
@@ -947,8 +953,10 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
             ))}
           </div>
         </div>
+        )}
 
         {/* CARD 7: SUN, MOON & ASTRONOMICAL SPRING TIDE (Frosted Acrylic) */}
+        {(activeTab === "TODAY" || activeTab === "10-DAY" || !activeTab) && (
         <div className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.7)] scroll-reveal">
           <div className="border-b border-white/10 pb-3 mb-3">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300 font-bold glass-text-title">
@@ -964,13 +972,17 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                   <Sun className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-white font-bold text-sm">12 hrs 36 mins</span>
-                  <p className="text-[10px] text-slate-400">Total Mumbai Daylight</p>
+                  <span className="text-white font-bold text-sm">
+                    {language === 'hi' ? '12 घंटे 36 मिनट' : language === 'mr' ? '12 तास 36 मिनिटे' : '12 hrs 36 mins'}
+                  </span>
+                  <p className="text-[10px] text-slate-400">
+                    {language === 'hi' ? 'मुंबई कुल सूर्यप्रकाश अवधि' : language === 'mr' ? 'मुंबई एकूण सूर्यप्रकाश कालावधी' : 'Total Mumbai Daylight'}
+                  </p>
                 </div>
               </div>
               <div className="text-right space-y-0.5">
-                <div>Rise: <strong className="text-slate-100">6:24 AM</strong></div>
-                <div>Set: <strong className="text-slate-100">6:50 PM</strong></div>
+                <div>{language === 'hi' ? 'सूर्योदय:' : language === 'mr' ? 'सूर्योदय:' : 'Rise:'} <strong className="text-slate-100">6:24 AM</strong></div>
+                <div>{language === 'hi' ? 'सूर्यास्त:' : language === 'mr' ? 'सूर्यास्त:' : 'Set:'} <strong className="text-slate-100">6:50 PM</strong></div>
               </div>
             </div>
 
@@ -981,17 +993,22 @@ const WeatherPortalViewComponent: React.FC<WeatherPortalViewProps> = ({
                   <Moon className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-white font-bold text-sm">Waxing Crescent (18%)</span>
-                  <p className="text-[10px] text-slate-400">Spring Coastal Tide Phase</p>
+                  <span className="text-white font-bold text-sm">
+                    {language === 'hi' ? 'शुक्ल पक्ष द्वितीया (18%)' : language === 'mr' ? 'शुक्ल पक्ष द्वितीया (18%)' : 'Waxing Crescent (18%)'}
+                  </span>
+                  <p className="text-[10px] text-slate-400">
+                    {language === 'hi' ? 'खगोलीय स्प्रिंग भरती चरण' : language === 'mr' ? 'खगोलीय उधाण भरती टप्पा' : 'Spring Coastal Tide Phase'}
+                  </p>
                 </div>
               </div>
               <div className="text-right space-y-0.5">
-                <div>Next High Tide: <strong className="text-cyan-300">14:15 IST (+4.1m)</strong></div>
-                <div>Next Low Tide: <strong className="text-slate-300">20:30 IST (+1.2m)</strong></div>
+                <div>{language === 'hi' ? 'आगामी उच्च ज्वार:' : language === 'mr' ? 'पुढील मोठी भरती:' : 'Next High Tide:'} <strong className="text-cyan-300">14:15 IST (+4.1m)</strong></div>
+                <div>{language === 'hi' ? 'आगामी भाटा:' : language === 'mr' ? 'पुढील ओहोटी:' : 'Next Low Tide:'} <strong className="text-slate-300">20:30 IST (+1.2m)</strong></div>
               </div>
             </div>
           </div>
         </div>
+        )}
 
       </div>
     </div>
